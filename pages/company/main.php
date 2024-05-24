@@ -7,8 +7,8 @@
             <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Yeni Firma"
                     data-toggle="tab">Yeni Firma</a></li>
 
-            <li class="nav-item" style="display:none"><a class="tabMenu nav-link " id="guncele" href="#edit"
-                    data-title="Firma Güncelle" data-toggle="tab">Firma Güncelle</a></li>
+            <li class="nav-item" ><a class="tabMenu nav-link " id="guncelle" href="#edit" data-title="Firma Güncelle"
+                    data-toggle="tab">Firma Güncelle</a></li>
 
         </ul>
     </div><!-- /.card-header -->
@@ -26,8 +26,8 @@
                 <?php include "list.php" ?>
             </div>
 
-            <div class="tab-pane fade" id="list">
-                <!-- <?php include "edit.php" ?> -->
+            <div class="tab-pane fade" id="edit">
+                <?php include "edit.php" ?>
 
             </div>
         </div>

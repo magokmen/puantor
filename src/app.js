@@ -194,6 +194,9 @@ function updateUrlAddresses(page) {
   //var newUrl = window.location.origin + "/" + page;
   window.history.pushState("", "", "/" + page);
 }
+
+
+
 function RoutePagewithParams(page, params = "") {
   $("#content").empty(); // İçeriği temizle
 
