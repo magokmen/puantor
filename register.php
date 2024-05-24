@@ -38,7 +38,8 @@ $func = new Functions();
         $full_name = "";
         $email = "";
 
-        echo "git eklendi";
+        echo "git eklendi ";
+        echo "mehmet ali ekledi";
 
         if (isset($_POST["kayıt"])) {
 
