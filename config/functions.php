@@ -279,8 +279,9 @@ class Functions
         $result = $sql->fetch(PDO::FETCH_ASSOC);
         return $result ? $result["id"] : 0; // Eğer kayıt bulunamazsa null döndür
     }
-}
 
+
+}
 
 function emailVarmi($mail_address,$table="accounts")
 {
@@ -291,11 +292,20 @@ function emailVarmi($mail_address,$table="accounts")
     $email_varmi = $sql->fetch(PDO::FETCH_ASSOC);
     return $email_varmi ? true : false;
 }
+
+//giriş ve kayıt ol sayfasındaki mesajları vermek için
 function showAlert($message, $type = "danger")
 {
     echo '<div class="alert alert-' . $type . '" role="alert">' . $message . '</div>';
 
 }
+function showMessage($message, $type = "danger")
+{
+    echo '<script>
+            showMessage('.$message.','.$type.');
+        </script>';
+}
+
 function go($url, $time)
 {
     if ($time != 0) {

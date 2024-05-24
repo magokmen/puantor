@@ -1,4 +1,6 @@
-<?php require_once "../../include/requires.php";
+<?php 
+require_once "../../plugins/datatables/datatable.php";
+require_once "../../include/requires.php";
 
 echo "hesap id :" . $account_id;
 if ($_POST && $_POST['method'] == "Delete") {

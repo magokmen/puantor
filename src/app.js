@@ -38,6 +38,12 @@ function submitFormbyAjax(page, params, messageType = "alert") {
   }
 }
 
+
+
+
+
+
+
 function formatDate(date) {
   let day = date.getDate();
   let month = date.getMonth() + 1; // Aylar 0'dan başladığı için 1 ekleyin

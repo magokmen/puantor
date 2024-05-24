@@ -27,20 +27,23 @@ if ($_POST && $_POST['method'] == "add") {
 
     $result = $statement->fetch(PDO::FETCH_ASSOC);
 
-    if (!$result) {
-        // Veritabanına güncelleme işlemini gerçekleştir
+    //mail adresi var mı kontrol edilir
+    $mailVarmi = emailVarmi($email,"users");
+
+    if (!$mailVarmi) {
+        // Veritabanına ekleme işlemini gerçekleştir
         if ($full_name != Null) {
             $up = $con->prepare("INSERT INTO users SET account_id = ?,
-                                                    full_name = ? , 
-                                                   phone = ? ,
-                                                   email = ? ,
-                                                   username = ? ,
-                                                   password = ? ");
+                                                        full_name = ? , 
+                                                        phone = ? ,
+                                                        email = ? ,
+                                                        username = ? ,
+                                                        password = ? ");
             $result = $up->execute(array($account_id, $full_name, $phone, $email, $username, $password));
 
         }
     } else {
-        echo "Kullanıcı var";
+        showMessage("Bu mail adresi kayıtlı");
     }
 }
 ;
