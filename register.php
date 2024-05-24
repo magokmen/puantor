@@ -1,7 +1,7 @@
 <?php ob_start();
 session_start();
-require_once "config/connect.php"; 
-require_once "config/functions.php"; 
+require_once "config/connect.php";
+require_once "config/functions.php";
 $func = new Functions();
 ?>
 <!DOCTYPE html>
@@ -34,9 +34,11 @@ $func = new Functions();
         <!-- /.login-logo -->
 
         <?php
-         $company_name="";
-         $full_name="";
-         $email="";
+        $company_name = "";
+        $full_name = "";
+        $email = "";
+
+        echo "git eklendi";
 
         if (isset($_POST["kayıt"])) {
 
@@ -55,23 +57,22 @@ $func = new Functions();
                 showAlert("Adı Soyadı boş bırakılamaz");
             } else if ($email == '' || $email == null) {
                 showAlert("Email adresi boş bırakılamaz");
-            } else if(!$func->preg_match($full_name)){
-                    showAlert("Ad soyad yalnızca boşluk ve harf içermelidir");
+            } else if (!$func->preg_match($full_name)) {
+                showAlert("Ad soyad yalnızca boşluk ve harf içermelidir");
             } else if ($password == '' || $password == null) {
                 showAlert("Şifre bırakılamaz");
             } else if ($password_repeat == '' || $password_repeat == null) {
                 showAlert("Şifre Tekrarı boş bırakılamaz");
             } else if ($password != $password_repeat) {
                 showAlert("Şifreler eşleşmiyor");
-            } else if (emailVarmi($email) || emailVarmi($email,"users")) {
+            } else if (emailVarmi($email) || emailVarmi($email, "users")) {
                 showAlert("Bu email adresi kayıtlı");
 
-            }else if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 showAlert("Geçersiz email adresi");
-            }
-            else {
+            } else {
                 //$password = password_hash($password, PASSWORD_BCRYPT);
-                $password_hashed = password_hash($_POST['password'],PASSWORD_BCRYPT);
+                $password_hashed = password_hash($_POST['password'], PASSWORD_BCRYPT);
 
                 try {
 
@@ -79,20 +80,20 @@ $func = new Functions();
                     $sql = $con->prepare("INSERT INTO accounts SET company_name= ? , full_name= ?, email= ? , password = ? ");
                     $sql->execute(array($company_name, $full_name, $email, $password_hashed));
                     $lastid = $con->lastInsertId();
-                
+
 
                     $userquery = $con->prepare("INSERT INTO users SET account_id= ? , full_name= ?, email= ? , password = ? ");
                     $userquery->execute(array($lastid, $full_name, $email, $password_hashed));
-                    
-                    
+
+
                     $compquery = $con->prepare("INSERT INTO companies SET account_id= ? , company_name= ?, email= ? ");
-                    $compquery->execute(array($lastid ,$company_name,  $email));
+                    $compquery->execute(array($lastid, $company_name, $email));
                     $con->commit();
 
                     showAlert("Başarı ile kayıt oluşturuldu.Giriş sayfasına yönlendiriliyorsunuz", "success");
-                    $company_name="";
-                    $full_name="";
-                    $email="";
+                    $company_name = "";
+                    $full_name = "";
+                    $email = "";
                     go("login.php", 3);
                 } catch (PDOException $ex) {
                     echo showAlert("Bir Hata ile karşılaşıldı. Hata :" . $ex->getMessage());
