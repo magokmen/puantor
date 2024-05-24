@@ -33,6 +33,7 @@ class Functions
     ';
     }
 
+    
     public function user_info($id, $field)
     {
         global $con;
@@ -43,27 +44,27 @@ class Functions
 
     }
 
-    public function teklifDurum($val)
-    {
-        $array_tur = ["Bekleyen", "Teklif Verildi", "İptal Edildi"];
-        $selectHTML = '<select id="Durumu" name="Durumu" class="form-control select2" style="width: 100%;">';
-        foreach ($array_tur as $durum) {
-            $selectHTML .= '<option ' . ($durum == $val ? " selected" : "") . ' value="' . $durum . '">' . $durum . '</option>';
-        }
-        $selectHTML .= '</select>';
-        echo $selectHTML;
-    }
+    // public function teklifDurum($val)
+    // {
+    //     $array_tur = ["Bekleyen", "Teklif Verildi", "İptal Edildi"];
+    //     $selectHTML = '<select id="Durumu" name="Durumu" class="form-control select2" style="width: 100%;">';
+    //     foreach ($array_tur as $durum) {
+    //         $selectHTML .= '<option ' . ($durum == $val ? " selected" : "") . ' value="' . $durum . '">' . $durum . '</option>';
+    //     }
+    //     $selectHTML .= '</select>';
+    //     echo $selectHTML;
+    // }
 
-    public function organizasyon_turu($tur)
-    {
-        $array_tur = ["Düğün", "Kına", "Genel"];
-        $selectHTML = '<select id="Turu" name="Turu" class="form-control select2" style="width: 100%;">';
-        foreach ($array_tur as $org) {
-            $selectHTML .= '<option ' . ($org == $tur ? " selected" : "") . ' value=' . $org . '>' . $org . '</option>';
-        }
-        $selectHTML .= '</select>';
-        echo $selectHTML;
-    }
+    // public function organizasyon_turu($tur)
+    // {
+    //     $array_tur = ["Düğün", "Kına", "Genel"];
+    //     $selectHTML = '<select id="Turu" name="Turu" class="form-control select2" style="width: 100%;">';
+    //     foreach ($array_tur as $org) {
+    //         $selectHTML .= '<option ' . ($org == $tur ? " selected" : "") . ' value=' . $org . '>' . $org . '</option>';
+    //     }
+    //     $selectHTML .= '</select>';
+    //     echo $selectHTML;
+    // }
 
     public function companies($name, $id)
     {
