@@ -25,6 +25,7 @@ function generateDates($year, $month, $days)
 
 
 $company_id = isset($_GET["company_id"]) ? $_GET["company_id"] : 0;
+$project_id = isset($_GET["project_id"]) ? $_GET["project_id"] : 0;
 $year = isset($_GET["year"]) ? $_GET["year"] : date('Y');
 $month = isset($_GET["months"]) ? $_GET["months"] : date('m');
 
@@ -33,9 +34,14 @@ $dates = generateDates($year, $month, $days);
 
 
 //Firmaya göre kayıt yapılan personeller getirilir
-$sql = $con->prepare("SELECT * FROM person where company_id = ?");
-$sql->execute(array($company_id));
-// echo "company_id = " . $company_id;
+if ($project_id == null) {
+    $sql = $con->prepare("SELECT * FROM person where company_id = ? ");
+    $sql->execute(array($company_id));
+} else {
+    $sql = $con->prepare("SELECT * FROM person where company_id = ? AND project_id = ?");
+    $sql->execute(array($company_id, $project_id));
+}
+
 ?>
 
 
@@ -320,21 +326,19 @@ $sql->execute(array($company_id));
     </div>
     <div class="row p-3">
         <div class="col-md-3 col-sm-12">
-            <label for="type_name">Firma <font color="red">*</font></label>
+            <label for="company">Firma <font color="red">*</font></label>
             <?php $func->companies("company", $company_id) ?>
         </div>
         <div class="col-md-3 col-sm-12">
-            <label for="type_name">Şantiye/Proje <font color="red">*</font></label>
-            <select name="santiye" id="" class="select2" style="width:100%">
-                <option value="1">Kızılca Şantiyesi</option>
-            </select>
+            <label for="project">Şantiye/Proje <font color="red">*</font></label>
+            <?php echo $func->projects("project", $company_id, $project_id) ?>
         </div>
         <div class="col-md-3 col-sm-12">
-            <label for="type_name">Ay <font color="red">*</font></label>
+            <label for="months">Ay <font color="red">*</font></label>
             <?php echo $func->getMonthsSelect("months", $month) ?>
         </div>
         <div class="col-md-3 col-sm-12">
-            <label for="type_name">Yıl <font color="red">*</font></label>
+            <label for="year">Yıl <font color="red">*</font></label>
             <select name="year" id="year" class="select2 " style="width:100%">
                 <?php
                 $current_year = date('Y');
@@ -370,7 +374,7 @@ $sql->execute(array($company_id));
         <tbody>
             <?php
 
-            
+
 
             while ($person = $sql->fetch(PDO::FETCH_ASSOC)) {
                 ?>
@@ -437,8 +441,8 @@ $sql->execute(array($company_id));
             minimumResultsForSearch: Infinity
         })
 
-        
-    })
-      
-</script>
 
+
+    })
+
+</script>

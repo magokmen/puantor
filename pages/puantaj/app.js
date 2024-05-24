@@ -82,6 +82,10 @@ $("#company").on("change", function () {
   Route();
 });
 
+$("#project").on("change", function () {
+  Route();
+});
+
 //Yıl değiştiği zaman sayfayı yeniden yükle
 $("#year").on("change", function () {
   Route();
@@ -96,13 +100,14 @@ function Route() {
   var month = $("#months").val();
   var year = $("#year").val();
   var company_id = $("#company option:selected").val();
+  var project_id = $("#project option:selected").val();
 
   //var year = $("#year").val();
 
   //Sayfayı yeniden yönlendirmek için
   RoutePagewithParams(
-    "puantaj/add",
-    "months=" + month + "&year=" + year + "&company_id=" + company_id
+    "puantaj/main",
+    "months=" + month + "&year=" + year + "&company_id=" + company_id + "&project_id=" + project_id
   );
 }
 
@@ -174,18 +179,19 @@ function puantaj_olustur() {
   //console.log(JSON.stringify(jsonData, null, 2));
 
   var company_id = $("#company option:selected").val();
+  var project_id = $("#project option:selected").val();
   var year = $("#year").val();
   var month = $("#months").val();
 
-  var data =
-    {
-      action: "puantaj",
-      company_id: company_id,
-      months: month,
-      year: year,
-      data: JSON.stringify(jsonData),
-    } 
-    // console.log(company_id, year, month);
+  var data = {
+    action: "puantaj",
+    company_id: company_id,
+    project_id: project_id,
+    months: month,
+    year: year,
+    data: JSON.stringify(jsonData),
+  };
+  // console.log(company_id, year, month);
   $.ajax({
     url: "ajax.php",
     type: "POST",

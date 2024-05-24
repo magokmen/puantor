@@ -88,6 +88,26 @@ class Functions
     }
 
 
+    public function projects($name,$company_id, $id)
+    {
+        global $con;
+        $html = ' <select required id="' . $name . '" name="' . $name . '"  class="select2"
+                            style="width: 100%;">
+                            <option value="">Proje Seçiniz</option>';
+
+        $sql = $con->prepare("Select id,project_name from projects WHERE company_id = ?");
+        $sql->execute(array($company_id));
+
+        while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
+            $project_name = $row['project_name'];
+            $html .= '<option ' . ($id == $row["id"] ? " selected" : '') . ' value=' . $row["id"] . '>' . $project_name . '</option>';
+        }
+        ;
+
+        $html .= ' </select>';
+        echo $html;
+    }
+
     public static function select_salon($id)
     {
         global $con;

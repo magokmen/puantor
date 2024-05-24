@@ -23,6 +23,7 @@ if ($_POST && $_POST["action"] == "kasa" ) {
 //header('Content-Type: application/json');
 if ($_POST && $_POST["action"] == "puantaj") {
     $company_id = $_POST["company_id"];
+    $project_id = $_POST["project_id"];
     $year = $_POST["year"];
     $months = $_POST["months"];
     $data = ($_POST["data"]);
@@ -76,6 +77,29 @@ if ($_POST && $_POST["action"] == "puantaj") {
 
 
 } 
+
+
+if ($_POST && $_POST["action"] == "proje") {
+    $company_id = $_POST["company_id"];
+
+    // Veritabanı sorgusu
+    $sql = $con->prepare("SELECT * FROM projects WHERE user_company_id = ?");
+    $sql->execute(array($company_id));
+    $results = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($results) {
+        // Eğer kayıtlar varsa, select öğesini oluştur
+        echo '<select class="select2">';
+        foreach ($results as $result) {
+            echo '<option value="' .  $result["project_id"] . '">' . $result["project_name"] . '</option>';
+        }
+        echo '</select>';
+    } else {
+        // Eğer kayıt yoksa bir mesaj döndürebilirsiniz
+        echo 'No projects found for this company.';
+    }
+}
+
 
 
 function kayitVarmi($company_id, $person, $year, $months)

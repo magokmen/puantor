@@ -278,7 +278,7 @@ $func = new Functions();
 
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link nav-menu loadContent" href="#" data-page="puantaj/add"
+                            <a class="nav-link nav-menu loadContent" href="#" data-page="puantaj/main"
                                 data-title="Puantaj Giriş">
                                 <i class="nav-icon fa-regular fa-calendar-days"></i>
                                 <p>
