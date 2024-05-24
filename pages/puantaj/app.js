@@ -1,0 +1,219 @@
+$(document).ready(function () {
+  const listgun = $(".gun");
+
+  listgun.on("click", function () {
+    if ($(this).hasClass("clicked")) {
+      $("#modal-default").modal("show");
+    }
+  });
+
+  let isMouseDown = false;
+  $(".gun").mouseover(function (event) {
+    if (isMouseDown) {
+      $(this).addClass("clicked");
+    }
+  });
+
+  $(".gun")
+    .mousedown(function () {
+      isMouseDown = true;
+      $(this).toggleClass("clicked");
+    })
+    .mouseup(function () {
+      isMouseDown = false;
+      if ($(".gun.clicked").length > 0) {
+        $("#modal-default").modal("show");
+      }
+    });
+
+  const listItems = $(".nav-item");
+
+  listItems.click(function () {
+    const clickedCells = $("table td.clicked");
+
+    const avatar = $(this).find(".avatar");
+    const avatarText = avatar.text();
+    const avatarColor = avatar.css("color");
+    const avatarBgColor = avatar.css("background-color");
+    const avatarDataid = avatar.attr("data-id");
+
+    clickedCells.each(function () {
+      clickedCells.text(avatarText);
+      clickedCells.css("color", avatarColor);
+      clickedCells.attr("data-id", avatarDataid);
+      clickedCells.css("background-color", avatarBgColor);
+    });
+    clickedCells.removeClass("clicked");
+    $("#modal-default").modal("hide");
+  });
+});
+
+//Delete tuşuna basıldığı zaman içeriği temizler
+$(document).keydown(function (event) {
+  // 'Delete' tuşunun keycode'u 46'dır
+  if (event.keyCode === 46) {
+    // .clicked sınıfına sahip tüm td elemanlarını seç ve içeriğini temizle
+    $("td.clicked").each(function () {
+      $(this).empty();
+      $(this).data("id", "");
+      $(this).toggleClass("clicked");
+      $(this).css("background-color", "white");
+    });
+  }
+});
+
+$(".table th").click(function () {
+  // Tıklanan sütunun indeksini al
+  var columnIndex = $(this).index();
+  var modalShow = true;
+  // Tüm satırlardaki ilgili sütundaki td'lere .clicked sınıfını ekle
+  $(".table tbody tr").each(function () {
+    $(this)
+      .find("td:eq(" + columnIndex + ")")
+      .toggleClass("clicked");
+  });
+  if ($(".table td.clicked").length > 0) {
+    $("#modal-default").modal("show");
+  }
+});
+
+//Firma Değiştiği zaman sayfayı yeniden yükle
+$("#company").on("change", function () {
+  Route();
+});
+
+//Yıl değiştiği zaman sayfayı yeniden yükle
+$("#year").on("change", function () {
+  Route();
+});
+
+//Ay değiştiği zaman sayfayı yeniden yükle
+$("#months").on("change", function () {
+  Route();
+});
+
+function Route() {
+  var month = $("#months").val();
+  var year = $("#year").val();
+  var company_id = $("#company option:selected").val();
+
+  //var year = $("#year").val();
+
+  //Sayfayı yeniden yönlendirmek için
+  RoutePagewithParams(
+    "puantaj/add",
+    "months=" + month + "&year=" + year + "&company_id=" + company_id
+  );
+}
+
+//Personel Özet Bilgilerini gösternmek için
+$(".btn-user-modal").on("click", function () {
+  // Butonun bulunduğu satırı bul
+  var $row = $(this).closest("tr");
+
+  // Satırdaki .user-job değerini al
+  var jobDescription = $row.find(".user-job").text();
+
+  // Butonun text değerini al
+  var userName = $(this).text();
+
+  // Kullanıcı adının baş harflerini al
+  var initials = userName
+    .split(" ")
+    .map(function (word) {
+      return word.charAt(0).toUpperCase();
+    })
+    .join("");
+
+  // Modal içindeki değerleri güncelle
+  $(".lead-job").text(jobDescription);
+  $(".lead-name").text(userName);
+  $(".avatar").text(initials);
+
+  // Modali göster
+  $("#modal-summary").modal("show");
+});
+
+function puantaj_olustur() {
+  // JSON verisini saklamak için bir nesne oluştur
+  var jsonData = {};
+
+  // Tablodaki her satırı döngü ile işle
+  $("table tbody tr").each(function () {
+    var row = $(this);
+    var employeeData = {}; // Her çalışan için bir nesne oluştur
+
+    // Ad, soyad ve ünvan bilgisini al
+    var fullName = row.find("td:first").data("id");
+    var position = row.find("td:eq(1)").text();
+
+    // Tarihler için döngü yap
+    row.find("td:gt(1)").each(function (index, td) {
+      var date = $("table thead th")
+        .eq(index + 2)
+        .text(); // İndeks + 2, 2. indeksten başlamasını sağlar
+
+      var status = $(this).data("id") ? $(this).data("id") : ""; // Durum bilgisini al
+      //console.log(date + "--" + status); //
+
+      // Çalışanın adı, soyadı ve ünvanı ile birleştirilmiş anahtar oluştur
+      var key = fullName + " : " + position;
+
+      // Anahtar zaten varsa, alt nesneye yeni tarih ve durum ekleyin
+      if (jsonData[key]) {
+        jsonData[key][date] = status;
+      } else {
+        // Yoksa yeni bir alt nesne oluşturun ve anahtarla birlikte ana nesneye ekleyin
+        employeeData[date] = status;
+        jsonData[key] = employeeData;
+      }
+    });
+  });
+
+  // JSON verisini konsolda göster
+  //console.log(JSON.stringify(jsonData, null, 2));
+
+  var company_id = $("#company option:selected").val();
+  var year = $("#year").val();
+  var month = $("#months").val();
+
+  var data =
+    {
+      action: "puantaj",
+      company_id: company_id,
+      months: month,
+      year: year,
+      data: JSON.stringify(jsonData),
+    } 
+    // console.log(company_id, year, month);
+  $.ajax({
+    url: "ajax.php",
+    type: "POST",
+    data: data,
+    dataType: "json",
+    success: function (response) {
+      if (response.status == 200) {
+        swal.fire({
+          title: "Başarılı",
+          icon: "success",
+          text: response.message,
+        });
+      } else if (response.status == 400) {
+        swal.fire({
+          title: "Uyarı",
+          icon: "alert",
+          text: response.message,
+        });
+      }
+    },
+    error: function (xhr, status, error) {
+      // Handle error if deletion fails (optional)
+      console.error(xhr.responseText);
+      Swal.fire({
+        title: "Hata!",
+        text: "Bir şeyler ters gitti!",
+        icon: "error",
+      });
+    },
+  });
+}

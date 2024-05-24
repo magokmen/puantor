@@ -1,0 +1,33 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.navMenu {
+    position: fixed;
+    display: inline;
+    width: 100%;
+    top: 0;
+
+}
+
+.maincontent {
+    margin-left: 20px;
+    margin-top: 60px;
+
+}
+
+.bread {
+    margin-top: 10px;
+    margin: 5px;
+    padding: 10px;
+    background: #ddd !important;
+    border-radius: 6px;
+
+}
+
+.non-visible{
+    display: none;
+}
+
