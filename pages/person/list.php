@@ -1,7 +1,7 @@
 <?php
 require_once "../../plugins/datatables/datatable.php";
 require_once "../../include/requires.php";
-    
+
 
 if ($_POST && $_POST['method'] == "Delete") {
 
@@ -16,20 +16,20 @@ if ($_POST && $_POST['method'] == "Delete") {
 
 ?>
 
-<div  style="margin-bottom:10px" class="row">
+<div style="margin-bottom:10px" class="row">
 
-            <div class="btn-group">
-                <button type="button" class="btn btn-default">Pdf</button>
-                <button type="button" class="btn btn-default">XLS</button>
-                <button type="button" class="btn btn-default">Hakediş Listesi</button>
-            </div>
-        
+    <div class="btn-group">
+        <button type="button" class="btn btn-default">Pdf</button>
+        <button type="button" class="btn btn-default">XLS</button>
+        <button type="button" class="btn btn-default">Hakediş Listesi</button>
+    </div>
+
 </div>
 <!-- Main content -->
 
 <table id="example1" class="table table-bordered table-striped table-sm table-hover">
     <thead>
-       
+
         <tr>
             <th>id</th>
             <th>Adı Soyadı</th>
@@ -46,7 +46,7 @@ if ($_POST && $_POST['method'] == "Delete") {
     </thead>
     <tbody>
 
-  
+
         <?php
         $sql = $con->prepare("SELECT p.*,c.account_id,c.company_name FROM `person` p
                                 LEFT JOIN companies c on c.id = p.company_id
@@ -62,49 +62,58 @@ if ($_POST && $_POST['method'] == "Delete") {
                 <td>
                     <?php echo $value["id"] ?>
                 </td>
+                
                 <td>
                     <?php echo $value["full_name"] ?>
                 </td>
+
                 <td>
-                    <?php echo $func->getCompanyName($value["company_id"]);?>
-                </td>
-                <td>
-                    <?php echo $func->getProjectName($value["project_id"]);?>
+                    <?php echo $func->getCompanyName($value["company_id"]); ?>
                 </td>
 
                 <td>
-                    <?php $id = $value["sigorta_no"];
-
-
-                    ?>
+                    <?php
+                    //Personelin birden fazla projede çalışması durumunda veritabanındaki 
+                    //değer parçalanarak proje isimlerine çevrilir
+                    echo $func->getProjectNames($value["project_id"]); ?>
                 </td>
+
+                <td>
+                    <?php $id = $value["sigorta_no"];?>
+                </td>
+
                 <td>
                     <?php echo $value["phone"] ?>
                 </td>
+
                 <td>
                     <?php echo $value["address"] ?>
                 </td>
+
                 <td>
                     <?php echo $value["daily_wages"] ?>
                 </td>
+
                 <td>
                     <?php echo $value["state"] ?>
                 </td>
+
                 <td>
                     <?php echo $value["email"] ?>
                 </td>
+
                 <td class="">
 
                     <i class="fa-solid fa-ellipsis-vertical list-button" data-toggle="dropdown"></i>
                     <ul class="dropdown-menu">
-                    <li class="dropdown-item"><i class="fa-solid fa-edit dropdown-list-icon"></i>
-                            <a href="#" onclick="RoutePagewithParams('person/edit','id=<?php echo $value['id']?>')"
+                        <li class="dropdown-item"><i class="fa-solid fa-edit dropdown-list-icon"></i>
+                            <a href="#" onclick="RoutePagewithParams('person/edit','id=<?php echo $value['id'] ?>')"
                                 data-title="Personel Güncelleme">
                                 Güncelle
                             </a>
-                        </li>   
-                    
-                    <li class="dropdown-item"><i class="fa-solid fa-calendar-days dropdown-list-icon"></i><a href="#"
+                        </li>
+
+                        <li class="dropdown-item"><i class="fa-solid fa-calendar-days dropdown-list-icon"></i><a href="#"
                                 onclick="RoutePage('offers/edit', this)" data-params="id=<?php echo $value["id"] ?>"
                                 data-title="Puantaj Listesi">
                                 Puantaj listesi
@@ -113,15 +122,16 @@ if ($_POST && $_POST['method'] == "Delete") {
 
 
 
-                       
-                        <li class="dropdown-item"><i class="fa-solid fa-file-pen dropdown-list-icon"></i><a href="#">Hesap Hareketleri
-                                 </a></li>
+
+                        <li class="dropdown-item"><i class="fa-solid fa-file-pen dropdown-list-icon"></i><a href="#">Hesap
+                                Hareketleri
+                            </a></li>
                         <li class="dropdown-divider"></li>
 
                         <?php
                         $params = array(
-                            "id" => $value["id"], 
-                            "message" => $value["full_name"] .' isimli personel silinecektir.Devam etmek istiyoru musunuz?'
+                            "id" => $value["id"],
+                            "message" => $value["full_name"] . ' isimli personel silinecektir.Devam etmek istiyoru musunuz?'
                         );
                         $params_json = $func->jsonEncode($params);
                         ?>

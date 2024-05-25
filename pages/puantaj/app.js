@@ -67,13 +67,15 @@ $(".table th").click(function () {
   var columnIndex = $(this).index();
   var modalShow = true;
   // Tüm satırlardaki ilgili sütundaki td'lere .clicked sınıfını ekle
-  $(".table tbody tr").each(function () {
-    $(this)
-      .find("td:eq(" + columnIndex + ")")
-      .toggleClass("clicked");
-  });
-  if ($(".table td.clicked").length > 0) {
-    $("#modal-default").modal("show");
+  if (columnIndex > 2) {
+    $(".table tbody tr").each(function () {
+      $(this)
+        .find("td:eq(" + columnIndex + ")")
+        .toggleClass("clicked");
+    });
+    if ($(".table td.clicked").length > 0) {
+      $("#modal-default").modal("show");
+    }
   }
 });
 
@@ -107,7 +109,14 @@ function Route() {
   //Sayfayı yeniden yönlendirmek için
   RoutePagewithParams(
     "puantaj/main",
-    "months=" + month + "&year=" + year + "&company_id=" + company_id + "&project_id=" + project_id
+    "months=" +
+      month +
+      "&year=" +
+      year +
+      "&company_id=" +
+      company_id +
+      "&project_id=" +
+      project_id
   );
 }
 

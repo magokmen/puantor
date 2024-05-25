@@ -108,6 +108,51 @@ class Functions
         echo $html;
     }
 
+    public function projectsMultiple($name, $company_id, $ids)
+    {
+        global $con;
+        $html = '<select required id="' . $name . '" name="' . $name . '[]" multiple class="select2" style="width: 100%;">
+                    <option value="">Proje Seçiniz</option>';
+    
+        $sql = $con->prepare("SELECT id, project_name FROM projects WHERE company_id = ?");
+        $sql->execute(array($company_id));
+    
+        $proarray = explode('|', $ids);
+    
+        while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
+            $project_name = $row['project_name'];
+            $selected = in_array($row["id"], $proarray) ? " selected" : "";
+            $html .= '<option value="' . $row["id"] . '"' . $selected . '>' . htmlspecialchars($project_name) . '</option>';
+        }
+    
+        $html .= '</select>';
+        echo $html;
+    }
+
+
+    
+    
+    function getProjectNames($projectIds, $delimiter = "|") {
+        global $func; // $func global değişkenini kullanmak için global bildirimi yapıyoruz
+    
+        if ($projectIds) {
+            // Proje ID'lerini ayır
+            $proArray = explode($delimiter, $projectIds);
+            $projects = "";
+    
+            // Her bir proje ID'sine karşılık gelen projeyi al ve birleştir
+            foreach ($proArray as $projectId) {
+                $projects .= $func->getProjectName($projectId) . ", ";
+            }
+    
+            // Sondaki virgülü kaldır ve sonucu döndür
+            return rtrim($projects, ", ");
+        }
+    
+        return "";
+    }
+    
+
     public static function select_salon($id)
     {
         global $con;

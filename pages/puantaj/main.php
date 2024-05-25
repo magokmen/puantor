@@ -34,12 +34,29 @@ $dates = generateDates($year, $month, $days);
 
 
 //Firmaya göre kayıt yapılan personeller getirilir
+
 if ($project_id == null) {
+
     $sql = $con->prepare("SELECT * FROM person where company_id = ? ");
     $sql->execute(array($company_id));
 } else {
-    $sql = $con->prepare("SELECT * FROM person where company_id = ? AND project_id = ?");
-    $sql->execute(array($company_id, $project_id));
+    
+    // $projects="";
+    // $projects= explode("|",$project_id);
+    // foreach ($projects as $proj){
+    //     $projects .= $proj .",";  
+    // };
+
+    // $projects = rtrim($projects, ","); // Sondaki virgülü kaldır
+
+    // $sql = $con->prepare("SELECT * FROM person where company_id = ? AND project_id IN ?");
+    // $sql->execute(array($company_id, $projects));
+    $projects = explode("|", $project_id); // Proje ID'lerini diziye ayır
+
+// SQL sorgusunu hazırlayalım
+$sql = $con->prepare("SELECT * FROM person WHERE company_id = ? AND project_id = ?");
+$sql->execute(array($company_id, $project_id));
+
 }
 
 ?>
@@ -385,7 +402,7 @@ if ($project_id == null) {
                             <?php echo $person["full_name"] ?></a></td>
                     <td class="text-nowrap" style="min-width:10vw;"><a class="user-job" href="#">
                             <?php echo $person["job"] ?></a></td>
-                    <td class="text-nowrap"><?php echo $func->getProjectName($person["project_id"]); ?></td>
+                    <td class="text-nowrap"><?php echo $func->getProjectNames($person["project_id"]); ?></td>
                     <?php
                     foreach ($dates as $date): ?>
 
@@ -397,15 +414,7 @@ if ($project_id == null) {
                             $query->execute(array($puantaj_id));
                             $puantaj_data = $query->fetch(PDO::FETCH_ASSOC);
                             $data_json = json_decode($puantaj_data["datas"], true);
-                            //$keys = array_keys($data_json);
-                            //print_r($keys);
-                            // foreach ($data_json as $date => $value) {
-                            //     if ($value !== "") {
-                            //        // echo "Tarih: $date, Değer: $value\n";
-                            //         echo "<td class='gun noselect' data-id=''>".$value."</td>";
-                            //     }else{
-                            //     }
-                            // }
+ 
                             $value = isset($data_json[$date]) ? $data_json[$date] : "0";
                             $func->puantajClass($value);
                             // echo "<td class='gun noselect' data-id=''>" . $value . "</td>";
