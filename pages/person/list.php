@@ -97,14 +97,14 @@ if ($_POST && $_POST['method'] == "Delete") {
 
                     <i class="fa-solid fa-ellipsis-vertical list-button" data-toggle="dropdown"></i>
                     <ul class="dropdown-menu">
-                    <li class="dropdown-item"><i class="fa-solid fa-print dropdown-list-icon"></i>
+                    <li class="dropdown-item"><i class="fa-solid fa-edit dropdown-list-icon"></i>
                             <a href="#" onclick="RoutePagewithParams('person/edit','id=<?php echo $value['id']?>')"
                                 data-title="Personel Güncelleme">
-                                Düzenle
+                                Güncelle
                             </a>
                         </li>   
                     
-                    <li class="dropdown-item"><i class="fa-solid fa-edit dropdown-list-icon"></i><a href="#"
+                    <li class="dropdown-item"><i class="fa-solid fa-calendar-days dropdown-list-icon"></i><a href="#"
                                 onclick="RoutePage('offers/edit', this)" data-params="id=<?php echo $value["id"] ?>"
                                 data-title="Puantaj Listesi">
                                 Puantaj listesi

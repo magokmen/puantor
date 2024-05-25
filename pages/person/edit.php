@@ -3,7 +3,7 @@ require_once "../../include/requires.php";
 
 // echo "hesap id : " . $account_id;
 
-$id = $_GET["id"];
+$id = isset($_GET["id"]) ? $_GET["id"] : @$_POST["id"];
 
 if ($_POST && $_POST["method"] == "add") {
 
@@ -11,12 +11,15 @@ if ($_POST && $_POST["method"] == "add") {
     $kimlik_no = @$_POST["kimlik_no"];
     $sigorta_no = @$_POST["sigorta_no"];
     $address = @$_POST["address"];
-    $gunluk_ucret = @$_POST["gunluk_ucret"];
+    $gunluk_ucret = @$_POST["daily_wages"];
     $email = @$_POST["email"];
     $iban_number = @$_POST["iban_number"];
+    $phone = @$_POST["phone_number"];
     $job = @$_POST["job"];
     $company_id = @$_POST["companies"];
     $project_id = @$_POST["projects"];
+    $job_start_date = @$_POST["job_start_date"];
+    $job_end_date = @$_POST["job_end_date"];
 
 
     // Veritabanına güncelleme işlemini gerçekleştir
@@ -27,24 +30,32 @@ if ($_POST && $_POST["method"] == "add") {
                                                     kimlik_no = ?, 
                                                     sigorta_no = ?, 
                                                     address = ?,  
+                                                    phone = ?,  
                                                     daily_wages = ?, 
                                                     email = ?, 
                                                     iban_number = ?,
                                                     job = ? ,
                                                     company_id = ?,
-                                                    project_id = ?  WHERE id = ?");
+                                                    project_id = ?,
+                                                    job_start_date = ?,    
+                                                    job_end_date = ?   
+                                                    WHERE id = ?");
             $insq->execute(
                 array(
                     $full_name,
                     $kimlik_no,
                     $sigorta_no,
                     $address,
+                    $phone,
                     $gunluk_ucret,
                     $email,
                     $iban_number,
                     $job,
                     $company_id,
-                    $project_id
+                    $project_id,
+                    $job_start_date,
+                    $job_end_date,
+                    $id
                 )
             );
 
@@ -52,7 +63,7 @@ if ($_POST && $_POST["method"] == "add") {
         }
 
     } catch (PDOException $ex) {
-        echo $ex->getMessage();
+        showMessage("Bir hata oluştu. Hata mesajı :" . $ex->getMessage());
     }
 }
 
@@ -75,7 +86,9 @@ $person = $sql->fetch(PDO::FETCH_ASSOC);
                 </li>
            </ul>
             <?php
-            $params = array("method" => "add");
+            $params = array(
+                "method" => "add",
+                "id" => $id);
             $params_json = $func->jsonEncode($params);
             ?>
 
@@ -148,7 +161,7 @@ $person = $sql->fetch(PDO::FETCH_ASSOC);
                         <div class="card-body">
 
                             <div class="form-group">
-                                <label for="ise_baslama_tarihi">İşe Başlama Tarihi <span
+                                <label for="job_start_date">İşe Başlama Tarihi <span
                                         style="color:red">(*)</span></label>
 
                                 <div class="input-group date" id="startdate" data-target-input="nearest">
@@ -156,7 +169,7 @@ $person = $sql->fetch(PDO::FETCH_ASSOC);
                                         data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                     </div>
-                                    <input required type="text" id="ise_baslama_tarihi" name="ise_baslama_tarihi"
+                                    <input required type="text" id="job_start_date" name="job_start_date"
                                         class="form-control datetimepicker-input" data-target="#startdate"
                                         data-inputmask-alias="datetime" data-inputmask-inputformat="dd.mm.yyyy"
                                         data-mask value="<?php echo $person["job_start_date"]; ?>" />
@@ -202,42 +215,46 @@ $person = $sql->fetch(PDO::FETCH_ASSOC);
 
                             <div class="form-group">
                                 <label for="companies">Firması</label>
-                                <?php echo $func->companies("companies", $account_id) ?>
+                                <?php echo $func->companies("companies", $person["company_id"]) ?>
                             </div>
 
                             <div class="form-group">
                                 <label for="companies">Projesi</label>
                                 <select name="projects" id="projects" class="select2 form-control">
-
+                                    <option value="<?php echo $person["project_id"]?>"><?php echo $func->getProjectName($person["project_id"]) ;?></option>
                                 </select>
 
                             </div>
                             <div class="form-group">
-                                <label for="gunluk_ucret">Günlük Ücreti<span style="color:red">(*)</span> </label>
-                                <input required type="text" id="gunluk_ucret" name="gunluk_ucret" class="form-control">
+                                <label for="daily_wages">Günlük Ücreti<span style="color:red">(*)</span> </label>
+                                <input required type="text" id="daily_wages" name="daily_wages" class="form-control"
+                                value="<?php echo $person["daily_wages"]; ?>" >
                             </div>
 
                             <div class="form-group">
                                 <label for="phone_number">Telefon<span style="color:red">(*)</span></label>
-                                <input required type="text" id="phone_number" name="phone_number" class="form-control">
+                                <input required type="text" id="phone_number" name="phone_number" class="form-control"
+                                value="<?php echo $person["phone"]; ?>">
                             </div>
 
                             <div class="form-group">
                                 <label for="email">Email Adresi </label>
-                                <input type="email" id="email" name="email" class="form-control">
+                                <input type="email" id="email" name="email" class="form-control"
+                                value="<?php echo $person["email"]; ?>">
                             </div>
 
 
                             <div class="form-group">
                                 <label for="iban_number">İban Numarası </label>
-                                <input type="text" id="iban_number" name="iban_number" class="form-control">
+                                <input type="text" id="iban_number" name="iban_number" class="form-control"
+                                value="<?php echo $person["iban_number"]; ?>">
                             </div>
 
                             <div class="form-group">
                                 <label for="job">Görevi</label>
                                 <select type="text" id="job" name="job" class="form-control select2">
                                     <option value="">Görev Seçiniz</option>
-                                    <option value="1">Ustabaşı</option>
+                                    <option selected value="1">Ustabaşı</option>
                                 </select>
                             </div>
                         </div>
@@ -279,6 +296,7 @@ $person = $sql->fetch(PDO::FETCH_ASSOC);
 
     $("#companies").on("change", function () {
         var company_id = $("#companies option:selected").val();
+        $('#projects').html('');
         $.ajax({
             url: "ajax.php",
             type: "POST",
