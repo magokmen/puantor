@@ -1,13 +1,30 @@
+<?php
+require_once "../../include/requires.php"; ?>
+
+
 <div class="card card-outline card-info">
     <div class="card-header p-2">
-        <ul class="nav nav-pills">
-            <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Personel Listesi"
-                    data-toggle="tab">Tüm Personeller</a>
-            </li>
-            <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Yeni Personel"
-                    data-toggle="tab">Yeni Personel</a></li>
+        <div class="d-flex justify-content-between">
 
-        </ul>
+
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Personel Listesi"
+                        data-toggle="tab">Tüm Personeller</a>
+                </li>
+                <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Yeni Personel"
+                        data-toggle="tab">Yeni Personel</a></li>
+
+
+            </ul>
+            <?php
+            $params = array("method" => "add");
+            $params_json = $func->jsonEncode($params);
+            ?>
+
+            <button type="button" id="save" data-title="Yeni Personel"
+                onclick="submitFormbyAjax('person/main','<?php echo $params_json ?>')"
+                class="btn btn-info d-none">Kaydet</button>
+        </div>
     </div><!-- /.card-header -->
     <div class="card-body">
         <div class="tab-content">
@@ -38,7 +55,15 @@
 
         if (pagetitle == "Yeni Personel") {
             $("#yeni").tab("show");
+            $("#save").removeClass("d-none");
         }
+    })
+
+    $("#liste").on("click", function(){
+        $("#save").addClass("d-none");
+    })
+    $("#yeni").on("click", function(){
+        $("#save").removeClass("d-none");
     })
     $(function () {
         $(".tabMenu").click(function () {

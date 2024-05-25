@@ -1,238 +1,257 @@
 <?php
-require_once "../../config/functions.php";
+require_once "../../include/requires.php";
 
-$func = new Functions();
-$id = isset($_GET['id']) ? $_GET['id'] : $_POST['id'];
+// echo "hesap id : " . $account_id;
 
-$name = "";
-$description = "";
-$eventdate = "";
+$id = $_GET["id"];
 
-if ($_POST ) {
-    $FirmaSahisAdi = @$_POST["FirmaSahisAdi"];
-    $Mekanid = @$_POST["mekanadi"];
-    $Salonid = @$_POST["salonadi"];
-    $eventdate = @$_POST["eventdate"];
-    $TeklifVeren = @$_POST["TeklifVeren"];
-    $TeklifTarihi = date("Y-m-d");
-    $Durumu = @$_POST["Durumu"];
-    $PersonelID = 1;
-    $FirmaSahisTel = @$_POST["FirmaSahisTel"];
-    $MusteriEmail = @$_POST["MusteriEmail"];
-    $Turu = @$_POST["Turu"];
-    $KisiSayisi = @$_POST["KisiSayisi"];
-    $description = @$_POST["description"];
+if ($_POST && $_POST["method"] == "add") {
 
-       //Veritabanına güncelleme işlemini gerçekleştir
-    if ($FirmaSahisAdi != Null) {
-        $insq = $con->prepare("UPDATE teklifler SET  FirmaSahisAdi = ? , 
-                                                      Mekanid = ? , 
-                                                      Salonid = ? , 
-                                                      eventdate = ? , 
-                                                      TeklifVeren = ? , 
-                                                      TeklifTarihi = ? , 
-                                                      Durumu = ? , 
-                                                      PersonelID = ? , 
-                                                      FirmaSahisTel = ? , 
-                                                      MusteriEmail = ? , 
-                                                      Turu = ? , 
-                                                      KisiSayisi = ? , 
-                                                      description = ? 
-                                                      WHERE id = ?");
-        $insq->execute(array($FirmaSahisAdi, $Mekanid, $Salonid, $eventdate, $TeklifVeren, $TeklifTarihi, $Durumu, $PersonelID, $FirmaSahisTel, $MusteriEmail, $Turu, $KisiSayisi, $description,$id ));
+    $full_name = @$_POST["full_name"];
+    $kimlik_no = @$_POST["kimlik_no"];
+    $sigorta_no = @$_POST["sigorta_no"];
+    $address = @$_POST["address"];
+    $gunluk_ucret = @$_POST["gunluk_ucret"];
+    $email = @$_POST["email"];
+    $iban_number = @$_POST["iban_number"];
+    $job = @$_POST["job"];
+    $company_id = @$_POST["companies"];
+    $project_id = @$_POST["projects"];
+
+
+    // Veritabanına güncelleme işlemini gerçekleştir
+    try {
+
+        if ($full_name != Null) {
+            $insq = $con->prepare("UPDATE person SET  full_name = ? ,
+                                                    kimlik_no = ?, 
+                                                    sigorta_no = ?, 
+                                                    address = ?,  
+                                                    daily_wages = ?, 
+                                                    email = ?, 
+                                                    iban_number = ?,
+                                                    job = ? ,
+                                                    company_id = ?,
+                                                    project_id = ?  WHERE id = ?");
+            $insq->execute(
+                array(
+                    $full_name,
+                    $kimlik_no,
+                    $sigorta_no,
+                    $address,
+                    $gunluk_ucret,
+                    $email,
+                    $iban_number,
+                    $job,
+                    $company_id,
+                    $project_id
+                )
+            );
+
+
+        }
+
+    } catch (PDOException $ex) {
+        echo $ex->getMessage();
     }
-
 }
-;
-try {
-    // seçme sorgusunu hazırla 
-    global $kayit;
-    $sorgu = "Select * from teklifler where id = ?";
-    $stmt = $con->prepare($sorgu);
-    $stmt->execute(array($id));
-    $kayit = $stmt->fetch(PDO::FETCH_ASSOC);
-    //data adında bir fonksiyon oluşturuldu (htmlspecialchars($kayit['name'], ENT_QUOTES);) bu şekilde yazmak yerine
-    $eventdate = $func->data('eventdate');
-    $FirmaSahisAdi = $func->data('FirmaSahisAdi');
-    $Mekanid = $func->data('Mekanid');
-    $Salonid = $func->data('Salonid');
-    $FirmaSahisTel = $func->data('FirmaSahisTel');
-    $MusteriEmail = $func->data('MusteriEmail');
 
 
+$sql = $con->prepare("SELECT * FROM person WHERE id = ?");
+$sql->execute(array($id));
+$person = $sql->fetch(PDO::FETCH_ASSOC);
 
-} catch (PDOException $exception) {
-    die('HATA: ' . $exception->getMessage());
-}
 
 ?>
+<div class="card card-outline card-info">
+    <div class="card-header p-2">
 
-<form id="myForm">
-    <div class="row">
+        <div class="d-flex justify-content-between">
 
-        <div class="col-md-6">
-            <div class="card card-teal">
-                <div class="card-header">
-                    <h3 class="card-title">Organizasyon Bilgileri</h3>
 
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Personel Listesi"
+                        data-toggle="tab">Tüm Personeller</a>
+                </li>
+           </ul>
+            <?php
+            $params = array("method" => "add");
+            $params_json = $func->jsonEncode($params);
+            ?>
 
-                    <div class="form-group">
-                        <label for="eventdate">Organizasyon Tarihi <font color="red">*</font>
-                        </label>
-                        <div class="input-group date" id="eventdate" data-target-input="nearest">
-                            <input type="text" required name="eventdate" value="<?php echo $eventdate; ?>"
-                                class="form-control datetimepicker-input" data-target="#eventdate"
-                                placeholder="Organizasyon Tarihi" />
-                            <div class="input-group-append" data-target="#eventdate" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+            <button type="button" id="save" data-title="Yeni Personel"
+                onclick="submitFormbyAjax('person/edit','<?php echo $params_json ?>')"
+                class="btn btn-info">Kaydet</button>
+        </div>
+
+    </div><!-- /.card-header -->
+    <div class="card-body">
+
+
+
+        <form id="myForm">
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="card card-teal">
+                        <div class="card-header">
+                            <h3 class="card-title">Kimlik Bilgileri</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
                             </div>
-                            <script type="text/javascript">
-                                $(function () {
-                                    $('#eventdate').datetimepicker({
-                                        format: 'DD.MM.YYYY'
-                                    });
-                                });
-                            </script>
                         </div>
-                    </div>
+                        <div class="card-body">
+
+                            <div class="form-group">
+                                <label for="full_name">Adı Soyadı <span style="color:red">(*)</span></label>
+                                <input id="full_name" name="full_name" type="text" class="form-control" required
+                                    value="<?php echo $person["full_name"]; ?>">
+                            </div>
 
 
-                    <div class="form-group">
-                        <label for="mekanadi">Organizasyon Mekanı<font color="red">*</font></label>
-                       <?php $func->select_mekan($id) ;?>
-                    </div>
-                    <div class="form-group">
-                        <label for="salonadi">Salon Adı<font color="red">*</font></label>
-                            <?php $func->select_salon($Salonid) ;?>
-                       
-                    </div>
-                    <div class="form-group">
-                        <label for="Turu">Organizasyon Türü <font color="red">*</font></label>
-                        <?php $func->organizasyon_turu($func->data("Turu")) ;?>
-                    </div>
-                    <div class="form-group">
-                        <label for="KisiSayisi">Kişi Sayısı</label>
-                        <input id="KisiSayisi" name="KisiSayisi" type="text" 
-                        value="<?php echo $func->data("KisiSayisi") ;?>" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="description">Açıklama</label>
-                        <textarea id="description" name="description" class="form-control" rows="3"
-                            placeholder="Açıklama ..."><?php echo $func->data("description") ;?></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputFile">Dosya </label>
-                        <div class="input-group">
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" data-browse="Gözat" id="exampleInputFile">
-                                <label class="custom-file-label" for="exampleInputFile">Dosya Seçiniz</label>
+                            <div class="form-group">
+                                <label for="kimlik_no">Tc Kimlik No</label>
+                                <input id="kimlik_no" name="kimlik_no" type="text" class="form-control"
+                                    value="<?php echo $person["kimlik_no"]; ?>">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="sigorta_no">Sigorta No</label>
+                                <input id="sigorta_no" name="sigorta_no" type="text" class="form-control"
+                                    value="<?php echo $person["sigorta_no"]; ?>">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="address">Adresi</label>
+                                <textarea type="text" id="address" name="address"
+                                    class="form-control"><?php echo $person["address"]; ?></textarea>
                             </div>
 
                         </div>
+                        <!-- /.card-body -->
                     </div>
+                    <!-- /.card -->
+
+                    <div class="card card-danger">
+                        <div class="card-header">
+                            <h3 class="card-title">Görev Bilgileri</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="form-group">
+                                <label for="ise_baslama_tarihi">İşe Başlama Tarihi <span
+                                        style="color:red">(*)</span></label>
+
+                                <div class="input-group date" id="startdate" data-target-input="nearest">
+                                    <div class="input-group-prepend" data-target="#startdate"
+                                        data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                    <input required type="text" id="ise_baslama_tarihi" name="ise_baslama_tarihi"
+                                        class="form-control datetimepicker-input" data-target="#startdate"
+                                        data-inputmask-alias="datetime" data-inputmask-inputformat="dd.mm.yyyy"
+                                        data-mask value="<?php echo $person["job_start_date"]; ?>" />
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="isten_ayrilma_tarihi">İşten Ayrılma Tarihi</label>
+
+                                <div class="input-group date" id="enddate" data-target-input="nearest">
+                                    <div class="input-group-prepend" data-target="#enddate"
+                                        data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                    <input type="text" id="isten_ayrilma_tarihi" name="isten_ayrilma_tarihi"
+                                        class="form-control datetimepicker-input" data-target="#enddate"
+                                        data-inputmask-alias="datetime" data-inputmask-inputformat="dd.mm.yyyy"
+                                        data-mask value="<?php echo $person["job_end_date"]; ?>" />
+
+                                </div>
+                            </div>
 
 
+
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
                 </div>
-                <!-- /.card-body -->
+                <div class="col-md-6">
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">Diğer Bilgiler</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="form-group">
+                                <label for="companies">Firması</label>
+                                <?php echo $func->companies("companies", $account_id) ?>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="companies">Projesi</label>
+                                <select name="projects" id="projects" class="select2 form-control">
+
+                                </select>
+
+                            </div>
+                            <div class="form-group">
+                                <label for="gunluk_ucret">Günlük Ücreti<span style="color:red">(*)</span> </label>
+                                <input required type="text" id="gunluk_ucret" name="gunluk_ucret" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone_number">Telefon<span style="color:red">(*)</span></label>
+                                <input required type="text" id="phone_number" name="phone_number" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Email Adresi </label>
+                                <input type="email" id="email" name="email" class="form-control">
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="iban_number">İban Numarası </label>
+                                <input type="text" id="iban_number" name="iban_number" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="job">Görevi</label>
+                                <select type="text" id="job" name="job" class="form-control select2">
+                                    <option value="">Görev Seçiniz</option>
+                                    <option value="1">Ustabaşı</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
             </div>
-            <!-- /.card -->
-        </div>
-        <div class="col-md-6">
-            <div class="card card-info">
-                <div class="card-header">
-                    <h3 class="card-title">Firma/Müşteri Bilgileri</h3>
+            <!-- row -->
 
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="FirmaSahisAdi">Firma/Müşteri Adı</label>
-                        <input type="text" id="FirmaSahisAdi" name="FirmaSahisAdi" 
-                        value="<?php echo $FirmaSahisAdi;?>" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="FirmaSahisTel">Telefon Numarası </label>
-                        <input type="phone" id="FirmaSahisTel" name="FirmaSahisTel" 
-                       value="<?php echo $FirmaSahisTel ?>" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="MusteriEmail">Mail Adresi</label>
-                        <input type="email" id="MusteriEmail" name="MusteriEmail" 
-                        value="<?php echo $MusteriEmail ?>" class="form-control">
-                    </div>
-                </div>
-                <!-- /.card-body -->
-            </div>
 
-            <div class="card">
-                <div class="card-header bg-gray">
-                    <h3 class="card-title">Teklif Bilgileri</h3>
 
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="Turu">Teklif Durumu<font color="red">*</font></label>
-                        <?php $func->teklifDurum($func->data("Durumu")) ;?>
-                    </div>
-                    <div class="form-group">
-                        <label for="TeklifVeren">Teklifi Hazırlayan</label>
-                        <input type="text" id="TeklifVeren" name="TeklifVeren" disabled readonly
-                         value="<?php echo $func->user_info($func->data('TeklifVeren'),'fullname') ;?>" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="offeremail">Mail Adresi</label>
-                        <input type="email" id="offeremail" disabled readonly
-                        value="<?php echo $func->user_info($func->data('TeklifVeren'),'email') ;?>" 
-                        class="form-control">
-                    </div>
-                </div>
-                <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-        </div>
+        </form>
     </div>
-    <!-- row -->
-
-
-    <button class="btn btn-secondary" onclick="RoutePage('offers/main',this)" data-title="Teklif Listesi" type="button">Listeye Dön</button>
-
-
-    <?php
-    $params = array(
-        "id" => $id,
-        "method" => "edit");
-    $params_json = $func->jsonEncode($params);
-    ?>
-
-    <button type="button" id="" data-title="Yeni Teklif"
-        onclick="submitFormbyAjax('offers/edit','<?php echo $params_json ?>')"
-        class="btn btn-primary float-right">Kaydet</button>
-</form>
-
-
-
-<script>
-    $(function () {
-        bsCustomFileInput.init();
-    });
-</script>
+</div>
 
 <script type="text/javascript">
     $(function () {
@@ -246,26 +265,30 @@ try {
 
     });
 
-    $(document).ready(function () {
-        $("#mekanadi").change(function () {
-            var mekanid = $(this).val();
-            $.ajax({
-                type: "POST",
-                url: "pages/salonlar.php",
-                data: { "mekanid": mekanid },
-                success: function (e) {
-                    $("#salonadi").text('');
-                    $("#salonadi").val('');
-                    $("#salonadi").html(e)
-                }
-
-            })
-        })
-    });
-
-    $("#returnlist").click(function () {
-        $("#liste").tab("show");
-        $("#page-title").text("Teklif Listesi");
+    $("#liste").click(function () {
+       RoutePagewithParams("person/main")
+        $("#page-title").text("Personel Listesi");
     })
 
+    $('[data-mask]').inputmask('dd.mm.yyyy')
+    $('#startdate,#enddate').datetimepicker({
+        format: 'DD.MM.YYYY',
+        locale: 'tr'
+
+    });
+
+    $("#companies").on("change", function () {
+        var company_id = $("#companies option:selected").val();
+        $.ajax({
+            url: "ajax.php",
+            type: "POST",
+            data: {
+                "company_id": company_id,
+                "action": "proje"
+            },
+            success: function (data) {
+                $('#projects').html(data);
+            }
+        })
+    })
 </script>

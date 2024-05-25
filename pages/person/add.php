@@ -1,5 +1,5 @@
 <?php
-require_once "../../include/requires.php";
+
 
 // echo "hesap id : " . $account_id;
 
@@ -30,10 +30,20 @@ if ($_POST && $_POST["method"] == "add") {
                                                     job = ? ,
                                                     company_id = ?,
                                                     project_id = ?       ");
-            $insq->execute(array($full_name, $kimlik_no, 
-                                $sigorta_no, $address, $gunluk_ucret, 
-                                $email, $iban_number, $job, 
-                                $company_id,$project_id));
+            $insq->execute(
+                array(
+                    $full_name,
+                    $kimlik_no,
+                    $sigorta_no,
+                    $address,
+                    $gunluk_ucret,
+                    $email,
+                    $iban_number,
+                    $job,
+                    $company_id,
+                    $project_id
+                )
+            );
 
 
         }
@@ -46,6 +56,7 @@ if ($_POST && $_POST["method"] == "add") {
 
 
 ?>
+
 
 <form id="myForm">
     <div class="row">
@@ -115,21 +126,6 @@ if ($_POST && $_POST["method"] == "add") {
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="isten_ayrilma_tarihi">İşten Ayrılma Tarihi</label>
-
-                        <div class="input-group date" id="enddate" data-target-input="nearest">
-                            <div class="input-group-prepend" data-target="#enddate" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                            </div>
-                            <input type="text" id="isten_ayrilma_tarihi" name="isten_ayrilma_tarihi"
-                                class="form-control datetimepicker-input" data-target="#enddate"
-                                data-inputmask-alias="datetime" data-inputmask-inputformat="dd.mm.yyyy" data-mask />
-
-                        </div>
-                    </div>
-
-
 
                 </div>
                 <!-- /.card-body -->
@@ -159,7 +155,7 @@ if ($_POST && $_POST["method"] == "add") {
                         <select name="projects" id="projects" class="select2">
 
                         </select>
-                        
+
                     </div>
                     <div class="form-group">
                         <label for="gunluk_ucret">Günlük Ücreti<span style="color:red">(*)</span> </label>
@@ -197,17 +193,8 @@ if ($_POST && $_POST["method"] == "add") {
     <!-- row -->
 
 
-    <button class="btn btn-secondary" id="returnlist" data-title="Personel Listesi" type="button">Listeye Dön</button>
 
 
-    <?php
-    $params = array("method" => "add");
-    $params_json = $func->jsonEncode($params);
-    ?>
-
-    <button type="button" id="" data-title="Yeni Personel"
-        onclick="submitFormbyAjax('person/main','<?php echo $params_json ?>')"
-        class="btn btn-primary float-right">Kaydet</button>
 </form>
 
 
@@ -223,11 +210,6 @@ if ($_POST && $_POST["method"] == "add") {
 
     });
 
-    $("#returnlist").click(function () {
-        $("#liste").tab("show");
-        $("#page-title").text("Personel Listesi");
-    })
-
     $('[data-mask]').inputmask('dd.mm.yyyy')
     $('#startdate,#enddate').datetimepicker({
         format: 'DD.MM.YYYY',
@@ -235,16 +217,16 @@ if ($_POST && $_POST["method"] == "add") {
 
     });
 
-    $("#companies").on("change",function(){
+    $("#companies").on("change", function () {
         var company_id = $("#companies option:selected").val();
         $.ajax({
-            url:"ajax.php",
+            url: "ajax.php",
             type: "POST",
-            data : {
-               "company_id": company_id,
-               "action" : "proje"
+            data: {
+                "company_id": company_id,
+                "action": "proje"
             },
-            success: function(data){
+            success: function (data) {
                 $('#projects').html(data);
             }
         })

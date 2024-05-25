@@ -155,7 +155,7 @@ if ($project_id == null) {
         text-align: left;
     }
 </style>
-<a href="" data-tooltip="* Tüm kolonu seçmek için tarihe basınız 
+<a href="javascript:" data-tooltip="* Tüm kolonu seçmek için tarihe basınız 
  * Seçimi kaldırmak için tekrar basınız
  * Seçili alanı silmek için delete tuşuna basınız.
  * Yaptığınız değişiklikleri kaydetmeyi unutmayın" data-tooltip-location="right">
