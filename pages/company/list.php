@@ -1,4 +1,5 @@
 <?php
+require_once "../../plugins/datatables/datatable.php";
 require_once "../../include/requires.php";
 //echo "acoount_id :" . $account_id ;
 if ($_POST && $_POST['method'] == "Delete") {
@@ -71,15 +72,15 @@ if ($_POST && $_POST['method'] == "Delete") {
 
                     <i class="fa-solid fa-ellipsis-vertical list-button" data-toggle="dropdown"></i>
                     <ul class="dropdown-menu">
-                        <li class="dropdown-item"><i class="fa-solid fa-edit dropdown-list-icon"></i><a href="#"
-                                onclick="RoutePage('offers/edit', this)" data-params="id=<?php echo $value["id"] ?>"
-                                data-title="Teklif Düzenle">
+                        <li class="dropdown-item edit"><i class="fa-solid fa-edit dropdown-list-icon"></i><a href="javascript:"
+                                data-params="<?php echo $row["id"] ?>"
+                                data-title="Firma Düzenle">
                                 Düzenle
                             </a>
                         </li>
 
                         <!-- <?php
-                        $params = array("id" => $row["id"], "delValue" => $row["full_name"]);
+                        $params = array("id" => $row["id"], "message" => $row["company_name"]);
                         $params_json = $func->jsonEncode($params);
                         ?> -->
 
@@ -111,3 +112,12 @@ if ($_POST && $_POST['method'] == "Delete") {
 <!-- /.content -->
 <?php
 include_once "../../plugins/datatables/datatablescripts.php" ?>
+
+<script>
+    $(".edit").click(function () {
+        pageTitle("", "Firma Güncelle");
+        var id = $(this).data("params");
+        RoutePagewithParams("company/edit", "?id=" + id);
+
+    })
+</script>

@@ -58,6 +58,7 @@ $message = "";
 
                 $_SESSION['companyID'] = $account["account_id"];
                 $_SESSION['UserFullName'] = $account["full_name"];
+                $_SESSION['accountType'] = $account["account_type"];
                 $_SESSION['accountID'] = $account["account_id"];
                 $_SESSION['id'] = $account["id"];
 

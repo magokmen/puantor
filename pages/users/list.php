@@ -62,7 +62,7 @@ if ($_POST && $_POST['method'] == "Delete") {
                     <?php
                     $params = array(
                         "id" => $value["id"],
-                        "delValue" => $value["full_name"] 
+                        "message" => $value["full_name"] .' isimli kullanıcı silinecektir. Devam etmek istiyor musunuz?'
                     );
                     $params_json = $func->jsonEncode($params);
                     ?>

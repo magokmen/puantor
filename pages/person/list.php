@@ -115,7 +115,10 @@ if ($_POST && $_POST['method'] == "Delete") {
                         <li class="dropdown-divider"></li>
 
                         <?php
-                        $params = array("id" => $value["id"], "delValue" => $value["full_name"]);
+                        $params = array(
+                            "id" => $value["id"], 
+                            "message" => $value["full_name"] .' isimli personel silinecektir.Devam etmek istiyoru musunuz?'
+                        );
                         $params_json = $func->jsonEncode($params);
                         ?>
 

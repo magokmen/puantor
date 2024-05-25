@@ -7,9 +7,6 @@
             <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Yeni Firma"
                     data-toggle="tab">Yeni Firma</a></li>
 
-            <li class="nav-item" ><a class="tabMenu nav-link " id="guncelle" href="#edit" data-title="Firma Güncelle"
-                    data-toggle="tab">Firma Güncelle</a></li>
-
         </ul>
     </div><!-- /.card-header -->
     <div class="card-body">
@@ -25,11 +22,6 @@
 
                 <?php include "list.php" ?>
             </div>
-
-            <div class="tab-pane fade" id="edit">
-                <?php include "edit.php" ?>
-
-            </div>
         </div>
 
        
@@ -42,7 +34,7 @@
     $(function () {
 
         var pagetitle = $("#page-title").text();
-        if (pagetitle == "Firmalarım") {
+        if (pagetitle == "Firma Listesi") {
             $("#liste").tab("show");
         }
 

@@ -67,7 +67,7 @@ $func = new Functions();
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
     <title>Puantor | Puantaj Takip Uygulaması</title>
-   
+
 </head>
 
 <body class="hold-transition sidebar-mini layout-navbar-fixed">
@@ -404,7 +404,7 @@ $func = new Functions();
 
                         <li class="nav-item">
                             <a class="nav-link nav-menu loadContent" href="#" data-page="company/main"
-                                data-title="Firmalarım">
+                                data-title="Firma Listesi">
 
                                 <i class="nav-icon fa-regular fa-folder-open"></i>
                                 <p>
@@ -455,6 +455,25 @@ $func = new Functions();
                             </a>
 
                         </li>
+
+                        <?php
+                        if ($_SESSION["accountType"] == 1) {
+                            ?>
+
+                            <li class="nav-item">
+                                <a class="nav-link nav-menu loadContent" href="#" data-page="accounts/list"
+                                    data-title="Hesaplar">
+
+                                    <i class="nav-icon  fa-solid fa-user-gear"></i>
+                                    <p>
+                                        Hesaplar 
+
+                                    </p>
+                                </a>
+
+                            </li>
+
+                        <?php } ?>
 
                         <li class="nav-item">
 
@@ -594,7 +613,7 @@ $func = new Functions();
     <!-- <script src="dist/js/pages/dashboard.js"></script> -->
 
     </script>
-  
+
 </body>
 
 </html>

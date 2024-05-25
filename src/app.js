@@ -131,8 +131,8 @@ function deleteRecordByAjax(page, params) {
   var parsedParams = JSON.parse(params);
   for (var key in parsedParams) {
     formData.append(key, parsedParams[key]);
-    if (key == "delValue") {
-      delMessage = parsedParams[key] + " isimli kaydı silmek istiyor musunuz?";
+    if (key == "message") {
+      delMessage = parsedParams[key] ;
     } else {
       delMessage = "Geçerli kaydı silmek istiyor musunuz?";
     }
@@ -194,9 +194,6 @@ function updateUrlAddresses(page) {
   //var newUrl = window.location.origin + "/" + page;
   window.history.pushState("", "", "/" + page);
 }
-
-
-
 function RoutePagewithParams(page, params = "") {
   $("#content").empty(); // İçeriği temizle
 
@@ -208,7 +205,7 @@ function RoutePagewithParams(page, params = "") {
   });
 }
 
-function RoutePage(page, element) {
+function RoutePage(page, element="") {
   //var params = $(element).data("params");
 
   var pageTitleElement = $("#page-title");

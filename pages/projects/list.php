@@ -64,7 +64,7 @@ if ($_POST && $_POST['method'] == "Delete") {
                     <?php echo $value["project_name"] ?>
                 </td>
                 <td>
-                    <?php echo $value["budget"]?>
+                    <?php echo $value["budget"] ?>
                 </td>
 
                 <td class="">
@@ -92,7 +92,10 @@ if ($_POST && $_POST['method'] == "Delete") {
                         <li class="dropdown-divider"></li>
 
                         <?php
-                        $params = array("id" => $value["id"], "delValue" => $value["full_name"]);
+                        $params = array(
+                            "id" => $value["id"],
+                            "message" => $value["project_name"] . ' isimli projeyi silmek istiyor musunuz?Devam ettiğiniz takdirde projeye ait ödemeler ve personeller silinecektir.'
+                        );
                         $params_json = $func->jsonEncode($params);
                         ?>
 

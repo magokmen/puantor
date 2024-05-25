@@ -19,7 +19,7 @@ require_once "../../include/requires.php";
 
         <!-- /.card -->
 
-        <button class="btn btn-secondary" id="returnlist" data-title="Firma Listesi" type="button">Listeye
+        <button class="btn btn-secondary" id="returnlist" data-title="Hesap Listesi" type="button">Listeye
             Dön</button>
 
         <?php
@@ -28,7 +28,7 @@ require_once "../../include/requires.php";
         ?>
 
         <button type="button" id="" data-title="Yeni Personel"
-            onclick="submitFormbyAjax('company/main','<?php echo $params_json ?>')"
+            onclick="submitFormbyAjax('person/main','<?php echo $params_json ?>')"
             class="btn btn-primary float-right">Kaydet</button>
     </div>
 </div>
@@ -41,7 +41,7 @@ require_once "../../include/requires.php";
         $("#returnlist").click(function () {
             var title = $(this).data("title");
 
-            RoutePagewithParams("company/main");
+            RoutePagewithParams("accounts/list");
             $("#page-title").text(title);
 
         })
