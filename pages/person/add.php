@@ -1,8 +1,5 @@
 <?php
 
-
-// echo "hesap id : " . $account_id;
-
 if ($_POST && $_POST["method"] == "add") {
 
     $full_name = @$_POST["full_name"];
@@ -14,8 +11,13 @@ if ($_POST && $_POST["method"] == "add") {
     $iban_number = @$_POST["iban_number"];
     $job = @$_POST["job"];
     $company_id = @$_POST["companies"];
-    $project_id = @$_POST["projects"];
-
+  
+    $projects= "";
+    foreach ($_POST["projects"] as $project) {
+		$projects .= $project . "|";
+	}
+    $projects = rtrim($projects, "|");
+    
     // Veritabanına güncelleme işlemini gerçekleştir
     try {
 
@@ -41,7 +43,7 @@ if ($_POST && $_POST["method"] == "add") {
                     $iban_number,
                     $job,
                     $company_id,
-                    $project_id
+                    $projects
                 )
             );
 
@@ -152,7 +154,8 @@ if ($_POST && $_POST["method"] == "add") {
 
                     <div class="form-group">
                         <label for="companies">Projesi</label>
-                        <select name="projects" id="projects" class="select2">
+                        <select class="select2" id="projects" name="projects[]" multiple="multiple" data-placeholder="Proje Seçiniz"
+                            data-dropdown-css-class="select2" style="width: 100%;">
 
                         </select>
 

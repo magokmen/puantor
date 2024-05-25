@@ -359,6 +359,7 @@ if ($project_id == null) {
 
                 <th>Adı Soyadı</th>
                 <th>Unvanı</th>
+                <th>Projesi</th>
                 <?php foreach ($dates as $date): ?>
                     <th class="vertical"><span><?php echo $date; ?></span></th>
                 <?php endforeach; ?>
@@ -384,13 +385,13 @@ if ($project_id == null) {
                             <?php echo $person["full_name"] ?></a></td>
                     <td class="text-nowrap" style="min-width:10vw;"><a class="user-job" href="#">
                             <?php echo $person["job"] ?></a></td>
-
+                    <td class="text-nowrap"><?php echo $func->getProjectName($person["project_id"]); ?></td>
                     <?php
                     foreach ($dates as $date): ?>
 
                         <?php
 
-                        $puantaj_id = $func->kayitVarmi($company_id, $person["id"], $year, $month);
+                        $puantaj_id = kayitVarmi($company_id,$project_id, $person["id"], $year, $month);
                         if ($puantaj_id > 0) {
                             $query = $con->prepare("SELECT * FROM puantaj where id = ?");
                             $query->execute(array($puantaj_id));

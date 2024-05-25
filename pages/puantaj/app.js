@@ -153,9 +153,9 @@ function puantaj_olustur() {
     var position = row.find("td:eq(1)").text();
 
     // Tarihler için döngü yap
-    row.find("td:gt(1)").each(function (index, td) {
+    row.find("td:gt(2)").each(function (index, td) {
       var date = $("table thead th")
-        .eq(index + 2)
+        .eq(index + 3)
         .text(); // İndeks + 2, 2. indeksten başlamasını sağlar
 
       var status = $(this).data("id") ? $(this).data("id") : ""; // Durum bilgisini al

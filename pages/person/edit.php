@@ -220,9 +220,10 @@ $person = $sql->fetch(PDO::FETCH_ASSOC);
 
                             <div class="form-group">
                                 <label for="companies">Projesi</label>
-                                <select name="projects" id="projects" class="select2 form-control">
+                                <?php echo $func->projects("projects",$person["company_id"],$person["project_id"]) ;?>
+                                <!-- <select name="projects" id="projects" class="select2 form-control">
                                     <option value="<?php echo $person["project_id"]?>"><?php echo $func->getProjectName($person["project_id"]) ;?></option>
-                                </select>
+                                </select> -->
 
                             </div>
                             <div class="form-group">

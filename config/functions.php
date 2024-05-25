@@ -307,16 +307,6 @@ class Functions
         return $params_json;
     }
 
-    public function kayitVarmi($company_id, $person, $year, $months)
-    {
-        global $con;
-        $sql = $con->prepare("SELECT * FROM puantaj where sub_company_id = ? AND person = ? AND yil = ? AND ay = ? ");
-        $sql->execute(array($company_id, $person, $year, $months));
-        $result = $sql->fetch(PDO::FETCH_ASSOC);
-        return $result ? $result["id"] : 0; // Eğer kayıt bulunamazsa null döndür
-    }
-
-
 }
 
 
@@ -353,3 +343,13 @@ function go($url, $time)
     }
 }
 
+
+
+function kayitVarmi($company_id,$project_id, $person, $year, $months)
+{
+    global $con;
+    $sql = $con->prepare("SELECT * FROM puantaj where company_id = ? AND project_id = ? AND person = ? AND yil = ? AND ay = ? ");
+    $sql->execute(array($company_id ,$project_id, $person, $year, $months));
+    $result = $sql->fetch(PDO::FETCH_ASSOC);
+    return $result ? $result["id"] : 0; // Eğer kayıt bulunamazsa null döndür
+}

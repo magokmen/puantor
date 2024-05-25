@@ -1,6 +1,7 @@
 <?php
 
 require_once "config/connect.php";
+require_once "config/functions.php";
 if ($_POST && $_POST["action"] == "kasa" ) {
     $vault_id =$_POST["vault_id"];
 
@@ -45,16 +46,16 @@ if ($_POST && $_POST["action"] == "puantaj") {
 
         try {
 
-            // $var_kayit = kayitVarmi(1, $full_name, $year, $months); 
-            $kayitVar = kayitVarmi($company_id, $full_name, $year, $months);
+           
+            $puantaj_id = kayitVarmi($company_id, $project_id,$full_name, $year, $months);
 
-            if ($kayitVar > 0) {
-                $sql = $con->prepare("UPDATE puantaj SET sub_company_id = ?, person = ? , yil = ?, ay = ?, datas = ?, company_id = ? WHERE id = ?");
-                $sql->execute(array($company_id, $full_name, $year, $months, $records_json, $kayitVar, $kayitVar));
+            if ($puantaj_id > 0) {
+                $sql = $con->prepare("UPDATE puantaj SET datas = ? WHERE id = ?");
+                $sql->execute(array($records_json, $puantaj_id));
 
             } else {
-                $sql = $con->prepare("INSERT INTO puantaj SET sub_company_id = ?, person = ? , yil = ?, ay = ?, datas = ?, company_id = ?");
-                $sql->execute(array($company_id, $full_name, $year, $months, $records_json, $kayitVar));
+                $sql = $con->prepare("INSERT INTO puantaj SET company_id = ?, project_id = ?, person = ? , yil = ?, ay = ?, datas = ?");
+                $sql->execute(array($company_id, $project_id, $full_name, $year, $months, $records_json));
             }
             $res = array(
                 "message" => "Puantaj Başarı ile kaydedildi!",
@@ -104,12 +105,3 @@ if ($_POST && $_POST["action"] == "proje") {
 }
 
 
-
-function kayitVarmi($company_id, $person, $year, $months)
-{
-    global $con;
-    $sql = $con->prepare("SELECT * FROM puantaj where sub_company_id = ? AND person = ? AND yil = ? AND ay = ? ");
-    $sql->execute(array($company_id, $person, $year, $months));
-    $result = $sql->fetch(PDO::FETCH_ASSOC);
-    return $result ? $result["id"] : 0; // Eğer kayıt bulunamazsa null döndür
-}
