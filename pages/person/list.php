@@ -34,6 +34,7 @@ if ($_POST && $_POST['method'] == "Delete") {
             <th>id</th>
             <th>Adı Soyadı</th>
             <th>Firma Adı</th>
+            <th>Proje Adı</th>
             <th>Sigorta No</th>
             <th>Telefon</th>
             <th>Adres</th>
@@ -65,11 +66,12 @@ if ($_POST && $_POST['method'] == "Delete") {
                     <?php echo $value["full_name"] ?>
                 </td>
                 <td>
-                    <?php echo $value["company_name"];
-
-
-                    ?>
+                    <?php echo $func->getCompanyName($value["company_id"]);?>
                 </td>
+                <td>
+                    <?php echo $func->getProjectName($value["project_id"]);?>
+                </td>
+
                 <td>
                     <?php $id = $value["sigorta_no"];
 
@@ -143,6 +145,7 @@ if ($_POST && $_POST['method'] == "Delete") {
             <th>id</th>
             <th>Adı Soyadı</th>
             <th>Firma Adı</th>
+            <th>Proje Adı</th>
             <th>Sigorta No</th>
             <th>Telefon</th>
             <th>Adres</th>

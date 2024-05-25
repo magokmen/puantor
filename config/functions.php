@@ -220,11 +220,26 @@ class Functions
     public static function getCompanyName($id)
     {
         global $con;
-        $sql = $con->prepare("Select * from accounts where id = ?");
+        $sql = $con->prepare("Select * from companies where id = ?");
         $sql->execute(array($id));
         $result = $sql->fetch(PDO::FETCH_ASSOC);
         if ($result) {
             return $result['company_name'];
+
+        } else {
+            return '';
+        }
+
+    }
+    
+    public static function getProjectName($id)
+    {
+        global $con;
+        $sql = $con->prepare("Select * from projects where id = ?");
+        $sql->execute(array($id));
+        $result = $sql->fetch(PDO::FETCH_ASSOC);
+        if ($result) {
+            return $result['project_name'];
 
         } else {
             return '';

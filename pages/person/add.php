@@ -14,6 +14,7 @@ if ($_POST && $_POST["method"] == "add") {
     $iban_number = @$_POST["iban_number"];
     $job = @$_POST["job"];
     $company_id = @$_POST["companies"];
+    $project_id = @$_POST["projects"];
 
     // Veritabanına güncelleme işlemini gerçekleştir
     try {
@@ -27,8 +28,12 @@ if ($_POST && $_POST["method"] == "add") {
                                                     email = ?, 
                                                     iban_number = ?,
                                                     job = ? ,
-                                                    company_id = ?");
-            $insq->execute(array($full_name, $kimlik_no, $sigorta_no, $address, $gunluk_ucret, $email, $iban_number, $job, $company_id));
+                                                    company_id = ?,
+                                                    project_id = ?       ");
+            $insq->execute(array($full_name, $kimlik_no, 
+                                $sigorta_no, $address, $gunluk_ucret, 
+                                $email, $iban_number, $job, 
+                                $company_id,$project_id));
 
 
         }
@@ -150,6 +155,13 @@ if ($_POST && $_POST["method"] == "add") {
                     </div>
 
                     <div class="form-group">
+                        <label for="companies">Projesi</label>
+                        <select name="projects" id="projects" class="select2">
+
+                        </select>
+                        
+                    </div>
+                    <div class="form-group">
                         <label for="gunluk_ucret">Günlük Ücreti<span style="color:red">(*)</span> </label>
                         <input required type="text" id="gunluk_ucret" name="gunluk_ucret" class="form-control">
                     </div>
@@ -222,4 +234,19 @@ if ($_POST && $_POST["method"] == "add") {
         locale: 'tr'
 
     });
+
+    $("#companies").on("change",function(){
+        var company_id = $("#companies option:selected").val();
+        $.ajax({
+            url:"ajax.php",
+            type: "POST",
+            data : {
+               "company_id": company_id,
+               "action" : "proje"
+            },
+            success: function(data){
+                $('#projects').html(data);
+            }
+        })
+    })
 </script>

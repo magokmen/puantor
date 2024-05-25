@@ -82,21 +82,24 @@ if ($_POST && $_POST["action"] == "puantaj") {
 if ($_POST && $_POST["action"] == "proje") {
     $company_id = $_POST["company_id"];
 
+    // Veritabanı bağlantınızı kontrol edin
+    // $con değişkeninin doğru şekilde tanımlandığından emin olun
+
     // Veritabanı sorgusu
-    $sql = $con->prepare("SELECT * FROM projects WHERE user_company_id = ?");
+    $sql = $con->prepare("SELECT * FROM projects WHERE company_id = ?");
     $sql->execute(array($company_id));
     $results = $sql->fetchAll(PDO::FETCH_ASSOC);
 
     if ($results) {
-        // Eğer kayıtlar varsa, select öğesini oluştur
-        echo '<select class="select2">';
+        // Eğer kayıtlar varsa, sadece option öğelerini oluştur
+        $html = '<option value="0">Proje Seçiniz</option>';
         foreach ($results as $result) {
-            echo '<option value="' .  $result["project_id"] . '">' . $result["project_name"] . '</option>';
+            $html .= '<option value="' . $result["id"] . '">' . $result["project_name"] . '</option>';
         }
-        echo '</select>';
+        echo $html; // HTML'yi döndürmek için echo kullanın
     } else {
         // Eğer kayıt yoksa bir mesaj döndürebilirsiniz
-        echo 'No projects found for this company.';
+        echo '<option value="">No projects found for this company.</option>';
     }
 }
 

@@ -409,7 +409,6 @@ $func = new Functions();
                                 <i class="nav-icon fa-regular fa-folder-open"></i>
                                 <p>
                                     Firmalarım
-
                                 </p>
                             </a>
 
