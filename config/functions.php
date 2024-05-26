@@ -111,8 +111,8 @@ class Functions
     public function projectsMultiple($name, $company_id, $ids)
     {
         global $con;
-        $html = '<select required id="' . $name . '" name="' . $name . '[]" multiple class="select2" style="width: 100%;">
-                    <option value="">Proje Seçiniz</option>';
+        $html = '<select id="' . $name . '" name="' . $name . '[]" multiple class="select2" style="width: 100%;">
+                    <option disabled value="0">Proje Seçiniz</option>';
     
         $sql = $con->prepare("SELECT id, project_name FROM projects WHERE company_id = ?");
         $sql->execute(array($company_id));

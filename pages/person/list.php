@@ -20,7 +20,7 @@ if ($_POST && $_POST['method'] == "Delete") {
 
     <div class="btn-group">
         <a type="button" href="pages/person/toxls.php" class="btn btn-default">XLS</a>
-        <a type="button" href="pages/person/toxlsw.php" class="btn btn-default">PDF</a>
+        <a type="button" href="#" class="btn btn-default">PDF</a>
         <button type="button" class="btn btn-default">Hakediş Listesi</button>
     </div>
 
@@ -50,7 +50,8 @@ if ($_POST && $_POST['method'] == "Delete") {
         <?php
         $sql = $con->prepare("SELECT p.*,c.account_id,c.company_name FROM `person` p
                                 LEFT JOIN companies c on c.id = p.company_id
-                                WHERE c.account_id = ?");
+                                WHERE c.account_id = ?
+                                ORDER BY p.id desc");
         $sql->execute(array($account_id));
         $result = $sql->fetchAll();
 
@@ -70,12 +71,12 @@ if ($_POST && $_POST['method'] == "Delete") {
                 <td>
                     <?php echo $func->getCompanyName($value["company_id"]); ?>
                 </td>
-
-                <td>
+                <?php $projectNames=$func->getProjectNames($value["project_id"]);?>
+                <td data-tooltip="<?php echo $projectNames ;?>">
                     <?php
                     //Personelin birden fazla projede çalışması durumunda veritabanındaki 
                     //değer parçalanarak proje isimlerine çevrilir
-                    echo $func->getProjectNames($value["project_id"]); ?>
+                    echo $func->shortProjectsName($projectNames) ?>
                 </td>
 
                 <td>

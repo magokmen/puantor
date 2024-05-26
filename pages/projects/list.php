@@ -1,8 +1,5 @@
 <?php
 require_once "../../plugins/datatables/datatable.php";
-include_once "../../config/connect.php";
-include_once "../../config/functions.php";
-
 
 
 if ($_POST && $_POST['method'] == "Delete") {

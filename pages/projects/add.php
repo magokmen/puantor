@@ -207,18 +207,7 @@ if ($_POST && $_POST["method"] == "add") {
     </div>
     <!-- row -->
 
-
-    <button class="btn btn-secondary" id="returnlist" data-title="Proje Listesi" type="button">Listeye Dön</button>
-
-
-    <?php
-    $params = array("method" => "add");
-    $params_json = $func->jsonEncode($params);
-    ?>
-
-    <button type="button" id="" data-title="Yeni Personel"
-        onclick="submitFormbyAjax('person/main','<?php echo $params_json ?>')"
-        class="btn btn-primary float-right">Kaydet</button>
+   
 </form>
 
 

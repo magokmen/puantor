@@ -16,7 +16,7 @@ $func = new Functions();
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="src/css/style.css">
     <link rel="apple-touch-icon" sizes="180x180" href="src/img/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="src/img/favicon-32x32.png">
@@ -321,7 +321,7 @@ $func = new Functions();
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" data-page="/person/main" data-title="Personel Listesi"
+                                    <a href="#" data-page="person/main" data-title="Personel Listesi"
                                         class="nav-link nav-menu loadContent">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Personel Listesi</p>

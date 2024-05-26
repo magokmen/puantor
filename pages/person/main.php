@@ -58,20 +58,21 @@ require_once "../../include/requires.php"; ?>
             $("#save").removeClass("d-none");
         }
     })
-
-    $("#liste").on("click", function(){
+    $("#liste").on("click", function () {
         $("#save").addClass("d-none");
     })
-    $("#yeni").on("click", function(){
+
+    $("#yeni").on("click", function () {
         $("#save").removeClass("d-none");
     })
+
     $(function () {
-        $(".tabMenu").click(function () {
-            var navLinkText = $(this).data("title");
-            $("#page-title").text(navLinkText);
-            setActiveMenu(this);
-        });
-    });
+  $(".tabMenu").click(function () {
+      var navLinkText = $(this).data("title");
+      $("#page-title").text(navLinkText);
+      setActiveMenu(this);
+  });
+});
     // $("#edit").click(function() {
     //     var title = $(this).text();
     //     $("#page-title").text(title);

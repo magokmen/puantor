@@ -5,8 +5,9 @@
                 "responsive": true,
                 "lengthChange": true,
                 "autoWidth": false,
+
                 "fixedColumns": true,
-                "order": [],
+                ordering: false,
                 language: {
                     info: '_PAGES_ sayfadan _PAGE_. sayfa gösteriliyor',
                     infoEmpty: 'Hiç kayıt bulunamadı',

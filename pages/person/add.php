@@ -12,8 +12,9 @@ if ($_POST && $_POST["method"] == "add") {
     $job = @$_POST["job"];
     $company_id = @$_POST["companies"];
   
-    $projects= isset($_POST["projects"]) ? $_POST["projects"] : 0;
-    if($projects){
+    $projects= "";
+
+    if(isset($_POST["projects"])){
         foreach ($_POST["projects"] as $project) {
             $projects .= $project . "|";
         }

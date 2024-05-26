@@ -1,9 +1,17 @@
 <?php 
+//serverdaki veritabanı bilgileri
+// $username = "mbeyazil_root";
+// $password = "54tJ29L^tg1[";
+// $hostname = "localhost";
+// $database = "mbeyazil_puantor";
 
-$username = "root";
-$password = "";
+//localdeki veritabanı bilgileri
+$username = "mbeyazil_root";
+$password = "54tJ29L^tg1[";
 $hostname = "localhost";
-$database = "puantor";
+$database = "mbeyazil_puantor";
+
+
 global $con;
 try {
     $con = new PDO(

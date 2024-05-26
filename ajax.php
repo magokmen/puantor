@@ -83,9 +83,6 @@ if ($_POST && $_POST["action"] == "puantaj") {
 if ($_POST && $_POST["action"] == "proje") {
     $company_id = $_POST["company_id"];
 
-    // Veritabanı bağlantınızı kontrol edin
-    // $con değişkeninin doğru şekilde tanımlandığından emin olun
-
     // Veritabanı sorgusu
     $sql = $con->prepare("SELECT * FROM projects WHERE company_id = ?");
     $sql->execute(array($company_id));
@@ -93,14 +90,14 @@ if ($_POST && $_POST["action"] == "proje") {
 
     if ($results) {
         // Eğer kayıtlar varsa, sadece option öğelerini oluştur
-        $html = '<option value="0">Proje Seçiniz</option>';
+        $html = '<option>Proje Seçiniz</option>';
         foreach ($results as $result) {
             $html .= '<option value="' . $result["id"] . '">' . $result["project_name"] . '</option>';
         }
         echo $html; // HTML'yi döndürmek için echo kullanın
     } else {
         // Eğer kayıt yoksa bir mesaj döndürebilirsiniz
-        echo '<option value="">No projects found for this company.</option>';
+        echo '<option disabled >Bu firmaya ait proje bulunamadı.</option>';
     }
 }
 
