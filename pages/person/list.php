@@ -19,8 +19,8 @@ if ($_POST && $_POST['method'] == "Delete") {
 <div style="margin-bottom:10px" class="row">
 
     <div class="btn-group">
-        <button type="button" class="btn btn-default">Pdf</button>
-        <button type="button" class="btn btn-default">XLS</button>
+        <a type="button" href="pages/person/toxls.php" class="btn btn-default">XLS</a>
+        <a type="button" href="pages/person/toxlsw.php" class="btn btn-default">PDF</a>
         <button type="button" class="btn btn-default">Hakediş Listesi</button>
     </div>
 
@@ -62,7 +62,7 @@ if ($_POST && $_POST['method'] == "Delete") {
                 <td>
                     <?php echo $value["id"] ?>
                 </td>
-                
+
                 <td>
                     <?php echo $value["full_name"] ?>
                 </td>
@@ -131,7 +131,7 @@ if ($_POST && $_POST['method'] == "Delete") {
                         <?php
                         $params = array(
                             "id" => $value["id"],
-                            "message" => $value["full_name"] . ' isimli personel silinecektir.Devam etmek istiyoru musunuz?'
+                            "message" => $value["full_name"] . ' isimli personel silinecektir.Devam etmek istiyor musunuz?'
                         );
                         $params_json = $func->jsonEncode($params);
                         ?>

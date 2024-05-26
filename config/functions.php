@@ -130,7 +130,7 @@ class Functions
     }
 
 
-    
+
     
     function getProjectNames($projectIds, $delimiter = "|") {
         global $func; // $func global değişkenini kullanmak için global bildirimi yapıyoruz
@@ -152,6 +152,21 @@ class Functions
         return "";
     }
     
+
+    function shortProjectsName($data, $delimiter = ',') {
+        $pieces = explode($delimiter, $data); // Veriyi belirli bir ayraçtan bölelim
+    
+        if (count($pieces) >= 2) {
+            $first_piece = trim($pieces[0]); // İlk parçayı alalım ve boşlukları temizleyelim
+            $second_piece = trim($pieces[1]); // İkinci parçayı alalım ve boşlukları temizleyelim
+    
+            // İkinci parçanın ilk karakterini ve dört noktayı ekleyerek kısaltılmış veriyi oluşturalım
+            $shorted = $first_piece . $delimiter . substr(trim($second_piece), 0, 1) . "....";
+            return $shorted;
+        } else {
+            return $data;
+        }
+    }
 
     public static function select_salon($id)
     {

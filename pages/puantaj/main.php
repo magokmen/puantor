@@ -40,25 +40,14 @@ if ($project_id == null) {
     $sql = $con->prepare("SELECT * FROM person where company_id = ? ");
     $sql->execute(array($company_id));
 } else {
-    
-    // $projects="";
-    // $projects= explode("|",$project_id);
-    // foreach ($projects as $proj){
-    //     $projects .= $proj .",";  
-    // };
 
-    // $projects = rtrim($projects, ","); // Sondaki virgülü kaldır
 
-    // $sql = $con->prepare("SELECT * FROM person where company_id = ? AND project_id IN ?");
-    // $sql->execute(array($company_id, $projects));
-    $projects = explode("|", $project_id); // Proje ID'lerini diziye ayır
-
-// SQL sorgusunu hazırlayalım
-$sql = $con->prepare("SELECT * FROM person WHERE company_id = ? AND project_id = ?");
-$sql->execute(array($company_id, $project_id));
+    // SQL sorgusunu hazırlayalım
+    $sql = $con->prepare("SELECT * FROM person WHERE company_id = ? AND project_id REGEXP CONCAT('[[:<:]]', ?, '[[:>:]]')");
+    $sql->execute(array($company_id, $project_id));
 
 }
-
+// echo "projects: ". $projects ;
 ?>
 
 
@@ -402,19 +391,29 @@ $sql->execute(array($company_id, $project_id));
                             <?php echo $person["full_name"] ?></a></td>
                     <td class="text-nowrap" style="min-width:10vw;"><a class="user-job" href="#">
                             <?php echo $person["job"] ?></a></td>
-                    <td class="text-nowrap"><?php echo $func->getProjectNames($person["project_id"]); ?></td>
+                    
+                    
+                    <?php
+                    $projectNames = $func->getProjectNames($person["project_id"]);
+                    ?>
+
+                    <td class="text-nowrap" data-tooltip="<?php echo $projectNames ;?>"><?php
+
+                    echo $func->shortProjectsName($projectNames);
+
+                    ?></td>
                     <?php
                     foreach ($dates as $date): ?>
 
                         <?php
 
-                        $puantaj_id = kayitVarmi($company_id,$project_id, $person["id"], $year, $month);
+                        $puantaj_id = kayitVarmi($company_id, $project_id, $person["id"], $year, $month);
                         if ($puantaj_id > 0) {
                             $query = $con->prepare("SELECT * FROM puantaj where id = ?");
                             $query->execute(array($puantaj_id));
                             $puantaj_data = $query->fetch(PDO::FETCH_ASSOC);
                             $data_json = json_decode($puantaj_data["datas"], true);
- 
+
                             $value = isset($data_json[$date]) ? $data_json[$date] : "0";
                             $func->puantajClass($value);
                             // echo "<td class='gun noselect' data-id=''>" . $value . "</td>";

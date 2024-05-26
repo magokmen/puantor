@@ -12,11 +12,14 @@ if ($_POST && $_POST["method"] == "add") {
     $job = @$_POST["job"];
     $company_id = @$_POST["companies"];
   
-    $projects= "";
-    foreach ($_POST["projects"] as $project) {
-		$projects .= $project . "|";
-	}
-    $projects = rtrim($projects, "|");
+    $projects= isset($_POST["projects"]) ? $_POST["projects"] : 0;
+    if($projects){
+        foreach ($_POST["projects"] as $project) {
+            $projects .= $project . "|";
+        }
+        $projects = rtrim($projects, "|");
+    }
+
     
     // Veritabanına güncelleme işlemini gerçekleştir
     try {
