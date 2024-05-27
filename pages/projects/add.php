@@ -1,46 +1,60 @@
 <?php
-require_once "../../config/connect.php";
-require_once "../../config/functions.php";
-
-$func = new Functions();
-
-
-$name = "";
-$description = "";
-$eventdate = "";
-
-
-
 
 if ($_POST && $_POST["method"] == "add") {
 
-    $full_name = @$_POST["full_name"];
-    $kimlik_no = @$_POST["kimlik_no"];
-    $sigorta_no = @$_POST["sigorta_no"];
-    $address = @$_POST["address"];
-    $gunluk_ucret = @$_POST["gunluk_ucret"];
-    $email = @$_POST["email"];
-    $iban_number = @$_POST["iban_number"];
-    $job = @$_POST["job"];
-    $company_id = 1;
 
+    $company_id = $_POST["companies"];
+    $project_name = $_POST["project_name"];
+    $budget = $_POST["budget"];
+    $city = $_POST["city"];
+    $town = $_POST["town"];
+    $address = $_POST["address"];
+    $email = $_POST["email"];
+    $account_number = $_POST["account_number"];
+    $notes = $_POST["notes"];
+    $start_date = $_POST["start_date"];
+    $file = $_FILES["project_file"]["name"];
+    $creator = sesset("id");
 
-
-    // Veritabanına güncelleme işlemini gerçekleştir
     try {
 
-        if ($full_name != Null) {
-            $insq = $con->prepare("INSERT INTO person SET  full_name = ? ,
-                                                    kimlik_no = ?, 
-                                                    sigorta_no = ?, 
-                                                    address = ?,  
-                                                    daily_wages = ?, 
-                                                    email = ?, 
-                                                    iban_number = ?,
-                                                    job = ? ,
-                                                    company_id = ?");
-            $insq->execute(array($full_name, $kimlik_no, $sigorta_no, $address, $gunluk_ucret, $email, $iban_number, $job, $company_id));
 
+        if (isset($file)) {
+            $uploadDir = '../../files/'; // Değiştirilmesi gereken dizin
+            $uploadPath = $uploadDir . basename($file);
+            // Dosyayı belirtilen dizine taşı,
+            if (move_uploaded_file($_FILES["project_file"]["tmp_name"], $uploadPath)) {
+
+            }
+            $insq = $con->prepare("INSERT INTO projects SET type = ? ,account_id = ?, company_id = ? , 
+                project_name = ? , 
+                budget = ? , 
+                city = ? , 
+                town = ? , 
+                address = ? , 
+                email = ? , 
+                account_number = ? , 
+                notes = ? , 
+                start_date = ? ,
+                file_name = ?,
+                creator = ? ");
+            $insq->execute(
+                array(
+                    $type,$account_id,
+                    $company_id,
+                    $project_name,
+                    $budget,
+                    $city,
+                    $town,
+                    $address,
+                    $email,
+                    $account_number,
+                    $notes,
+                    $start_date,
+                    $file,
+                    $creator
+                )
+            );
 
         }
 
@@ -70,10 +84,14 @@ if ($_POST && $_POST["method"] == "add") {
                 <div class="card-body">
 
                     <div class="form-group">
-                        <label for="company">Firma <span style="color:red">(*)</span></label>
-                        <input id="company" name="company" type="text" class="form-control" required>
+                        <label for="companies">Şirket <span style="color:red">(*)</span><small> İşlem yapacağınız şirketinizi seçiniz.</small></label>
+                        <?php echo $func->companies("companies", "") ?>
                     </div>
 
+                    <div class="form-group">
+                        <label for="companies">Firma Adı <span style="color:red">(*)</span></label>
+                        <?php echo $func->firms("firms", "") ?>
+                    </div>
 
                     <div class="form-group">
                         <label for="project_name">Proje Adı</label>
@@ -88,17 +106,18 @@ if ($_POST && $_POST["method"] == "add") {
 
 
                     <div class="form-group">
-                        <label for="sigorta_no">Açılış Bütçesi</label>
-                        <input id="sigorta_no" name="sigorta_no" type="text" class="form-control">
+                        <label for="budget">Açılış Bütçesi</label>
+                        <input id="budget" name="budget" type="text" class="form-control">
                     </div>
 
 
+
                     <div class="form-group">
-                        <label for="exampleInputFile">Sözleşmesi</label>
+                        <label for="project_file">Sözleşmesi</label>
                         <div class="input-group">
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="exampleInputFile">
-                                <label class="custom-file-label" for="exampleInputFile">Dosya Seçin</label>
+                                <input type="file" class="custom-file-input" name="project_file" id="project_file">
+                                <label class="custom-file-label" for="project_file">Dosya Seçin</label>
                             </div>
                         </div>
                     </div>
@@ -122,32 +141,20 @@ if ($_POST && $_POST["method"] == "add") {
                 <div class="card-body">
 
                     <div class="form-group">
-                        <label for="project_start_date">Proje Başlama Tarihi <span style="color:red">(*)</span></label>
+                        <label for="start_date">Proje Başlama Tarihi <span style="color:red">(*)</span></label>
 
                         <div class="input-group date" id="startdate" data-target-input="nearest">
                             <div class="input-group-prepend" data-target="#startdate" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
-                            <input required type="text" id="project_start_date" name="project_start_date"
+                            <input type="text" id="start_date" name="start_date"
                                 class="form-control datetimepicker-input" data-target="#startdate"
                                 data-inputmask-alias="datetime" data-inputmask-inputformat="dd.mm.yyyy" data-mask />
 
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="project_finish_date">Proje Bitiş Tarihi</label>
 
-                        <div class="input-group date" id="enddate" data-target-input="nearest">
-                            <div class="input-group-prepend" data-target="#enddate" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                            </div>
-                            <input type="text" id="project_finish_date" name="project_finish_date"
-                                class="form-control datetimepicker-input" data-target="#enddate"
-                                data-inputmask-alias="datetime" data-inputmask-inputformat="dd.mm.yyyy" data-mask />
-
-                        </div>
-                    </div>
 
 
 
@@ -170,13 +177,13 @@ if ($_POST && $_POST["method"] == "add") {
                 <div class="card-body">
 
                     <div class="form-group">
-                        <label for="project_city">Şehir<span style="color:red">(*)</span> </label>
-                        <input required type="text" id="project_city" name="project_city" class="form-control">
+                        <label for="city">Şehir<span style="color:red">(*)</span> </label>
+                        <input required type="text" id="city" name="city" class="form-control">
                     </div>
 
                     <div class="form-group">
-                        <label for="project_town">İlçe<span style="color:red">(*)</span></label>
-                        <input required type="text" id="project_town" name="project_town" class="form-control">
+                        <label for="town">İlçe<span style="color:red">(*)</span></label>
+                        <input required type="text" id="town" name="town" class="form-control">
                     </div>
 
                     <div class="form-group">
@@ -191,13 +198,13 @@ if ($_POST && $_POST["method"] == "add") {
 
 
                     <div class="form-group">
-                        <label for="iban_number">Hesap Numarası </label>
-                        <input type="text" id="iban_number" name="iban_number" class="form-control">
+                        <label for="account_number">Hesap Numarası </label>
+                        <input type="text" id="account_number" name="account_number" class="form-control">
                     </div>
 
                     <div class="form-group">
-                        <label for="project_notes">Proje Hakkında Not</label>
-                        <textarea type="text" id="project_notes" name="project_notes" class="form-control"></textarea>
+                        <label for="notes">Proje Hakkında Not</label>
+                        <textarea type="text" id="notes" name="notes" class="form-control"></textarea>
                     </div>
 
                 </div>
@@ -207,7 +214,7 @@ if ($_POST && $_POST["method"] == "add") {
     </div>
     <!-- row -->
 
-   
+
 </form>
 
 

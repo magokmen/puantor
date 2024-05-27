@@ -1,6 +1,8 @@
+
+
+
 <?php
 require_once "../../plugins/datatables/datatable.php";
-require_once "../../include/requires.php";
 
 
 if ($_POST && $_POST['method'] == "Delete") {
@@ -71,8 +73,8 @@ if ($_POST && $_POST['method'] == "Delete") {
                 <td>
                     <?php echo $func->getCompanyName($value["company_id"]); ?>
                 </td>
-                <?php $projectNames=$func->getProjectNames($value["project_id"]);?>
-                <td data-tooltip="<?php echo $projectNames ;?>">
+                <?php $projectNames = $func->getProjectNames($value["project_id"]); ?>
+                <td data-tooltip="<?php echo $projectNames; ?>">
                     <?php
                     //Personelin birden fazla projede çalışması durumunda veritabanındaki 
                     //değer parçalanarak proje isimlerine çevrilir
@@ -80,7 +82,7 @@ if ($_POST && $_POST['method'] == "Delete") {
                 </td>
 
                 <td>
-                    <?php $id = $value["sigorta_no"];?>
+                    <?php $id = $value["sigorta_no"]; ?>
                 </td>
 
                 <td>
@@ -120,7 +122,12 @@ if ($_POST && $_POST['method'] == "Delete") {
                                 Puantaj listesi
                             </a>
                         </li>
-
+                        <li class="dropdown-item"><i class="fa-regular fa-thumbs-down dropdown-list-icon"></i></i><a href="#"
+                                onclick="RoutePage('persone/deduction', this)" data-params="id=<?php echo $value["id"] ?>"
+                                data-title="Kesinti Ekle">
+                                Kesinti Ekle
+                            </a>
+                        </li>
 
 
 
@@ -141,12 +148,7 @@ if ($_POST && $_POST['method'] == "Delete") {
                                 onclick="deleteRecordByAjax('person/main','<?php echo $params_json ?>')">Sil!</a></li>
                     </ul>
 
-                    <!-- <button class="btn btn-sm bg-gray" onclick="RoutePage('/offers/edit', this)" data-title="Teklif Düzenle"
-                        data-params="id=<?php echo $value["id"] ?>"><i class="fas fa-edit"></i></button> -->
-                    <!-- 
-                    <button type="button" class="btn btn-sm bg-danger"
-                        onclick="deleteRecordByAjax('offers/main','<?php echo $value['id'] ?>')"><i
-                            class="fa fa-trash"></i></button> -->
+             
                 </td>
             </tr>
 
@@ -173,3 +175,5 @@ if ($_POST && $_POST['method'] == "Delete") {
 <!-- /.content -->
 <?php
 include_once "../../plugins/datatables/datatablescripts.php" ?>
+
+

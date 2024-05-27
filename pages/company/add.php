@@ -1,7 +1,7 @@
 <?php
 require_once "../../include/requires.php";
 
-echo "Kullanıcı id :" . $account_id ;
+// echo "Kullanıcı id :" . $account_id ;
 if ($account_id == ''){
     go("logout.php","");
 }
@@ -56,13 +56,13 @@ if ($_POST && $_POST["method"] == "add") {
                 <div class="card-body">
 
                     <div class="form-group">
-                        <label for="company_name">Firma Adı <span style="color:red">(*)</span></label>
+                        <label for="company_name">Şirket Adı <span style="color:red">(*)</span></label>
                         <input id="company_name" name="company_name" type="text" class="form-control" required>
                     </div>
 
 
                     <div class="form-group">
-                        <label for="company_official">Firma Yetkilisi</label>
+                        <label for="company_official">Yetkili Adı</label>
                         <input id="company_official" name="company_official" type="text" class="form-control">
                     </div>
 

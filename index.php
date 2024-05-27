@@ -344,26 +344,39 @@ $func = new Functions();
                                     <!-- <span class="badge badge-info right">6</span> -->
                                 </p>
                             </a>
+
+                            <!-- fonksiyon ile yönlendirmek istenirse a'nın classındaki loadcontent classı çıkarılmalı, -->
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="#" data-page="/projects/main" data-title="Alınan Projeler"
-                                        class="nav-link nav-menu loadContent">
+                                    <a href="#" onclick="RoutePagewithParams('projects/main','type=1')" data-title="Alınan Projeler"
+                                        class="nav-link nav-menu">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
-                                            Aldığım Projeler</strong>
+                                            Alınan Projeler</strong>
                                             <span class="right badge badge-danger">Yeni</span>
                                         </p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" data-page="/projects/main" data-title="Verilen Projeler"
-                                        class="nav-link nav-menu loadContent">
+                                    <a href="#" onclick="RoutePagewithParams('projects/main','type=2')" data-title="Verilen Projeler"
+                                        class="nav-link nav-menu">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Verdiğim Projeler</p>
+                                        <p>Verilen Projeler</p>
                                     </a>
                                 </li>
 
                             </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-menu loadContent" href="#" data-page="firms/main"
+                                data-title="Firma Listesi">
+
+                                <i class="nav-icon fa-regular fa-folder-open"></i>
+                                <p>
+                                    Firmalar
+                                </p>
+                            </a>
+
                         </li>
 
                         <li class="nav-item">
@@ -404,11 +417,11 @@ $func = new Functions();
 
                         <li class="nav-item">
                             <a class="nav-link nav-menu loadContent" href="#" data-page="company/main"
-                                data-title="Firma Listesi">
-
-                                <i class="nav-icon fa-regular fa-folder-open"></i>
+                                data-title="Şirket Listesi">
+                                <i class="nav-icon fa-solid fa-briefcase"></i>
+                               
                                 <p>
-                                    Firmalarım
+                                    Şirketlerim
                                 </p>
                             </a>
 

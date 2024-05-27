@@ -72,7 +72,7 @@ class Functions
         global $account_id;
         $html = ' <select required id="' . $name . '" name="' . $name . '"  class="select2"
                             style="width: 100%;">
-                            <option value="">Firma Seçiniz</option>';
+                            <option value="">Şirket Seçiniz</option>';
 
         $sql = $con->prepare("Select id,company_name from companies WHERE account_id = ?");
         $sql->execute(array($account_id));
@@ -87,10 +87,32 @@ class Functions
         echo $html;
     }
 
+    
+    public function firms($name, $id)
+    {
+        global $con;
+        global $account_id;
+        $html = ' <select required id="' . $name . '" name="' . $name . '"  class="select2"
+                            style="width: 100%;">
+                            <option value="">Firma Seçiniz</option>';
+
+        $sql = $con->prepare("Select id,firm_name from firms WHERE account_id = ?");
+        $sql->execute(array($account_id));
+
+        while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
+            $firm_name = $row['firm_name'];
+            $html .= '<option ' . ($id == $row["id"] ? " selected" : '') . ' value=' . $row["id"] . '>' . $firm_name . '</option>';
+        }
+        ;
+
+        $html .= ' </select>';
+        echo $html;
+    }
 
     public function projects($name,$company_id, $id)
     {
         global $con;
+        global $account_id;
         $html = ' <select required id="' . $name . '" name="' . $name . '"  class="select2"
                             style="width: 100%;">
                             <option value="">Proje Seçiniz</option>';
@@ -335,11 +357,11 @@ class Functions
         </select>';
     }
 
-    public static function getTableColumns($tableName)
+    public function getTableColumns($tableName)
     {
         global $con; // $ac değişkeni global olarak tanımlanmalı veya fonksiyon içinde tanımlanmalıdır
 
-        $ttquery = $con->prepare("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'yakarallevici' AND TABLE_NAME = ?");
+        $ttquery = $con->prepare("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'puantor' AND TABLE_NAME = ?");
         $ttquery->execute([$tableName]);
 
         $columns = '';
@@ -369,7 +391,9 @@ class Functions
 
 }
 
-
+function sesset($field){
+    return htmlspecialchars($_SESSION[$field]);
+}
 
 function emailVarmi($mail_address,$table="accounts")
 {
@@ -405,11 +429,11 @@ function go($url, $time)
 
 
 
-function kayitVarmi($company_id,$project_id, $person, $year, $months)
+function kayitVarmi($company_id, $person, $year, $months)
 {
     global $con;
-    $sql = $con->prepare("SELECT * FROM puantaj where company_id = ? AND project_id = ? AND person = ? AND yil = ? AND ay = ? ");
-    $sql->execute(array($company_id ,$project_id, $person, $year, $months));
+    $sql = $con->prepare("SELECT * FROM puantaj where company_id = ? AND  person = ? AND yil = ? AND ay = ? ");
+    $sql->execute(array($company_id , $person, $year, $months));
     $result = $sql->fetch(PDO::FETCH_ASSOC);
     return $result ? $result["id"] : 0; // Eğer kayıt bulunamazsa null döndür
 }

@@ -2,12 +2,11 @@
     $(document).ready(function () {
         $(function () {
             table = $("#example1").DataTable({
-                "responsive": true,
+                destroy : true,
                 "lengthChange": true,
                 "autoWidth": false,
-
                 "fixedColumns": true,
-                ordering: false,
+                ordering: [],
                 language: {
                     info: '_PAGES_ sayfadan _PAGE_. sayfa gösteriliyor',
                     infoEmpty: 'Hiç kayıt bulunamadı',

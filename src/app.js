@@ -150,11 +150,13 @@ function deleteRecordByAjax(page, params) {
     if (result.isConfirmed) {
       // If confirmed, trigger AJAX request to delete record
       var deleteUrl = "pages/" + page + ".php";
-
+      
+  
       //formData elemanlarını console ekranında göstermek için
       // formData.forEach(function (value, key) {
       //   console.log(key + ": " + value);
       // });
+
 
       fetch(deleteUrl, {
         method: "POST",
@@ -162,14 +164,12 @@ function deleteRecordByAjax(page, params) {
       })
         .then((response) => response.text())
         .then((data) => {
-          Swal.fire({
-            title: "Başarılı!",
-            text: "Kayıt başarı ile silindi!",
-            icon: "success",
-          }).then(() => {
-            // Redirect to the page
-            // Assuming you have an updatePageContent function
-
+             Swal.fire({
+             title: "Başarılı!",
+             text: "Kayıt başarı ile silindi!",
+             icon: "success",
+            
+            }).then(() => {
             updatePageContent(data);
           });
         })
@@ -182,7 +182,9 @@ function deleteRecordByAjax(page, params) {
             icon: "error",
           });
         });
-    }
+
+
+    }//is confirmed
   });
 }
 
@@ -195,6 +197,7 @@ function updateUrlAddresses(page) {
   window.history.pushState("", "", "/" + page);
 }
 function RoutePagewithParams(page, params = "") {
+  
   $("#content").empty(); // İçeriği temizle
 
   $("#content").animate({ opacity: 0 }, 300, function () {

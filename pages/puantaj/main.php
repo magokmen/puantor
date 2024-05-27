@@ -1,4 +1,5 @@
 <?php
+
 require_once "../../include/requires.php";
 
 function isWeekend($date)
@@ -32,35 +33,58 @@ $month = isset($_GET["months"]) ? $_GET["months"] : date('m');
 $days = $func->daysInMonth($month, $year);
 $dates = generateDates($year, $month, $days);
 
+$search_name = isset($_GET["search_name"]) ? $_GET["search_name"] : "";
+$search_job = isset($_GET["search_job"]) ? $_GET["search_job"] : "";
+$search_projects = isset($_GET["search_projects"]) ? $_GET["search_projects"] : "";
+if ($search_name == null & $search_job == null & $search_projects == null) {
+    $collapsed = "collapse";
+} else {
+    $collapsed = "";
+}
+
+
+
+
 
 //Firmaya göre kayıt yapılan personeller getirilir
-
 if ($project_id == null) {
-
-    $sql = $con->prepare("SELECT * FROM person where company_id = ? ");
+    // $search_name = "%" . $search_name . "%";
+    // $search_job = "%" . $search_job . "%";
+    // $search_projects = "%" . $search_projects . "%";
+    $sql = $con->prepare("SELECT * FROM person WHERE company_id = ?");
     $sql->execute(array($company_id));
-} else {
 
+} else {
 
     // SQL sorgusunu hazırlayalım
     $sql = $con->prepare("SELECT * FROM person WHERE company_id = ? AND project_id REGEXP CONCAT('[[:<:]]', ?, '[[:>:]]')");
     $sql->execute(array($company_id, $project_id));
-
 }
-// echo "projects: ". $projects ;
+
 ?>
 
 
 
 <style>
     .gun {
-        width: 40px;
-        min-width: 40px;
-        height: 30px;
+        width: 35px;
+        min-width: 35px;
         background-color: white;
         text-align: center;
         cursor: pointer;
+        font-weight: 600;
+        
     }
+
+    .dataTables_wrapper .dataTables_filter {
+        display: none;
+    }
+    .table tbody tr td{
+        max-height: 35px !important;
+        height: 35px !important;
+        padding: 2px !important;
+        vertical-align: middle !important;
+       }
 
     .gun.clicked {
         background-color: #FFED00 !important;
@@ -75,9 +99,15 @@ if ($project_id == null) {
         cursor: pointer;
     }
 
+    th.ld {
+        min-width: 100px;
+    }
+
     th.vertical {
         height: 100px;
         width: 40px;
+        min-width: 40px;
+        max-width: 40px;
         vertical-align: bottom;
         padding: 0;
         line-height: 1.5;
@@ -87,6 +117,8 @@ if ($project_id == null) {
     th.vertical span {
         writing-mode: vertical-rl;
         transform: rotate(180deg);
+
+        width: 40px;
         white-space: nowrap;
         bottom: 0;
         position: absolute;
@@ -161,15 +193,15 @@ if ($project_id == null) {
         text-align: left;
     }
 </style>
-<a href="javascript:" data-tooltip="* Tüm kolonu seçmek için tarihe basınız 
+<!-- <a href="javascript:" data-tooltip="* Tüm kolonu seçmek için tarihe basınız 
  * Seçimi kaldırmak için tekrar basınız
  * Seçili alanı silmek için delete tuşuna basınız.
  * Yaptığınız değişiklikleri kaydetmeyi unutmayın" data-tooltip-location="right">
 
     <i class="fa-solid fa-circle-info"></i>
-</a>
+</a> -->
 
-<div class="card card-outline card-info">
+<div class="card card-outline card-info p-3">
 
     <div class="modal fade" id="modal-default">
 
@@ -318,25 +350,55 @@ if ($project_id == null) {
     <!-- Kullanıcı Özet Bilgileri -->
 
 
+    <div id="accordion">
+        <div class="card shadow-none">
+            <div class="card-header">
+                <div class="row d-flex justify-content-between">
 
+                    <a data-toggle="collapse" href="#collapseOne">
+                        <i class="fa-solid fa-magnifying-glass"></i>
 
-    <div class="row">
-        <div class="col-md-12">
+                    </a>
 
-            <button type="button" id="" onclick="puantaj_olustur()"
-                class="btn btn-primary float-right m-2">Kaydet</button>
+                    <button type="button" id="" onclick="puantaj_olustur()" class="btn btn-primary float-right"><i
+                            class="fas fa-save mr-2"></i> Kaydet</button>
+                </div>
 
-
+            </div>
+            <div id="collapseOne" class="<?php echo $collapsed; ?>" data-parent="#accordion">
+                <div class="row p-3">
+                    <div class="col-md-3 col-sm-12">
+                        <input type="text" class="form-control" autocomplete="off" id="search_name"
+                            value="<?php echo $search_name; ?>" placeholder="Adı Soyadına göre ara...">
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                        <input type="text" class="form-control" id="search_job" value="<?php echo $search_job; ?>"
+                            placeholder="Unvanına göre ara... ">
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                        <input type="text" class="form-control" id="search_projects"
+                            value="<?php echo $search_projects; ?>" placeholder="Projesine göre ara... ">
+                    </div>
+                </div>
+            </div>
         </div>
 
+
     </div>
-    <div class="row p-3">
+
+
+
+    <div class="row pb-3">
         <div class="col-md-3 col-sm-12">
-            <label for="company">Firma <font color="red">*</font></label>
+            <label for="company">Şirket <font color="red">*</font>
+                <span class="pointer" data-tooltip="İşlem yapacağınız şirketiniz" data-tooltip-location="right">
+                    <i class="text-blue fa-solid fa-circle-info"></i>
+                </span>
+            </label>
             <?php $func->companies("company", $company_id) ?>
         </div>
         <div class="col-md-3 col-sm-12">
-            <label for="project">Şantiye/Proje <font color="red">*</font></label>
+            <label for="project">Proje <font color="red">*</font></label>
             <?php echo $func->projects("project", $company_id, $project_id) ?>
         </div>
         <div class="col-md-3 col-sm-12">
@@ -359,13 +421,14 @@ if ($project_id == null) {
         </div>
     </div>
 
-    <table class="table table-bordered table-sm table-responsive p-2">
+
+    <table id="pTable" class="table table-bordered table-sm table-responsive p-2">
         <thead>
             <tr>
 
-                <th>Adı Soyadı</th>
-                <th>Unvanı</th>
-                <th>Projesi</th>
+                <th class="ld">Adı Soyadı</th>
+                <th class="ld">Unvanı</th>
+                <th class="ld">Projesi</th>
                 <?php foreach ($dates as $date): ?>
                     <th class="vertical"><span><?php echo $date; ?></span></th>
                 <?php endforeach; ?>
@@ -391,23 +454,23 @@ if ($project_id == null) {
                             <?php echo $person["full_name"] ?></a></td>
                     <td class="text-nowrap" style="min-width:10vw;"><a class="user-job" href="#">
                             <?php echo $person["job"] ?></a></td>
-                    
-                    
+
+
                     <?php
                     $projectNames = $func->getProjectNames($person["project_id"]);
                     ?>
 
-                    <td class="text-nowrap" data-tooltip="<?php echo $projectNames ;?>"><?php
+                    <td class="text-nowrap" data-tooltip="<?php echo $projectNames; ?>"><?php
 
-                    echo $func->shortProjectsName($projectNames);
+                       echo $func->shortProjectsName($projectNames);
 
-                    ?></td>
+                       ?></td>
                     <?php
                     foreach ($dates as $date): ?>
 
                         <?php
 
-                        $puantaj_id = kayitVarmi($company_id, $project_id, $person["id"], $year, $month);
+                        $puantaj_id = kayitVarmi($company_id, $person["id"], $year, $month);
                         if ($puantaj_id > 0) {
                             $query = $con->prepare("SELECT * FROM puantaj where id = ?");
                             $query->execute(array($puantaj_id));
@@ -441,6 +504,8 @@ if ($project_id == null) {
 
 </div>
 
+<script src="plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
 
 <script src="pages/puantaj/app.js"></script>
 <script>
@@ -449,9 +514,58 @@ if ($project_id == null) {
         $('.select2').select2({
             minimumResultsForSearch: Infinity
         })
+        function filterWaitingDemand() {
+            var table = $('#pTable').DataTable();
+            table.column(5).search('Ma').draw();
+
+        }
 
 
+        $("#search").click(function () {
+            var search_name = $("#search_name").val();
+            var search_job = $("#search_job").val();
+            var search_projects = $("#search_projects").val();
 
+
+        })
+
+        var table = new DataTable('#pTable', {
+            //filter: false,
+            //    searching : true,
+            ordering: false,
+            language: {
+                info: '_PAGES_ sayfadan _PAGE_. sayfa gösteriliyor',
+                infoEmpty: 'Hiç kayıt bulunamadı',
+                infoFiltered: '(_MAX_ kayıt filtrelendi)',
+                lengthMenu: 'Her sayfada _MENU_ kayıt göster',
+                zeroRecords: 'Kayıt Yok!',
+                search: "Ara",
+                paginate: {
+                    "first": "İlk",
+                    "last": "Son",
+                    "next": "Sonraki",
+                    "previous": "Önceki"
+                },
+            },
+        });
+
+        // #column3_search is a <input type="text"> element
+        $('#search_name').on('keyup', function () {
+            table
+                .columns(0)
+                .search(this.value)
+                .draw();
+        });
+        // $('#search_name input').on('keyup change clear', function () {
+        //     alert("dsfa")
+
+        //         // var colIndex = $(this).index();
+        //         var table=$("#pTable").Datatable();
+        //         table
+        //             .column(0)
+        //             .search(this.value)
+        //             .draw();
+        // });
     })
 
 </script>

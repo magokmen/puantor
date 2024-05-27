@@ -47,7 +47,7 @@ if ($_POST && $_POST["action"] == "puantaj") {
         try {
 
            
-            $puantaj_id = kayitVarmi($company_id, $project_id,$full_name, $year, $months);
+            $puantaj_id = kayitVarmi($company_id,$full_name, $year, $months);
 
             if ($puantaj_id > 0) {
                 $sql = $con->prepare("UPDATE puantaj SET datas = ? WHERE id = ?");
@@ -100,5 +100,8 @@ if ($_POST && $_POST["action"] == "proje") {
         echo '<option disabled >Bu firmaya ait proje bulunamadı.</option>';
     }
 }
+
+
+
 
 

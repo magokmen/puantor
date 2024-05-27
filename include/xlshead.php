@@ -6,10 +6,10 @@
 // $database = "mbeyazil_puantor";
 
 //localdeki veritabanı bilgileri
-$username = "mbeyazil_root";
-$password = "54tJ29L^tg1[";
+$username = "root";
+$password = "";
 $hostname = "localhost";
-$database = "mbeyazil_puantor";
+$database = "puantor";
 
 
 global $con;

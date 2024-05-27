@@ -21,7 +21,14 @@ if ($_POST && $_POST["method"] == "add") {
     $job_start_date = @$_POST["job_start_date"];
     $job_end_date = @$_POST["job_end_date"];
 
+    $projects= "";
 
+    if(isset($_POST["projects"])){
+        foreach ($_POST["projects"] as $project) {
+            $projects .= $project . "|";
+        }
+        $projects = rtrim($projects, "|");
+    }
     // Veritabanına güncelleme işlemini gerçekleştir
     try {
 
@@ -52,7 +59,7 @@ if ($_POST && $_POST["method"] == "add") {
                     $iban_number,
                     $job,
                     $company_id,
-                    $project_id,
+                    $projects,
                     $job_start_date,
                     $job_end_date,
                     $id

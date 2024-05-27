@@ -2,11 +2,11 @@
 <div class="card card-outline card-info">
     <div class="card-header p-2">
         <ul class="nav nav-pills">
-            <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Firma Listesi"
-                    data-toggle="tab">Firma Listesi</a>
+            <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Şirket Listesi"
+                    data-toggle="tab">Şirket Listesi</a>
             </li>
-            <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Yeni Firma"
-                    data-toggle="tab">Yeni Firma</a></li>
+            <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Yeni Şirket"
+                    data-toggle="tab">Yeni Şirket</a></li>
 
         </ul>
     </div><!-- /.card-header -->
@@ -35,11 +35,11 @@
     $(function () {
 
         var pagetitle = $("#page-title").text();
-        if (pagetitle == "Firma Listesi") {
+        if (pagetitle == "Şirket Listesi") {
             $("#liste").tab("show");
         }
 
-        if (pagetitle == "Yeni Firma") {
+        if (pagetitle == "Yeni Şirket") {
             $("#yeni").tab("show");
         }
     })

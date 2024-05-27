@@ -1,6 +1,6 @@
 <?php
 require_once "../../plugins/datatables/datatable.php";
-
+require_once "../../include/requires.php";
 
 
 
@@ -31,7 +31,6 @@ if ($_POST && isset($_POST["action"]) == "delete-project") {
     <div class="btn-group">
         <button type="button" class="btn btn-default">Pdf</button>
         <button type="button" class="btn btn-default">XLS</button>
-        <button type="button" class="btn btn-default">Hakediş Listesi</button>
     </div>
 
 </div>
@@ -41,13 +40,13 @@ if ($_POST && isset($_POST["action"]) == "delete-project") {
     <thead>
 
         <tr>
-            <th>id</th>
+            <th class="text-center">id</th>
             <th>Firma Adı</th>
-            <th>Proje Adı</th>
-            <th>Başl.Bütçe</th>
+            <th>Firma Yetkilisi</th>
             <th>Şehir</th>
             <th>İlçe</th>
-            <th>Başlama Tarihi</th>
+            <th>Telefon</th>
+            <th>Email</th>
             <th>Adres</th>
             <th>#</th>
         </tr>
@@ -56,8 +55,8 @@ if ($_POST && isset($_POST["action"]) == "delete-project") {
 
 
         <?php
-        $sql = $con->prepare("Select * from projects WHERE type = ? and account_id = ? ORDER BY id desc");
-        $sql->execute(array($type,$account_id));
+        $sql = $con->prepare("Select * from firms WHERE account_id = ? ORDER BY id desc");
+        $sql->execute(array($account_id));
         $result = $sql->fetchAll();
 
 
@@ -65,19 +64,19 @@ if ($_POST && isset($_POST["action"]) == "delete-project") {
 
             ?>
             <tr>
-                <td>
+                <td class="text-center">
                     <?php echo $value["id"] ?>
                 </td>
                 <td>
-                    <?php echo $func->getCompanyName($value["company_id"]) ?>
+                    <?php echo $func->getCompanyName($value["firm_name"]) ?>
                 </td>
                 <td>
-                    <?php echo $value["project_name"] ?>
+                    <?php echo $value["firm_official"] ?>
                 </td>
-                <td><?php echo $value["budget"] ?></td>
                 <td><?php echo $value["city"] ?></td>
                 <td><?php echo $value["town"] ?></td>
-                <td><?php echo $value["start_date"] ?></td>
+                <td><?php echo $value["phone"] ?></td>
+                <td><?php echo $value["email"] ?></td>
                 <td><?php echo $value["address"] ?></td>
 
                 <td class="">
@@ -125,13 +124,13 @@ if ($_POST && isset($_POST["action"]) == "delete-project") {
     <tfoot>
 
         <tr>
-            <th>id</th>
+        <th class="text-center">id</th>
             <th>Firma Adı</th>
-            <th>Proje Adı</th>
-            <th>Başl.Bütçe</th>
+            <th>Firma Yetkilisi</th>
             <th>Şehir</th>
             <th>İlçe</th>
-            <th>Başlama Tarihi</th>
+            <th>Telefon</th>
+            <th>Email</th>
             <th>Adres</th>
             <th>#</th>
         </tr>
