@@ -44,6 +44,20 @@ class Functions
 
     }
 
+    public function getFirmName($id)
+    {
+        global $con;
+        $sql = $con->prepare("Select id,firm_name from firms where id = ?");
+        $sql->execute(array($id));
+        $result = $sql->fetch(PDO::FETCH_ASSOC);
+        if ($result) {
+            return $result['firm_name'];
+
+        } else {
+            return '';
+        }
+
+    }
 
        public function getCityName($id)
     {

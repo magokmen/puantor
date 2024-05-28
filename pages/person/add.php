@@ -204,26 +204,9 @@ if ($_POST && $_POST["method"] == "add") {
 
 </form>
 
-
+<script src="../../src/component.js"></script>
 <script type="text/javascript">
-    $(function () {
-        //Initialize Select2 Elements
-        $('.select2').select2()
-
-        //Initialize Select2 Elements
-        $('.select2bs4').select2({
-            theme: 'bootstrap4'
-        })
-
-    });
-
-    $('[data-mask]').inputmask('dd.mm.yyyy')
-    $('#startdate,#enddate').datetimepicker({
-        format: 'DD.MM.YYYY',
-        locale: 'tr'
-
-    });
-
+ 
     $("#companies").on("change", function () {
         var company_id = $("#companies option:selected").val();
         $.ajax({

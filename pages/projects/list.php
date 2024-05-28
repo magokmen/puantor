@@ -42,6 +42,7 @@ if ($_POST && isset($_POST["action"]) == "delete-project") {
 
         <tr>
             <th>id</th>
+            <th>Şirket Adı</th>
             <th>Firma Adı</th>
             <th>Proje Adı</th>
             <th>Başl.Bütçe</th>
@@ -72,6 +73,9 @@ if ($_POST && isset($_POST["action"]) == "delete-project") {
                     <?php echo $func->getCompanyName($value["company_id"]) ?>
                 </td>
                 <td>
+                    <?php echo $func->getFirmName($value["firm_id"]) ?>
+                </td>
+                <td>
                     <?php echo $value["project_name"] ?>
                 </td>
                 <td><?php echo $value["budget"] ?></td>
@@ -85,7 +89,7 @@ if ($_POST && isset($_POST["action"]) == "delete-project") {
                     <i class="fa-solid fa-ellipsis-vertical list-button" data-toggle="dropdown"></i>
                     <ul class="dropdown-menu">
                         <li class="dropdown-item"><i class="fa-solid fa-edit dropdown-list-icon"></i><a href="#"
-                                onclick="RoutePage('projects/edit', this)" data-params="id=<?php echo $value["id"] ?>"
+                                onclick="RoutePagewithParams('projects/edit','id=<?php echo $value['id'] ?>&type=<?php echo $type ;?>')" 
                                 data-title="Proje Düzenle">
                                 Düzenle
                             </a>
@@ -125,7 +129,8 @@ if ($_POST && isset($_POST["action"]) == "delete-project") {
     <tfoot>
 
         <tr>
-            <th>id</th>
+        <th>id</th>
+            <th>Şirket Adı</th>
             <th>Firma Adı</th>
             <th>Proje Adı</th>
             <th>Başl.Bütçe</th>

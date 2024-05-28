@@ -276,29 +276,32 @@ $person = $sql->fetch(PDO::FETCH_ASSOC);
     </div>
 </div>
 
+
+<script src="../../src/component.js"></script>
 <script type="text/javascript">
-    $(function () {
-        //Initialize Select2 Elements
-        $('.select2').select2()
-
-        //Initialize Select2 Elements
-        $('.select2bs4').select2({
-            theme: 'bootstrap4'
+ 
+    $("#companies").on("change", function () {
+        var company_id = $("#companies option:selected").val();
+        $.ajax({
+            url: "ajax.php",
+            type: "POST",
+            data: {
+                "company_id": company_id,
+                "action": "proje"
+            },
+            success: function (data) {
+                $('#projects').html(data);
+            }
         })
+    })
+</script>
 
-    });
-
+<script type="text/javascript">
+   
     $("#liste").click(function () {
        RoutePagewithParams("person/main")
         $("#page-title").text("Personel Listesi");
     })
-
-    $('[data-mask]').inputmask('dd.mm.yyyy')
-    $('#startdate,#enddate').datetimepicker({
-        format: 'DD.MM.YYYY',
-        locale: 'tr'
-
-    });
 
     $("#companies").on("change", function () {
         var company_id = $("#companies option:selected").val();

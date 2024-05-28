@@ -85,7 +85,7 @@ if ($_POST && $_POST['method'] == "Delete") {
                     <ul class="dropdown-menu">
                         <li class="dropdown-item edit"><i class="fa-solid fa-edit dropdown-list-icon"></i>
                             <a href="#" onclick="RoutePagewithParams('company/edit','id=<?php echo $row['id'] ?>')"
-                                data-title="Firma Güncelleme">
+                                data-title="Şirket Güncelleme">
                                 Güncelle
                             </a>
                         </li>

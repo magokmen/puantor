@@ -126,23 +126,3 @@ if ($_POST && $_POST["method"] == "add") {
     <!-- row -->
   
 </form>
-
-
-<script>
-
-    $('.select2').select2()
-
-    $('[data-mask]').inputmask('dd.mm.yyyy')
-    $('#startdate,#enddate').datetimepicker({
-        format: 'DD.MM.YYYY',
-        locale: 'tr'
-
-    });
-    $("#returnlist").click(function () {
-        var pageTitle = $("#returnlist").data("title");
-        $("#liste").tab("show");
-        $("#page-title").text(pageTitle);
-
-    })
-
-</script>

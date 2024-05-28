@@ -69,12 +69,13 @@ $result = $sql->fetch(PDO::FETCH_OBJ);
             <?php
             $params = array(
                 "method" => "add",
-                "id" => $id
+                "id" => $id,
+              
             );
             $params_json = $func->jsonEncode($params);
             ?>
 
-            <button type="button" id="save" data-title="Yeni Personel"
+            <button type="button" id="save" data-title="Firma Güncelle"
                 onclick="submitFormbyAjax('company/edit','<?php echo $params_json ?>')" class="btn btn-info"><i
                     class="fas fa-save mr-2"></i> Kaydet</button>
         </div>
@@ -201,23 +202,12 @@ $result = $sql->fetch(PDO::FETCH_OBJ);
 
 <script>
 
-    $('.select2').select2()
+ 
     $("#liste").click(function () {
         RoutePagewithParams("company/main")
         $("#page-title").text("Şirket Listesi");
     })
     $("#page-title").text("Şirket Güncelle");
-    $('[data-mask]').inputmask('dd.mm.yyyy')
-    $('#startdate,#enddate').datetimepicker({
-        format: 'DD.MM.YYYY',
-        locale: 'tr'
 
-    });
-    $("#returnlist").click(function () {
-        var pageTitle = $("#returnlist").data("title");
-        $("#liste").tab("show");
-        $("#page-title").text(pageTitle);
-
-    })
 
 </script>

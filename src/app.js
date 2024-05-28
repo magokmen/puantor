@@ -1,5 +1,3 @@
-
-
 function submitFormbyAjax(page, params, messageType = "alert") {
   var form = document.getElementById("myForm");
   var formData = new FormData(form);
@@ -37,12 +35,6 @@ function submitFormbyAjax(page, params, messageType = "alert") {
       .catch((error) => console.error(error));
   }
 }
-
-
-
-
-
-
 
 function formatDate(date) {
   let day = date.getDate();
@@ -132,7 +124,7 @@ function deleteRecordByAjax(page, params) {
   for (var key in parsedParams) {
     formData.append(key, parsedParams[key]);
     if (key == "message") {
-      delMessage = parsedParams[key] ;
+      delMessage = parsedParams[key];
     } else {
       delMessage = "Geçerli kaydı silmek istiyor musunuz?";
     }
@@ -150,13 +142,11 @@ function deleteRecordByAjax(page, params) {
     if (result.isConfirmed) {
       // If confirmed, trigger AJAX request to delete record
       var deleteUrl = "pages/" + page + ".php";
-      
-  
+
       //formData elemanlarını console ekranında göstermek için
       // formData.forEach(function (value, key) {
       //   console.log(key + ": " + value);
       // });
-
 
       fetch(deleteUrl, {
         method: "POST",
@@ -164,12 +154,11 @@ function deleteRecordByAjax(page, params) {
       })
         .then((response) => response.text())
         .then((data) => {
-             Swal.fire({
-             title: "Başarılı!",
-             text: "Kayıt başarı ile silindi!",
-             icon: "success",
-            
-            }).then(() => {
+          Swal.fire({
+            title: "Başarılı!",
+            text: "Kayıt başarı ile silindi!",
+            icon: "success",
+          }).then(() => {
             updatePageContent(data);
           });
         })
@@ -182,9 +171,7 @@ function deleteRecordByAjax(page, params) {
             icon: "error",
           });
         });
-
-
-    }//is confirmed
+    } //is confirmed
   });
 }
 
@@ -197,7 +184,6 @@ function updateUrlAddresses(page) {
   window.history.pushState("", "", "/" + page);
 }
 function RoutePagewithParams(page, params = "") {
-  
   $("#content").empty(); // İçeriği temizle
 
   $("#content").animate({ opacity: 0 }, 300, function () {
@@ -208,7 +194,7 @@ function RoutePagewithParams(page, params = "") {
   });
 }
 
-function RoutePage(page, element="") {
+function RoutePage(page, element = "") {
   //var params = $(element).data("params");
 
   var pageTitleElement = $("#page-title");
@@ -248,7 +234,7 @@ function loadPage(e) {
   // Sayfanın var olup olmadığını kontrol et
   $.ajax({
     url: "pages/" + page + ".php",
-    type: 'HEAD',
+    type: "HEAD",
     error: function () {
       // Sayfa yoksa 404'e yönlendir
       pagelink = "404.php";
@@ -258,7 +244,7 @@ function loadPage(e) {
       // Sayfa varsa
       pagelink = "pages/" + page + ".php";
       loadContent(pagelink);
-    }
+    },
   });
 }
 
@@ -271,8 +257,6 @@ function loadContent(pagelink) {
     });
   });
 }
-
-
 
 $(function () {
   $(".loadContent").on("click", loadPage);
@@ -381,15 +365,9 @@ function showMessage(message, type) {
   }
 }
 
-
 $(function () {
   $('[data-toggle="tooltip"]').tooltip();
 });
-
-
-
-
-
 
 function SaveNewKategory(p_name, selectName) {
   var Addcategory = document.getElementById("Addcategory").value;

@@ -184,46 +184,17 @@ $result = $sql->fetch(PDO::FETCH_OBJ);
 </div>
 
 
-
+<script src="../../src/component.js"></script>
 
 <script type="text/javascript">
     $("#page-title").text("Firma Güncelle");
-    $('.select2').select2()
-    $(function () {
-        
-        //Initialize Select2 Elements
-        $('.select2bs4').select2({
-            theme: 'bootstrap4'
-        })
-
-    });
-
+ 
     $("#liste").click(function () {
        RoutePagewithParams("firms/main")
         $("#page-title").text("Firma Listesi");
     })
 
-    $("#city").on("change",function(){
-        var il_id= ($(this).val())
 
-        $.ajax({
-            url:"ajax.php",
-            type:"POST",
-            data:{
-                il_id :il_id,
-                "action" : "ilce",
-            },
-            success:function(data){
-               $("#town").html(data)
-            }
-        })
-    })
  
 
-    $('[data-mask]').inputmask('dd.mm.yyyy')
-    $('#startdate,#enddate').datetimepicker({
-        format: 'DD.MM.YYYY',
-        locale: 'tr'
-
-    });
 </script>

@@ -1,10 +1,13 @@
 <?php
 
 // echo "Kullanıcı id :" . $account_id ;
+
+$type = isset($_GET["type"]) ? $_GET["type"] : $_POST["type"];
 if ($_POST && $_POST["method"] == "add") {
 
 
     $company_id = $_POST["companies"];
+    $firm_id = $_POST["firms"];
     $project_name = $_POST["project_name"];
     $budget = $_POST["budget"];
     $city = $_POST["city"];
@@ -27,7 +30,8 @@ if ($_POST && $_POST["method"] == "add") {
             if (move_uploaded_file($_FILES["project_file"]["tmp_name"], $uploadPath)) {
 
             }
-            $insq = $con->prepare("INSERT INTO projects SET type = ? ,account_id = ?, company_id = ? , 
+        }
+        $insq = $con->prepare("INSERT INTO projects SET type = ? ,account_id = ?, company_id = ? , firm_id = ?,
                 project_name = ? , 
                 budget = ? , 
                 city = ? , 
@@ -39,25 +43,27 @@ if ($_POST && $_POST["method"] == "add") {
                 start_date = ? ,
                 file_name = ?,
                 creator = ? ");
-            $insq->execute(
-                array(
-                    $type,$account_id,
-                    $company_id,
-                    $project_name,
-                    $budget,
-                    $city,
-                    $town,
-                    $address,
-                    $email,
-                    $account_number,
-                    $notes,
-                    $start_date,
-                    $file,
-                    $creator
-                )
-            );
+        $insq->execute(
+            array(
+                $type,
+                $account_id,
+                $company_id,
+                $firm_id,
+                $project_name,
+                $budget,
+                $city,
+                $town,
+                $address,
+                $email,
+                $account_number,
+                $notes,
+                $start_date,
+                $file,
+                $creator
+            )
+        );
 
-        }
+
 
     } catch (PDOException $ex) {
         echo $ex->getMessage();
@@ -83,9 +89,10 @@ if ($_POST && $_POST["method"] == "add") {
                     </div>
                 </div>
                 <div class="card-body">
-
+                    <input type="text" name="type" readonly disabled value="<?php echo $type; ?>">
                     <div class="form-group">
-                        <label for="companies">Şirket <span style="color:red">(*)</span><small> İşlem yapacağınız şirketinizi seçiniz.</small></label>
+                        <label for="companies">Şirket <span style="color:red">(*)</span><small> İşlem yapacağınız
+                                şirketinizi seçiniz.</small></label>
                         <?php echo $func->companies("companies", "") ?>
                     </div>
 
@@ -99,14 +106,6 @@ if ($_POST && $_POST["method"] == "add") {
                         <input id="project_name" name="project_name" type="text" class="form-control">
                     </div>
 
-
-                    <div class="form-group">
-                        <label for="company_official">Yetkilisi</label>
-                        <input id="company_official" name="company_official" type="text" class="form-control">
-                    </div>
-
-
-                   
 
 
                 </div>
@@ -180,11 +179,11 @@ if ($_POST && $_POST["method"] == "add") {
 
                     <div class="form-group">
                         <label for="city">Şehir<span style="color:red">(*)</span> </label>
-                        <?php echo $func->cities("city","") ;?>
+                        <?php echo $func->cities("city", ""); ?>
                     </div>
 
                     <div class="form-group">
-                        <label for="town">İlçe<span style="color:red">(*)</span></label>
+                        <label for="town">İlçe</label>
                         <select name="town" id="town" class="select2"></select>
                     </div>
 
@@ -219,45 +218,4 @@ if ($_POST && $_POST["method"] == "add") {
 
 </form>
 
-
-<script type="text/javascript">
-    $(function () {
-        //Initialize Select2 Elements
-        $('.select2').select2()
-
-        //Initialize Select2 Elements
-        $('.select2bs4').select2({
-            theme: 'bootstrap4'
-        })
-
-    });
-    $(document).ready(function(){
-        $("#city").on("change",function(){
-        var il_id= ($(this).val())
-
-        $.ajax({
-            url:"ajax.php",
-            type:"POST",
-            data:{
-                il_id :il_id,
-                "action" : "ilce",
-            },
-            success:function(data){
-               $("#town").html(data)
-            }
-        })
-    })
-    })
-
-    $("#returnlist").click(function () {
-        $("#liste").tab("show");
-        $("#page-title").text("Alınan Projeler");
-    })
-
-    $('[data-mask]').inputmask('dd.mm.yyyy')
-    $('#startdate,#enddate').datetimepicker({
-        format: 'DD.MM.YYYY',
-        locale: 'tr'
-
-    });
-</script>
+<script src="../../src/component.js"></script>

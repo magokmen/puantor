@@ -1,6 +1,6 @@
 <?php require_once "../../include/requires.php";
 
-$type = isset($_GET["type"]) ? $_GET["type"] : $_POST["type"] ;
+$type = isset($_GET["type"]) ? $_GET["type"] : @$_POST["type"] ;
 $pageTitle = ($type == 1) ? "Alınan Projeler" : "Verilen Projeler";
 ?>
 

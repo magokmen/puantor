@@ -146,39 +146,4 @@ if ($_POST) {
 
 </form>
 
-
-<script type="text/javascript">
-    $('.select2').select2()
-    $(function () {
-        
-        //Initialize Select2 Elements
-        $('.select2bs4').select2({
-            theme: 'bootstrap4'
-        })
-
-    });
-
-    $("#city").on("change",function(){
-        var il_id= ($(this).val())
-
-        $.ajax({
-            url:"ajax.php",
-            type:"POST",
-            data:{
-                il_id :il_id,
-                "action" : "ilce",
-            },
-            success:function(data){
-               $("#town").html(data)
-            }
-        })
-    })
- 
-
-    $('[data-mask]').inputmask('dd.mm.yyyy')
-    $('#startdate,#enddate').datetimepicker({
-        format: 'DD.MM.YYYY',
-        locale: 'tr'
-
-    });
-</script>
+<script src="../../src/component.js"></script>
