@@ -1,5 +1,6 @@
 <?php
 
+// echo "Kullanıcı id :" . $account_id ;
 if ($_POST && $_POST["method"] == "add") {
 
 
@@ -105,22 +106,7 @@ if ($_POST && $_POST["method"] == "add") {
                     </div>
 
 
-                    <div class="form-group">
-                        <label for="budget">Açılış Bütçesi</label>
-                        <input id="budget" name="budget" type="text" class="form-control">
-                    </div>
-
-
-
-                    <div class="form-group">
-                        <label for="project_file">Sözleşmesi</label>
-                        <div class="input-group">
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" name="project_file" id="project_file">
-                                <label class="custom-file-label" for="project_file">Dosya Seçin</label>
-                            </div>
-                        </div>
-                    </div>
+                   
 
 
                 </div>
@@ -154,6 +140,22 @@ if ($_POST && $_POST["method"] == "add") {
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <label for="budget">Açılış Bütçesi</label>
+                        <input id="budget" name="budget" type="text" class="form-control">
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="project_file">Sözleşmesi</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="project_file" id="project_file">
+                                <label class="custom-file-label" for="project_file">Dosya Seçin</label>
+                            </div>
+                        </div>
+                    </div>
 
 
 
@@ -178,12 +180,12 @@ if ($_POST && $_POST["method"] == "add") {
 
                     <div class="form-group">
                         <label for="city">Şehir<span style="color:red">(*)</span> </label>
-                        <input required type="text" id="city" name="city" class="form-control">
+                        <?php echo $func->cities("city","") ;?>
                     </div>
 
                     <div class="form-group">
                         <label for="town">İlçe<span style="color:red">(*)</span></label>
-                        <input required type="text" id="town" name="town" class="form-control">
+                        <select name="town" id="town" class="select2"></select>
                     </div>
 
                     <div class="form-group">
@@ -229,6 +231,23 @@ if ($_POST && $_POST["method"] == "add") {
         })
 
     });
+    $(document).ready(function(){
+        $("#city").on("change",function(){
+        var il_id= ($(this).val())
+
+        $.ajax({
+            url:"ajax.php",
+            type:"POST",
+            data:{
+                il_id :il_id,
+                "action" : "ilce",
+            },
+            success:function(data){
+               $("#town").html(data)
+            }
+        })
+    })
+    })
 
     $("#returnlist").click(function () {
         $("#liste").tab("show");

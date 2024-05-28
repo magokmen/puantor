@@ -44,27 +44,74 @@ class Functions
 
     }
 
-    // public function teklifDurum($val)
-    // {
-    //     $array_tur = ["Bekleyen", "Teklif Verildi", "İptal Edildi"];
-    //     $selectHTML = '<select id="Durumu" name="Durumu" class="form-control select2" style="width: 100%;">';
-    //     foreach ($array_tur as $durum) {
-    //         $selectHTML .= '<option ' . ($durum == $val ? " selected" : "") . ' value="' . $durum . '">' . $durum . '</option>';
-    //     }
-    //     $selectHTML .= '</select>';
-    //     echo $selectHTML;
-    // }
 
-    // public function organizasyon_turu($tur)
-    // {
-    //     $array_tur = ["Düğün", "Kına", "Genel"];
-    //     $selectHTML = '<select id="Turu" name="Turu" class="form-control select2" style="width: 100%;">';
-    //     foreach ($array_tur as $org) {
-    //         $selectHTML .= '<option ' . ($org == $tur ? " selected" : "") . ' value=' . $org . '>' . $org . '</option>';
-    //     }
-    //     $selectHTML .= '</select>';
-    //     echo $selectHTML;
-    // }
+       public function getCityName($id)
+    {
+        global $con;
+        $sql = $con->prepare("Select id,il_adi from il where id = ?");
+        $sql->execute(array($id));
+        $result = $sql->fetch(PDO::FETCH_ASSOC);
+        if ($result) {
+            return $result['il_adi'];
+
+        } else {
+            return '';
+        }
+
+    }
+    public function getTownName($id)
+    {
+        global $con;
+        $sql = $con->prepare("Select id,ilce_adi from ilce where id = ?");
+        $sql->execute(array($id));
+        $result = $sql->fetch(PDO::FETCH_ASSOC);
+        if ($result) {
+            return $result['ilce_adi'];
+
+        } else {
+            return '';
+        }
+
+    }
+    public function cities($name, $id)
+    {
+        global $con;
+        $html = ' <select required id="' . $name . '" name="' . $name . '"  class="select2"
+                            style="width: 100%;">
+                            <option value="">İl Seçiniz</option>';
+
+        $sql = $con->prepare("Select id,il_adi from il");
+        $sql->execute();
+
+        while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
+            $il_adi = $row['il_adi'];
+            $html .= '<option ' . ($id == $row["id"] ? " selected" : '') . ' value=' . $row["id"] . '>' . $il_adi . '</option>';
+        }
+        ;
+
+        $html .= ' </select>';
+        echo $html;
+    }
+    
+    public function towns($name, $id)
+    {
+        global $con;
+        $html = ' <select required id="' . $name . '" name="' . $name . '"  class="select2"
+                            style="width: 100%;">
+                            <option value="">İlce Seçiniz</option>';
+
+        $sql = $con->prepare("Select id,ilce_adi from ilce");
+        $sql->execute();
+
+        while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
+            $ilce_adi = $row['ilce_adi'];
+            $html .= '<option ' . ($id == $row["id"] ? " selected" : '') . ' value=' . $row["id"] . '>' . $ilce_adi . '</option>';
+        }
+        ;
+
+        $html .= ' </select>';
+        echo $html;
+    }
 
     public function companies($name, $id)
     {
@@ -436,4 +483,12 @@ function kayitVarmi($company_id, $person, $year, $months)
     $sql->execute(array($company_id , $person, $year, $months));
     $result = $sql->fetch(PDO::FETCH_ASSOC);
     return $result ? $result["id"] : 0; // Eğer kayıt bulunamazsa null döndür
+}
+
+function formatdDate($date){
+    // Zaman damgası oluşturma
+$timestamp = strtotime($date);
+
+// Yeni formatta tarihi stringe dönüştürme
+return date("d.m.Y", $timestamp);
 }

@@ -1,7 +1,7 @@
 <?php
-require_once "../../include/requires.php";
 
-// echo "Kullanıcı id :" . $account_id ;
+
+//  echo "Kullanıcı id :" . $account_id ;
 if ($account_id == ''){
     go("logout.php","");
 }
@@ -124,19 +124,7 @@ if ($_POST && $_POST["method"] == "add") {
 
     </div>
     <!-- row -->
-
-
-    <button class="btn btn-secondary" id="returnlist" data-title="Firma Listesi" type="button">Listeye Dön</button>
-
-
-    <?php
-    $params = array("method" => "add");
-    $params_json = $func->jsonEncode($params);
-    ?>
-
-    <button type="button" data-title="Yeni Firma"
-        onclick="submitFormbyAjax('company/main','<?php echo $params_json ?>')"
-        class="btn btn-primary float-right">Kaydet</button>
+  
 </form>
 
 

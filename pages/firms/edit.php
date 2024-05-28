@@ -1,12 +1,15 @@
 <?php
-
+require_once "../../include/requires.php";
 // echo "Kullanıcı id :" . $account_id ;
 if ($account_id == '') {
     go("logout.php", "");
 }
-// echo "hesap no :" . $account_id;
 
-if ($_POST) {
+$id = isset($_GET["id"]) ? $_GET["id"] : @$_POST["id"];
+
+echo "hesap no :" . $id;
+
+if ($_POST && $_POST['method']== "update") {
 
 
     try {
@@ -22,23 +25,54 @@ if ($_POST) {
         $phone                  = @$_POST["phone"];
         $notes                  = @$_POST["notes"];
 
-        $insq = $con->prepare("INSERT INTO firms SET account_id = ? , 
-                                                    firm_name = ? ,firm_official = ? , 
-                                                    city = ? ,town = ? ,email = ? ,account_number = ? , 
-                                                    tax_number = ? ,address = ? ,phone = ? ,notes = ?");
+        $insq = $con->prepare("UPDATE  firms SET account_id = ? , 
+                                       firm_name = ? ,firm_official = ? , 
+                                       city = ? ,town = ? ,email = ? ,account_number = ? , 
+                                       tax_number = ? ,address = ? ,phone = ? ,notes = ? WHERE id = ?");
                                 
                                 $insq->execute(array($account_id, 
                                                     $firm_name, $firm_official, 
                                                     $city, $town, $email, $account_number, 
-                                                    $tax_number, $address, $phone, $notes));
+                                                    $tax_number, $address, $phone, $notes, $id));
 
     } catch (PDOException $ex) {
         showAlert($ex->getMessage());
     }
 }
 
+$sql = $con->prepare("SELECT * FROM firms WHERE id = ?");
+$sql->execute(array($id));
+$result = $sql->fetch(PDO::FETCH_OBJ);
+
 ?>
-<form id="myForm">
+
+<div class="card card-outline card-info">
+    <div class="card-header p-2">
+
+        <div class="d-flex justify-content-between">
+
+
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Personel Listesi"
+                        data-toggle="tab">Tüm Firmalar</a>
+                </li>
+           </ul>
+            <?php
+            $params = array(
+                "method" => "update",
+                "id" => $id);
+            $params_json = $func->jsonEncode($params);
+            ?>
+
+            <button type="button" id="save" data-title="Yeni Personel"
+                onclick="submitFormbyAjax('firms/edit','<?php echo $params_json ?>')"
+                class="btn btn-info">Kaydet</button>
+        </div>
+
+    </div><!-- /.card-header -->
+    <div class="card-body">
+
+    <form id="myForm">
     <div class="row">
 
         <div class="col-md-6">
@@ -56,40 +90,42 @@ if ($_POST) {
 
                     <div class="form-group">
                         <label for="firm_name">Firma Adı<span style="color:red">(*)</span></label>
-                        <input id="firm_name" name="firm_name" type="text" class="form-control">
+                        <input id="firm_name" name="firm_name" type="text" value="<?php echo $result->firm_name ;?>"
+                        class="form-control">
                     </div>
 
 
                     <div class="form-group">
-                        <label for="company_official">Yetkilisi</label>
-                        <input id="company_official" name="company_official" type="text" class="form-control">
+                        <label for="firm_official">Yetkilisi</label>
+                        <input id="firm_official" name="firm_official" type="text" value="<?php echo $result->firm_official ;?>"
+                        class="form-control">
                     </div>
 
                     <div class="form-group">
                         <label for="phone">Telefon <span style="color:red">(*)</span></label>
-                        <input type="text" required id="phone" name="phone" class="form-control">
+                        <input type="text" required id="phone" name="phone" value="<?php echo $result->phone ;?>"
+                        class="form-control">
                     </div>
 
 
                     <div class="form-group">
                         <label for="email">Email Adresi </label>
-                        <input type="email" id="email" name="email" class="form-control">
+                        <input type="email" id="email" name="email" value="<?php echo $result->email ;?>"
+                        class="form-control">
                     </div>
 
                     <div class="form-group">
                         <label for="tax_number">Vergi Numarası </label>
-                        <input type="text" id="tax_number" name="tax_number" class="form-control">
+                        <input type="text" id="tax_number" name="tax_number" value="<?php echo $result->tax_number ;?>" 
+                        class="form-control">
                     </div>
 
 
                     <div class="form-group">
                         <label for="account_number">Hesap Numarası </label>
-                        <input type="text" id="account_number" name="account_number" class="form-control">
+                        <input type="text" id="account_number" name="account_number" value="<?php echo $result->account_number ;?>" 
+                        class="form-control">
                     </div>
-
-
-
-
 
                 </div>
                 <!-- /.card-body -->
@@ -113,27 +149,24 @@ if ($_POST) {
 
                     <div class="form-group">
                         <label for="city">Şehir </label>
-                        <?php echo $func->cities("city","") ?>
+                        <?php echo $func->cities("city",$result->city) ?>
                     </div>
 
                     <div class="form-group">
-                        <label for="town">İlçe</span></label>
-                        <select name="town" id="town" class="select2"></select>
+                        <label for="town">İlçe</label>
+                        <?php echo $func->towns("town",$result->town) ?>
                     </div>
 
                     <div class="form-group">
                         <label for="address">Adresi</label>
-                        <textarea type="text" id="address" name="address" class="form-control"></textarea>
+                        <textarea type="text" id="address" name="address" class="form-control"><?php echo $result->address ;?>
+                        </textarea>
                     </div>
 
-
-
-
-
-
-                    <div class="form-group">
+                   <div class="form-group">
                         <label for="notes">Firma Hakkında Not</label>
-                        <textarea type="text" id="notes" name="notes" class="form-control"></textarea>
+                        <textarea type="text" id="notes" name="notes" class="form-control"><?php echo $result->notes ;?>
+                        </textarea>
                     </div>
 
                 </div>
@@ -144,10 +177,17 @@ if ($_POST) {
     <!-- row -->
 
 
-</form>
+    </form>
+
+
+    </div>
+</div>
+
+
 
 
 <script type="text/javascript">
+    $("#page-title").text("Firma Güncelle");
     $('.select2').select2()
     $(function () {
         
@@ -157,6 +197,11 @@ if ($_POST) {
         })
 
     });
+
+    $("#liste").click(function () {
+       RoutePagewithParams("firms/main")
+        $("#page-title").text("Firma Listesi");
+    })
 
     $("#city").on("change",function(){
         var il_id= ($(this).val())

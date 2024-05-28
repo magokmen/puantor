@@ -6,7 +6,7 @@ require_once "../../include/requires.php";
 
 if ($_POST && isset($_POST["action"]) == "delete-project") {
     $id = $_POST["id"];
-    $sql = $con->prepare("SELECT * FROM projects where id = ?");
+    $sql = $con->prepare("SELECT * FROM firms where id = ?");
     $sql->execute(array($id));
     $result = $sql->fetch(PDO::FETCH_ASSOC);
     $file_path = "../../files/" . $result["file_name"];
@@ -68,13 +68,13 @@ if ($_POST && isset($_POST["action"]) == "delete-project") {
                     <?php echo $value["id"] ?>
                 </td>
                 <td>
-                    <?php echo $func->getCompanyName($value["firm_name"]) ?>
+                    <?php echo $value["firm_name"] ?>
                 </td>
                 <td>
                     <?php echo $value["firm_official"] ?>
                 </td>
-                <td><?php echo $value["city"] ?></td>
-                <td><?php echo $value["town"] ?></td>
+                <td><?php echo $func->getCityName($value["city"]) ?></td>
+                <td><?php echo  $func->getTownName($value["town"]) ?></td>
                 <td><?php echo $value["phone"] ?></td>
                 <td><?php echo $value["email"] ?></td>
                 <td><?php echo $value["address"] ?></td>
@@ -84,20 +84,12 @@ if ($_POST && isset($_POST["action"]) == "delete-project") {
                     <i class="fa-solid fa-ellipsis-vertical list-button" data-toggle="dropdown"></i>
                     <ul class="dropdown-menu">
                         <li class="dropdown-item"><i class="fa-solid fa-edit dropdown-list-icon"></i><a href="#"
-                                onclick="RoutePage('offers/edit', this)" data-params="id=<?php echo $value["id"] ?>"
-                                data-title="Teklif Düzenle">
+                                onclick="RoutePagewithParams('firms/edit', 'id=<?php echo $value['id'] ?>')"
+                                data-title="Firma Düzenle">
                                 Düzenle
                             </a>
                         </li>
 
-
-
-                        <li class="dropdown-item"><i class="fa-solid fa-print dropdown-list-icon"></i>
-                            <a href="#" onclick="RoutePage('offers/edit', this)" data-params="id=<?php echo $value["id"] ?>"
-                                data-title="Teklif Düzenle">
-                                Puantaj Listesi
-                            </a>
-                        </li>
                         <li class="dropdown-item"><i class="fa-solid fa-file-pen dropdown-list-icon"></i><a href="#">Hesap
                                 Hareketleri
                             </a></li>
@@ -107,14 +99,13 @@ if ($_POST && isset($_POST["action"]) == "delete-project") {
                         $params = array(
                             "id" => $value["id"],
                             "action" => "delete-project",
-                            "type" => $type,
-                            "message" => $value["project_name"] . ' isimli projeyi silmek istiyor musunuz?Devam ettiğiniz takdirde projeye ait ödemeler ve personeller silinecektir.'
+                            "message" => $value["firm_name"] . ' isimli firmayı silmek istiyor musunuz?Devam ettiğiniz takdirde firmaya ait ödemeler ve personeller silinecektir.'
                         );
                         $params_json = $func->jsonEncode($params);
                         ?>
 
                         <li class="dropdown-item"><i class="fa-solid fa-trash-can dropdown-list-icon"></i><a href="#"
-                                onclick="deleteRecordByAjax('projects/main','<?php echo $params_json ?>')">Sil!</a></li>
+                                onclick="deleteRecordByAjax('firms/main','<?php echo $params_json ?>')">Sil!</a></li>
                     </ul>
                 </td>
             </tr>

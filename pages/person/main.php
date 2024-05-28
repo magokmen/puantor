@@ -26,6 +26,8 @@ require_once "../../include/requires.php"; ?>
                 class="btn btn-info d-none">
                 <i class="fas fa-save mr-2"></i>Kaydet</button>
         </div>
+
+        
     </div><!-- /.card-header -->
     <div class="card-body">
         <div class="tab-content">

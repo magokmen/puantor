@@ -17,7 +17,7 @@
             $params_json = $func->jsonEncode($params);
             ?>
 
-            <button type="button" id="save" data-title="Yeni Proje"
+            <button type="button" id="save" data-title="Yeni Firma"
                 onclick="submitFormbyAjax('firms/main','<?php echo $params_json ?>')" class="btn btn-info d-none">
                 <i class="fas fa-save mr-2"></i>Kaydet</button>
         </div>

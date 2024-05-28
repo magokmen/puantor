@@ -73,18 +73,32 @@ if ($project_id == null) {
         text-align: center;
         cursor: pointer;
         font-weight: 600;
-        
+
     }
 
     .dataTables_wrapper .dataTables_filter {
         display: none;
     }
-    .table tbody tr td{
+
+    .table {
+        padding-bottom: 15px !important;
+
+
+    }
+
+    .table tbody tr td {
         max-height: 35px !important;
         height: 35px !important;
         padding: 2px !important;
         vertical-align: middle !important;
-       }
+
+
+    }
+
+    .table tr td,
+    .table th {
+        border: 1px solid #ddd !important;
+    }
 
     .gun.clicked {
         background-color: #FFED00 !important;
@@ -354,218 +368,230 @@ if ($project_id == null) {
         <div class="card shadow-none">
             <div class="card-header">
                 <div class="row d-flex justify-content-between">
+                    <div class="left-btn">
 
-                    <a data-toggle="collapse" href="#collapseOne">
-                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <a data-toggle="collapse" href="#collapseOne">
+                            <i class="fa-solid fa-magnifying-glass"></i>
 
-                    </a>
+                        </a>
+                        <div class="btn ml-3">
+                            <button type="button" class="btn btn-default" data-toggle="dropdown">Rapor Al <i class="fa-solid fa-caret-down ml-3"></i> </button>
 
-                    <button type="button" id="" onclick="puantaj_olustur()" class="btn btn-primary float-right"><i
-                            class="fas fa-save mr-2"></i> Kaydet</button>
+                            <div class="dropdown-menu" role="menu">
+                                <a class="dropdown-item" href="#">Puantajı Excele Aktar</a>
+                                <!-- <div class="dropdown-divider"></div> -->
+                               
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right-btn">
+
+                        <button type="button" id="" onclick="puantaj_olustur()" class="btn btn-primary float-right"><i
+                                class="fas fa-save mr-2"></i> Kaydet</button>
+                    </div>
+
                 </div>
-
-            </div>
-            <div id="collapseOne" class="<?php echo $collapsed; ?>" data-parent="#accordion">
-                <div class="row p-3">
-                    <div class="col-md-3 col-sm-12">
-                        <input type="text" class="form-control" autocomplete="off" id="search_name"
-                            value="<?php echo $search_name; ?>" placeholder="Adı Soyadına göre ara...">
-                    </div>
-                    <div class="col-md-3 col-sm-12">
-                        <input type="text" class="form-control" id="search_job" value="<?php echo $search_job; ?>"
-                            placeholder="Unvanına göre ara... ">
-                    </div>
-                    <div class="col-md-3 col-sm-12">
-                        <input type="text" class="form-control" id="search_projects"
-                            value="<?php echo $search_projects; ?>" placeholder="Projesine göre ara... ">
+                <div id="collapseOne" class="<?php echo $collapsed; ?>" data-parent="#accordion">
+                    <div class="row p-3">
+                        <div class="col-md-3 col-sm-12 mb-3">
+                            <input type="text" class="form-control" autocomplete="off" id="search_name"
+                                value="<?php echo $search_name; ?>" placeholder="Adı Soyadına göre ara...">
+                        </div>
+                        <div class="col-md-3 col-sm-12 mb-3">
+                            <input type="text" class="form-control" id="search_job" value="<?php echo $search_job; ?>"
+                                placeholder="Unvanına göre ara... ">
+                        </div>
+                        <div class="col-md-3 col-sm-12 mb-3">
+                            <input type="text" class="form-control" id="search_projects"
+                                value="<?php echo $search_projects; ?>" placeholder="Projesine göre ara... ">
+                        </div>
                     </div>
                 </div>
             </div>
+
+
         </div>
 
 
-    </div>
 
+        <div class="row pb-3">
+            <div class="col-md-3 col-sm-12">
+                <label for="company">Şirket <font color="red">*</font>
+                    <span class="pointer" data-tooltip="İşlem yapacağınız şirketiniz" data-tooltip-location="right">
+                        <i class="text-blue fa-solid fa-circle-info"></i>
+                    </span>
+                </label>
+                <?php $func->companies("company", $company_id) ?>
+            </div>
+            <div class="col-md-3 col-sm-12">
+                <label for="project">Proje <font color="red">*</font></label>
+                <?php echo $func->projects("project", $company_id, $project_id) ?>
+            </div>
+            <div class="col-md-3 col-sm-12">
+                <label for="months">Ay <font color="red">*</font></label>
+                <?php echo $func->getMonthsSelect("months", $month) ?>
+            </div>
+            <div class="col-md-3 col-sm-12">
+                <label for="year">Yıl <font color="red">*</font></label>
+                <select name="year" id="year" class="select2 " style="width:100%">
+                    <?php
+                    $current_year = date('Y');
+                    for ($i = 2020; $i <= $current_year + 2; $i++) {
+                        $selected = ($i == $year) ? ' selected' : ' ';
+                        echo '<option ' . $selected . ' value="' . $i . '">' . $i . '</option>';
+                    }
 
-
-    <div class="row pb-3">
-        <div class="col-md-3 col-sm-12">
-            <label for="company">Şirket <font color="red">*</font>
-                <span class="pointer" data-tooltip="İşlem yapacağınız şirketiniz" data-tooltip-location="right">
-                    <i class="text-blue fa-solid fa-circle-info"></i>
-                </span>
-            </label>
-            <?php $func->companies("company", $company_id) ?>
-        </div>
-        <div class="col-md-3 col-sm-12">
-            <label for="project">Proje <font color="red">*</font></label>
-            <?php echo $func->projects("project", $company_id, $project_id) ?>
-        </div>
-        <div class="col-md-3 col-sm-12">
-            <label for="months">Ay <font color="red">*</font></label>
-            <?php echo $func->getMonthsSelect("months", $month) ?>
-        </div>
-        <div class="col-md-3 col-sm-12">
-            <label for="year">Yıl <font color="red">*</font></label>
-            <select name="year" id="year" class="select2 " style="width:100%">
-                <?php
-                $current_year = date('Y');
-                for ($i = 2020; $i <= $current_year + 2; $i++) {
-                    $selected = ($i == $year) ? ' selected' : ' ';
-                    echo '<option ' . $selected . ' value="' . $i . '">' . $i . '</option>';
-                }
-
-                ?>
-
-            </select>
-        </div>
-    </div>
-
-
-    <table id="pTable" class="table table-bordered table-sm table-responsive p-2">
-        <thead>
-            <tr>
-
-                <th class="ld">Adı Soyadı</th>
-                <th class="ld">Unvanı</th>
-                <th class="ld">Projesi</th>
-                <?php foreach ($dates as $date): ?>
-                    <th class="vertical"><span><?php echo $date; ?></span></th>
-                <?php endforeach; ?>
-                <!-- <?php
-                for ($i = 1; $i < 31; $i++) {
                     ?>
+
+                </select>
+            </div>
+        </div>
+
+
+        <table id="pTable" class="table  table-sm table-responsive p-2">
+            <thead>
+                <tr>
+
+                    <th class="ld">Adı Soyadı</th>
+                    <th class="ld">Unvanı</th>
+                    <th class="ld">Projesi</th>
+                    <?php foreach ($dates as $date): ?>
+                        <th class="vertical"><span><?php echo $date; ?></span></th>
+                    <?php endforeach; ?>
+                    <!-- <?php
+                    for ($i = 1; $i < 31; $i++) {
+                        ?>
                     <th class="vertical"><span>Header <?php echo $i; ?></span></th>
                     <?php
-                }
-                ?> -->
-            </tr>
-        </thead>
-        <tbody>
-            <?php
+                    }
+                    ?> -->
+                </tr>
+            </thead>
+            <tbody>
+                <?php
 
 
 
-            while ($person = $sql->fetch(PDO::FETCH_ASSOC)) {
-                ?>
-                <tr>
-                    <td class="text-nowrap" style="min-width:12vw;" data-id="<?php echo $person["id"] ?>"><a
-                            class="btn-user-modal" type="button">
-                            <?php echo $person["full_name"] ?></a></td>
-                    <td class="text-nowrap" style="min-width:10vw;"><a class="user-job" href="#">
-                            <?php echo $person["job"] ?></a></td>
-
-
-                    <?php
-                    $projectNames = $func->getProjectNames($person["project_id"]);
+                while ($person = $sql->fetch(PDO::FETCH_ASSOC)) {
                     ?>
+                    <tr>
+                        <td class="text-nowrap" style="min-width:12vw;" data-id="<?php echo $person["id"] ?>"><a
+                                class="btn-user-modal" type="button">
+                                <?php echo $person["full_name"] ?></a></td>
+                        <td class="text-nowrap" style="min-width:10vw;"><a class="user-job" href="#">
+                                <?php echo $person["job"] ?></a></td>
 
-                    <td class="text-nowrap" data-tooltip="<?php echo $projectNames; ?>"><?php
-
-                       echo $func->shortProjectsName($projectNames);
-
-                       ?></td>
-                    <?php
-                    foreach ($dates as $date): ?>
 
                         <?php
-
-                        $puantaj_id = kayitVarmi($company_id, $person["id"], $year, $month);
-                        if ($puantaj_id > 0) {
-                            $query = $con->prepare("SELECT * FROM puantaj where id = ?");
-                            $query->execute(array($puantaj_id));
-                            $puantaj_data = $query->fetch(PDO::FETCH_ASSOC);
-                            $data_json = json_decode($puantaj_data["datas"], true);
-
-                            $value = isset($data_json[$date]) ? $data_json[$date] : "0";
-                            $func->puantajClass($value);
-                            // echo "<td class='gun noselect' data-id=''>" . $value . "</td>";
-                
-                        } else {
-                            if (isWeekend($date)) {
-                                $func->puantajClass(6);
-                            } else {
-                                echo "<td class='gun noselect'></td>";
-                            }
-
-                        }
-
+                        $projectNames = $func->getProjectNames($person["project_id"]);
                         ?>
 
-                    <?php endforeach; ?>
+                        <td class="text-nowrap" data-tooltip="<?php echo $projectNames; ?>"><?php
 
-                </tr>
-                <?php
+                           echo $func->shortProjectsName($projectNames);
+
+                           ?></td>
+                        <?php
+                        foreach ($dates as $date): ?>
+
+                            <?php
+
+                            $puantaj_id = kayitVarmi($company_id, $person["id"], $year, $month);
+                            if ($puantaj_id > 0) {
+                                $query = $con->prepare("SELECT * FROM puantaj where id = ?");
+                                $query->execute(array($puantaj_id));
+                                $puantaj_data = $query->fetch(PDO::FETCH_ASSOC);
+                                $data_json = json_decode($puantaj_data["datas"], true);
+
+                                $value = isset($data_json[$date]) ? $data_json[$date] : "0";
+                                $func->puantajClass($value);
+                                // echo "<td class='gun noselect' data-id=''>" . $value . "</td>";
+                    
+                            } else {
+                                if (isWeekend($date)) {
+                                    $func->puantajClass(6);
+                                } else {
+                                    echo "<td class='gun noselect'></td>";
+                                }
+
+                            }
+
+                            ?>
+
+                        <?php endforeach; ?>
+
+                    </tr>
+                    <?php
+                }
+                ?>
+            </tbody>
+        </table>
+
+
+    </div>
+
+    <script src="plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+
+    <script src="pages/puantaj/app.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('.select2').select2({
+                minimumResultsForSearch: Infinity
+            })
+            function filterWaitingDemand() {
+                var table = $('#pTable').DataTable();
+                table.column(5).search('Ma').draw();
+
             }
-            ?>
-        </tbody>
-    </table>
 
 
-</div>
-
-<script src="plugins/datatables/jquery.dataTables.min.js"></script>
-<script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-
-<script src="pages/puantaj/app.js"></script>
-<script>
-    $(document).ready(function () {
-
-        $('.select2').select2({
-            minimumResultsForSearch: Infinity
-        })
-        function filterWaitingDemand() {
-            var table = $('#pTable').DataTable();
-            table.column(5).search('Ma').draw();
-
-        }
+            $("#search").click(function () {
+                var search_name = $("#search_name").val();
+                var search_job = $("#search_job").val();
+                var search_projects = $("#search_projects").val();
 
 
-        $("#search").click(function () {
-            var search_name = $("#search_name").val();
-            var search_job = $("#search_job").val();
-            var search_projects = $("#search_projects").val();
+            })
 
-
-        })
-
-        var table = new DataTable('#pTable', {
-            //filter: false,
-            //    searching : true,
-            ordering: false,
-            language: {
-                info: '_PAGES_ sayfadan _PAGE_. sayfa gösteriliyor',
-                infoEmpty: 'Hiç kayıt bulunamadı',
-                infoFiltered: '(_MAX_ kayıt filtrelendi)',
-                lengthMenu: 'Her sayfada _MENU_ kayıt göster',
-                zeroRecords: 'Kayıt Yok!',
-                search: "Ara",
-                paginate: {
-                    "first": "İlk",
-                    "last": "Son",
-                    "next": "Sonraki",
-                    "previous": "Önceki"
+            var table = new DataTable('#pTable', {
+                //filter: false,
+                //    searching : true,
+                ordering: false,
+                language: {
+                    info: '_PAGES_ sayfadan _PAGE_. sayfa gösteriliyor',
+                    infoEmpty: 'Hiç kayıt bulunamadı',
+                    infoFiltered: '(_MAX_ kayıt filtrelendi)',
+                    lengthMenu: 'Her sayfada _MENU_ kayıt göster',
+                    zeroRecords: 'Kayıt Yok!',
+                    search: "Ara",
+                    paginate: {
+                        "first": "İlk",
+                        "last": "Son",
+                        "next": "Sonraki",
+                        "previous": "Önceki"
+                    },
                 },
-            },
-        });
+            });
 
-        // #column3_search is a <input type="text"> element
-        $('#search_name').on('keyup', function () {
-            table
-                .columns(0)
-                .search(this.value)
-                .draw();
-        });
-        // $('#search_name input').on('keyup change clear', function () {
-        //     alert("dsfa")
+            // #column3_search is a <input type="text"> element
+            $('#search_name').on('keyup', function () {
+                table
+                    .columns(0)
+                    .search(this.value)
+                    .draw();
+            });
+            // $('#search_name input').on('keyup change clear', function () {
+            //     alert("dsfa")
 
-        //         // var colIndex = $(this).index();
-        //         var table=$("#pTable").Datatable();
-        //         table
-        //             .column(0)
-        //             .search(this.value)
-        //             .draw();
-        // });
-    })
+            //         // var colIndex = $(this).index();
+            //         var table=$("#pTable").Datatable();
+            //         table
+            //             .column(0)
+            //             .search(this.value)
+            //             .draw();
+            // });
+        })
 
-</script>
+    </script>

@@ -21,6 +21,8 @@ if ($_POST && $_POST["action"] == "kasa" ) {
 
 } 
 
+
+
 //header('Content-Type: application/json');
 if ($_POST && $_POST["action"] == "puantaj") {
     $company_id = $_POST["company_id"];
@@ -102,6 +104,25 @@ if ($_POST && $_POST["action"] == "proje") {
 }
 
 
+if ($_POST && $_POST["action"] == "ilce") {
+    $il_id = $_POST["il_id"];
 
+    // Veritabanı sorgusu
+    $sql = $con->prepare("SELECT * FROM ilce WHERE il_id = ?");
+    $sql->execute(array($il_id));
+    $results = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($results) {
+        // Eğer kayıtlar varsa, sadece option öğelerini oluştur
+        $html = '<option>İlçe Seçiniz</option>';
+        foreach ($results as $result) {
+            $html .= '<option value="' . $result["id"] . '">' . $result["ilce_adi"] . '</option>';
+        }
+        echo $html; // HTML'yi döndürmek için echo kullanın
+    } else {
+        // Eğer kayıt yoksa bir mesaj döndürebilirsiniz
+        echo '<option disabled >İl bulunamadı</option>';
+    }
+}
 
 

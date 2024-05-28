@@ -75,8 +75,8 @@ if ($_POST && isset($_POST["action"]) == "delete-project") {
                     <?php echo $value["project_name"] ?>
                 </td>
                 <td><?php echo $value["budget"] ?></td>
-                <td><?php echo $value["city"] ?></td>
-                <td><?php echo $value["town"] ?></td>
+                <td><?php echo $func->getCityName($value["city"]) ?></td>
+                <td><?php echo $func->getTownName($value["town"]) ?></td>
                 <td><?php echo $value["start_date"] ?></td>
                 <td><?php echo $value["address"] ?></td>
 
@@ -85,8 +85,8 @@ if ($_POST && isset($_POST["action"]) == "delete-project") {
                     <i class="fa-solid fa-ellipsis-vertical list-button" data-toggle="dropdown"></i>
                     <ul class="dropdown-menu">
                         <li class="dropdown-item"><i class="fa-solid fa-edit dropdown-list-icon"></i><a href="#"
-                                onclick="RoutePage('offers/edit', this)" data-params="id=<?php echo $value["id"] ?>"
-                                data-title="Teklif Düzenle">
+                                onclick="RoutePage('projects/edit', this)" data-params="id=<?php echo $value["id"] ?>"
+                                data-title="Proje Düzenle">
                                 Düzenle
                             </a>
                         </li>

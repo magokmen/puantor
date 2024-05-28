@@ -21,7 +21,6 @@ if ($_POST && $_POST['method'] == "Delete") {
     <div class="btn-group">
         <button type="button" class="btn btn-default">Pdf</button>
         <button type="button" class="btn btn-default">XLS</button>
-        <button type="button" class="btn btn-default">Hakediş Listesi</button>
     </div>
 
 </div>
@@ -34,7 +33,10 @@ if ($_POST && $_POST['method'] == "Delete") {
             <th>id</th>
             <th>Firma Adı</th>
             <th>Yetkili</th>
+            <th>Telefon</th>
             <th>Email</th>
+            <th>Açılış Tarihi</th>
+            <th>Kapanış Tarihi</th>
             <th>Durum</th>
             <th>#</th>
 
@@ -60,22 +62,31 @@ if ($_POST && $_POST['method'] == "Delete") {
                     <?php echo $row["company_name"]; ?>
                 </td>
                 <td>
-                    <?php echo $row["full_name"]; ?>
+                    <?php echo $row["company_official"]; ?>
+                </td>
+                <td>
+                    <?php echo $row["phone"]; ?>
                 </td>
                 <td>
                     <?php echo $row["email"]; ?>
                 </td>
                 <td>
-                    Aktif
+                    <?php echo $row["open_date"]; ?>
+                </td>
+                <td>
+                    <?php echo $row["close_date"]; ?>
+                </td>
+                <td>
+                    <?php echo ($row["close_date"] == '') ? "Aktif" : "Pasif"; ?>
                 </td>
                 <td class="">
 
                     <i class="fa-solid fa-ellipsis-vertical list-button" data-toggle="dropdown"></i>
                     <ul class="dropdown-menu">
-                        <li class="dropdown-item edit"><i class="fa-solid fa-edit dropdown-list-icon"></i><a href="javascript:"
-                                data-params="<?php echo $row["id"] ?>"
-                                data-title="Firma Düzenle">
-                                Düzenle
+                        <li class="dropdown-item edit"><i class="fa-solid fa-edit dropdown-list-icon"></i>
+                            <a href="#" onclick="RoutePagewithParams('company/edit','id=<?php echo $row['id'] ?>')"
+                                data-title="Firma Güncelleme">
+                                Güncelle
                             </a>
                         </li>
 
@@ -100,10 +111,12 @@ if ($_POST && $_POST['method'] == "Delete") {
             <th>id</th>
             <th>Firma Adı</th>
             <th>Yetkili</th>
+            <th>Telefon</th>
             <th>Email</th>
+            <th>Açılış Tarihi</th>
+            <th>Kapanış Tarihi</th>
             <th>Durum</th>
             <th>#</th>
-
 
         </tr>
     </tfoot>
@@ -112,12 +125,3 @@ if ($_POST && $_POST['method'] == "Delete") {
 <!-- /.content -->
 <?php
 include_once "../../plugins/datatables/datatablescripts.php" ?>
-
-<script>
-    $(".edit").click(function () {
-        pageTitle("", "Firma Güncelle");
-        var id = $(this).data("params");
-        RoutePagewithParams("company/edit", "?id=" + id);
-
-    })
-</script>

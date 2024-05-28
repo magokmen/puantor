@@ -1,14 +1,28 @@
+<?php require_once "../../include/requires.php"; ?>
 
 <div class="card card-outline card-info">
     <div class="card-header p-2">
-        <ul class="nav nav-pills">
-            <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Şirket Listesi"
-                    data-toggle="tab">Şirket Listesi</a>
-            </li>
-            <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Yeni Şirket"
-                    data-toggle="tab">Yeni Şirket</a></li>
 
-        </ul>
+        <div class="d-flex justify-content-between">
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Şirket Listesi"
+                        data-toggle="tab">Şirket Listesi</a>
+                </li>
+                <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Yeni Şirket"
+                        data-toggle="tab">Yeni Şirket</a></li>
+
+            </ul>
+
+
+            <?php
+            $params = array("method" => "add");
+            $params_json = $func->jsonEncode($params);
+            ?>
+
+            <button type="button" data-title="Yeni Firma" id="save"
+                onclick="submitFormbyAjax('company/main','<?php echo $params_json ?>')"
+                class="btn btn-info d-none"><i class="fas fa-save mr-2"></i> Kaydet</button>
+        </div><!-- /.card-header -->
     </div><!-- /.card-header -->
     <div class="card-body">
         <div class="tab-content">
@@ -25,7 +39,7 @@
             </div>
         </div>
 
-       
+
 
     </div><!-- /.card-body -->
 </div>
@@ -43,6 +57,17 @@
             $("#yeni").tab("show");
         }
     })
+
+    $("#liste").on("click", function () {
+        $("#save").addClass("d-none");
+    })
+
+    $("#yeni").on("click", function () {
+        $("#save").removeClass("d-none");
+    })
+
+
+
     $(function () {
         $(".tabMenu").click(function () {
             var navLinkText = $(this).data("title");

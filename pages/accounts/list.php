@@ -18,9 +18,8 @@ if ($_POST && $_POST['method'] == "Delete") {
 
 <div class="card card-outline card-info">
     <div class="card-body">
-        <div class="row">
 
-            <table id="example1" class="table table-bordered table-striped table-sm table-responsive-sm table-hover ">
+            <table id="example1" class="table table-bordered table-striped table-sm table-hover">
                 <thead>
                     <tr>
                         <th class="text-center">id</th>
@@ -97,7 +96,7 @@ if ($_POST && $_POST['method'] == "Delete") {
             </table>
             <!-- /.content -->
 
-        </div>
+ 
     </div>
 </div>
 <?php
