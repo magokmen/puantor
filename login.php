@@ -131,7 +131,7 @@ $message = "";
 
                     <div class="d-flex justify-content-between">
                         <p class="mb-1">
-                            <a href="forgot-password.html">Şifremi Unuttum</a>
+                            <a href="forgot-password.php">Şifremi Unuttum</a>
                         </p>
                         <p class="mb-1">
                             <a href="register.php">Hesap Oluştur</a>

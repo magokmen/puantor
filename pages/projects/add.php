@@ -89,12 +89,13 @@ if ($_POST && $_POST["method"] == "add") {
                     </div>
                 </div>
                 <div class="card-body">
-                    <input type="text" name="type" readonly disabled value="<?php echo $type; ?>">
+                    <input type="hidden" name="type" readonly disabled value="<?php echo $type; ?>">
                     <div class="form-group">
                         <label for="companies">Şirket <span style="color:red">(*)</span><small> İşlem yapacağınız
                                 şirketinizi seçiniz.</small></label>
                         <?php echo $func->companies("companies", "") ?>
                     </div>
+                    
 
                     <div class="form-group">
                         <label for="companies">Firma Adı <span style="color:red">(*)</span></label>

@@ -491,6 +491,24 @@ function permtrue($var)
 }
 
 
+// function authorize($action) {
+//     // Oturum kontrolü
+//     session_start();
+//     if (!isset($_SESSION['id'])) {
+//       return false;
+//     }
+  
+//     // Yetki kontrolü
+//     $userId = $_SESSION['id'];
+//     if (!checkUserRole($requiredRole)) {
+//       return false;
+//     }
+  
+//     return true;
+//   }
+  
+  
+
 function emailVarmi($mail_address, $table = "accounts")
 {
 

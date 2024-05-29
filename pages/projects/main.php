@@ -16,7 +16,7 @@ $pageTitle = ($type == 1) ? "Alınan Projeler" : "Verilen Projeler";
                         data-toggle="tab">Yeni Proje</a></li>
 
             </ul>
-<!-- #region -->
+
             <?php
             $params = array("method" => "add","type" => $type);
             $params_json = $func->jsonEncode($params);

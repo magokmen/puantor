@@ -122,7 +122,7 @@ $result = $sql->fetch(PDO::FETCH_OBJ);
                             </div>
                         </div>
                         <div class="card-body">
-                        <input type="text" id="type" name ="type" disabled readonly value="<?php echo $type ;?>">
+                        <input type="hidden" id="type" name ="type" disabled readonly value="<?php echo $type ;?>">
                             <div class="form-group">
                                 <label for="companies">Şirket <span style="color:red">(*)</span><small> İşlem
                                         yapacağınız şirketinizi seçiniz.</small></label>

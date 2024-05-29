@@ -1,3 +1,5 @@
 {
-    "php.version": "8.1"
+    "php.version": "8.1",
+    "CodeGPT.Autocomplete.suggestionDelay": 3400,
+    "CodeGPT.Autocomplete.enabled": true
 }
