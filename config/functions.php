@@ -9,11 +9,12 @@ class Functions
     {
         return htmlspecialchars($val);
     }
-    public function preg_match($val) {
+    public function preg_match($val)
+    {
         return preg_match("/^[a-zA-ZÇĞİÖŞÜçğıöşü' -]*$/u", $this->security($val));
     }
-    
-    
+
+
     public static function data($value)
     {
         global $kayit; // Eğer $kayit global bir değişken ise
@@ -33,7 +34,7 @@ class Functions
     ';
     }
 
-    
+
     public function user_info($id, $field)
     {
         global $con;
@@ -59,7 +60,7 @@ class Functions
 
     }
 
-       public function getCityName($id)
+    public function getCityName($id)
     {
         global $con;
         $sql = $con->prepare("Select id,il_adi from il where id = ?");
@@ -106,7 +107,7 @@ class Functions
         $html .= ' </select>';
         echo $html;
     }
-    
+
     public function towns($name, $id)
     {
         global $con;
@@ -148,7 +149,7 @@ class Functions
         echo $html;
     }
 
-    
+
     public function firms($name, $id)
     {
         global $con;
@@ -170,7 +171,7 @@ class Functions
         echo $html;
     }
 
-    public function projects($name,$company_id, $id)
+    public function projects($name, $company_id, $id)
     {
         global $con;
         global $account_id;
@@ -196,53 +197,55 @@ class Functions
         global $con;
         $html = '<select id="' . $name . '" name="' . $name . '[]" multiple class="select2" style="width: 100%;">
                     <option disabled value="0">Proje Seçiniz</option>';
-    
+
         $sql = $con->prepare("SELECT id, project_name FROM projects WHERE company_id = ?");
         $sql->execute(array($company_id));
-    
+
         $proarray = explode('|', $ids);
-    
+
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
             $project_name = $row['project_name'];
             $selected = in_array($row["id"], $proarray) ? " selected" : "";
             $html .= '<option value="' . $row["id"] . '"' . $selected . '>' . htmlspecialchars($project_name) . '</option>';
         }
-    
+
         $html .= '</select>';
         echo $html;
     }
 
 
 
-    
-    function getProjectNames($projectIds, $delimiter = "|") {
+
+    function getProjectNames($projectIds, $delimiter = "|")
+    {
         global $func; // $func global değişkenini kullanmak için global bildirimi yapıyoruz
-    
+
         if ($projectIds) {
             // Proje ID'lerini ayır
             $proArray = explode($delimiter, $projectIds);
             $projects = "";
-    
+
             // Her bir proje ID'sine karşılık gelen projeyi al ve birleştir
             foreach ($proArray as $projectId) {
                 $projects .= $func->getProjectName($projectId) . ", ";
             }
-    
+
             // Sondaki virgülü kaldır ve sonucu döndür
             return rtrim($projects, ", ");
         }
-    
+
         return "";
     }
-    
 
-    function shortProjectsName($data, $delimiter = ',') {
+
+    function shortProjectsName($data, $delimiter = ',')
+    {
         $pieces = explode($delimiter, $data); // Veriyi belirli bir ayraçtan bölelim
-    
+
         if (count($pieces) >= 2) {
             $first_piece = trim($pieces[0]); // İlk parçayı alalım ve boşlukları temizleyelim
             $second_piece = trim($pieces[1]); // İkinci parçayı alalım ve boşlukları temizleyelim
-    
+
             // İkinci parçanın ilk karakterini ve dört noktayı ekleyerek kısaltılmış veriyi oluşturalım
             $shorted = $first_piece . $delimiter . substr(trim($second_piece), 0, 1) . "....";
             return $shorted;
@@ -374,7 +377,7 @@ class Functions
         }
 
     }
-    
+
     public static function getProjectName($id)
     {
         global $con;
@@ -452,11 +455,43 @@ class Functions
 
 }
 
-function sesset($field){
+function sesset($field)
+{
     return htmlspecialchars($_SESSION[$field]);
 }
+function authid($authName)
+{
+    $sid = sesset("id");
+    global $con;
 
-function emailVarmi($mail_address,$table="accounts")
+    $setques = $con->prepare("SELECT * FROM authority WHERE authName = ? ");
+    $setques->execute(array($authName));
+    $data = $setques->fetch(PDO::FETCH_ASSOC);
+
+    return isset($data["id"]) ? $data["id"] : 0;
+}
+
+function permtrue($var)
+{
+    global $con;
+    $authid = authid($var);
+    $pcheck = $con->prepare("SELECT * FROM userauths WHERE roleId = ? and authID = ?");
+    $pcheck->execute(array(sesset("id"), $authid));
+    $auth = $pcheck->fetchAll(PDO::FETCH_ASSOC);
+
+    if (count($auth) > 0) {
+        return "true";
+    } else {
+        $rootDir = $_SERVER['DOCUMENT_ROOT'];
+        //go($rootDir. "/505.php");
+         go("../../505.php");
+        exit();
+    }
+
+}
+
+
+function emailVarmi($mail_address, $table = "accounts")
 {
 
     global $con;
@@ -475,11 +510,11 @@ function showAlert($message, $type = "danger")
 function showMessage($message, $type = "danger")
 {
     echo '<script>
-            showMessage('.$message.','.$type.');
+            showMessage(' . $message . ',' . $type . ');
         </script>';
 }
 
-function go($url, $time)
+function go($url, $time = 0)
 {
     if ($time != 0) {
         header("Refresh:$time;url=$url");
@@ -494,15 +529,16 @@ function kayitVarmi($company_id, $person, $year, $months)
 {
     global $con;
     $sql = $con->prepare("SELECT * FROM puantaj where company_id = ? AND  person = ? AND yil = ? AND ay = ? ");
-    $sql->execute(array($company_id , $person, $year, $months));
+    $sql->execute(array($company_id, $person, $year, $months));
     $result = $sql->fetch(PDO::FETCH_ASSOC);
     return $result ? $result["id"] : 0; // Eğer kayıt bulunamazsa null döndür
 }
 
-function formatdDate($date){
+function formatdDate($date)
+{
     // Zaman damgası oluşturma
-$timestamp = strtotime($date);
+    $timestamp = strtotime($date);
 
-// Yeni formatta tarihi stringe dönüştürme
-return date("d.m.Y", $timestamp);
+    // Yeni formatta tarihi stringe dönüştürme
+    return date("d.m.Y", $timestamp);
 }

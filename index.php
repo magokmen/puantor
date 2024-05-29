@@ -1,13 +1,12 @@
 <?php
-session_start();
+
+// Kök dizinini tanımlayın
+require_once  "include/requires.php";
+
 if (!isset($_SESSION['login']) || !isset($_SESSION["accountID"])) {
     header("Location: logout.php");
     exit;
 }
-
-require_once "config/connect.php";
-require_once "config/functions.php";
-$func = new Functions();
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -22,6 +21,7 @@ $func = new Functions();
     <link rel="icon" type="image/png" sizes="32x32" href="src/img/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="src/img/favicon-16x16.png">
     <link rel="manifest" href="src/img/site.webmanifest">
+    <link rel="canonical" href="https://puantor.mbeyazilim.com" />
     <!-- <script
         src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.38.0/js/tempusdominus-bootstrap-4.min.js"
         crossorigin="anonymous"></script>
@@ -67,6 +67,8 @@ $func = new Functions();
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
     <title>Puantor | Puantaj Takip Uygulaması</title>
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+
 
 </head>
 
@@ -118,7 +120,7 @@ $func = new Functions();
                     </div>
                 </li>
 
-                            <!-- Notifications Dropdown Menu -->
+                <!-- Notifications Dropdown Menu -->
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="far fa-bell"></i>
@@ -150,7 +152,7 @@ $func = new Functions();
                         <i class="fas fa-expand-arrows-alt"></i>
                     </a>
                 </li>
-               
+
             </ul>
 
         </nav>
@@ -282,8 +284,8 @@ $func = new Functions();
                             <!-- fonksiyon ile yönlendirmek istenirse a'nın classındaki loadcontent classı çıkarılmalı, -->
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="#" onclick="RoutePagewithParams('projects/main','type=1')" data-title="Alınan Projeler"
-                                        class="nav-link nav-menu">
+                                    <a href="#" onclick="RoutePagewithParams('projects/main','type=1')"
+                                        data-title="Alınan Projeler" class="nav-link nav-menu">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
                                             Alınan Projeler</strong>
@@ -292,8 +294,8 @@ $func = new Functions();
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" onclick="RoutePagewithParams('projects/main','type=2')" data-title="Verilen Projeler"
-                                        class="nav-link nav-menu">
+                                    <a href="#" onclick="RoutePagewithParams('projects/main','type=2')"
+                                        data-title="Verilen Projeler" class="nav-link nav-menu">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Verilen Projeler</p>
                                     </a>
@@ -347,13 +349,14 @@ $func = new Functions();
 
 
                             </ul>
+                    
                         </li>
 
                         <li class="nav-item">
                             <a class="nav-link nav-menu loadContent" href="#" data-page="company/main"
                                 data-title="Şirket Listesi">
                                 <i class="nav-icon fa-solid fa-briefcase"></i>
-                               
+
                                 <p>
                                     Şirketlerim
                                 </p>
@@ -389,6 +392,17 @@ $func = new Functions();
 
                             </ul>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-menu loadContent" href="#" data-page="roles/main" data-title="Yetki Grupları">
+                               
+                                <i class="nav-icon fa-solid fa-lock-open"></i>
+                                <p>
+                                    Yetkiler
+
+                                </p>
+                            </a>
+
+                        </li>
 
 
                         <li class="nav-item">
@@ -412,7 +426,7 @@ $func = new Functions();
 
                                     <i class="nav-icon  fa-solid fa-user-gear"></i>
                                     <p>
-                                        Hesaplar 
+                                        Hesaplar
 
                                     </p>
                                 </a>
@@ -452,7 +466,9 @@ $func = new Functions();
                     </div><!-- /.row -->
 
                     <div id="content" class="maincontent">
-                        <?php require "pages/index.php"; ?>
+                        <?php 
+                        
+                        require "pages/index.php"; ?>
                     </div>
                 </div><!-- /.container-fluid -->
 
@@ -497,7 +513,8 @@ $func = new Functions();
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="plugins/toastr/toastr.min.js"></script>
     <script src="plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
-
+    <!-- Bootstrap Switch -->
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
     <!-- jQuery -->
 

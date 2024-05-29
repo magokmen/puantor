@@ -1,5 +1,9 @@
 
 <?php
+// $username = "mbeyazil_root";
+// $password = "54tJ29L^tg1[";
+// $hostname = "45.84.189.194";
+// $database = "mbeyazil_puantor";
 $username = "root";
 $password = "";
 $hostname = "localhost";
@@ -12,8 +16,8 @@ try {
         $password,
         array(pdo::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
     );
-} catch (PDOException $getexetion) {
-    echo "Bağlantı başarısız!" . $exception->getMessage();
+} catch (PDOException $ex) {
+    echo "Bağlantı başarısız!" . $ex->getMessage();
 };
 
 

@@ -547,13 +547,7 @@ if ($project_id == null) {
             }
 
 
-            $("#search").click(function () {
-                var search_name = $("#search_name").val();
-                var search_job = $("#search_job").val();
-                var search_projects = $("#search_projects").val();
 
-
-            })
 
             var table = new DataTable('#pTable', {
                 //filter: false,
@@ -582,16 +576,21 @@ if ($project_id == null) {
                     .search(this.value)
                     .draw();
             });
-            // $('#search_name input').on('keyup change clear', function () {
-            //     alert("dsfa")
 
-            //         // var colIndex = $(this).index();
-            //         var table=$("#pTable").Datatable();
-            //         table
-            //             .column(0)
-            //             .search(this.value)
-            //             .draw();
-            // });
+            $('#search_job').on('keyup', function () {
+                table
+                    .columns(1)
+                    .search(this.value)
+                    .draw();
+            });
+
+            $('#search_projects').on('keyup', function () {
+                table
+                    .columns(2)
+                    .search(this.value)
+                    .draw();
+            });
+
         })
 
     </script>

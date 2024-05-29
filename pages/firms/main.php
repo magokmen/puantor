@@ -8,7 +8,7 @@
                 <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Firma Listesi"
                         data-toggle="tab">Firma Listesi</a>
                 </li>
-                <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Yeni Firma"
+                <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Firma Listesi"
                         data-toggle="tab">Yeni Firma</a></li>
 
             </ul>

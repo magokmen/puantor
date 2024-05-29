@@ -301,7 +301,7 @@ if ($_POST) {
                             <li class="nav-item"><a class="tabMenu active nav-link" id="liste" href="#list"
                                     data-title="Kasa" data-toggle="tab">Kasa Hareketleri</a>
                             </li>
-                            <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Özet"
+                            <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Kasa"
                                     data-toggle="tab">Özet</a></li>
 
                         </ul>

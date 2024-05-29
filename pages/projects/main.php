@@ -12,11 +12,11 @@ $pageTitle = ($type == 1) ? "Alınan Projeler" : "Verilen Projeler";
                 <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="<?php echo $pageTitle ;?>"
                         data-toggle="tab">Proje Listesi</a>
                 </li>
-                <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Yeni Proje"
+                <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="<?php echo $pageTitle ;?>"
                         data-toggle="tab">Yeni Proje</a></li>
 
             </ul>
-
+<!-- #region -->
             <?php
             $params = array("method" => "add","type" => $type);
             $params_json = $func->jsonEncode($params);

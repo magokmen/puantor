@@ -183,9 +183,10 @@ function updateUrlAddresses(page) {
   //var newUrl = window.location.origin + "/" + page;
   window.history.pushState("", "", "/" + page);
 }
-function RoutePagewithParams(page, params = "") {
-  $("#content").empty(); // İçeriği temizle
 
+
+function RoutePagewithParams(page, params = "", ) {
+  $("#content").empty(); // İçeriği temizle
   $("#content").animate({ opacity: 0 }, 300, function () {
     $(this).load("pages/" + page + ".php?" + params, function () {
       // Yükleme tamamlandığında içeriği gösterme işlemi
@@ -195,22 +196,23 @@ function RoutePagewithParams(page, params = "") {
 }
 
 function RoutePage(page, element = "") {
-  //var params = $(element).data("params");
 
   var pageTitleElement = $("#page-title");
   var params = element ? $(element).data("params") : "";
   var title = element ? $(element).data("title") : "";
-  pageTitle(page, title);
+  pageTitleElement.text(title);
+
+  console.log(page);
 
   $("#content").empty(); // İçeriği temizle
-  if (!page) {
+   if (page != null) {
     $("#content").animate({ opacity: 0 }, 300, function () {
       $(this).load("pages/" + page + ".php?" + params, function () {
         // Yükleme tamamlandığında içeriği gösterme işlemi
         $(this).animate({ opacity: 1 }, 300);
       });
     });
-  }
+   }
 }
 
 function pageTitle(page, title) {
@@ -237,7 +239,7 @@ function loadPage(e) {
     type: "HEAD",
     error: function () {
       // Sayfa yoksa 404'e yönlendir
-      pagelink = "404.php";
+      // pagelink = "404.php";
       loadContent(pagelink);
     },
     success: function () {
