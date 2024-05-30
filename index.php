@@ -2,7 +2,20 @@
 if (!isset($_SESSION['login']) || !isset($_SESSION["accountID"])) {
     header("Location: logout.php");
     exit;
-} ?>
+}
+
+
+
+if ($expired_date < 3) {
+    $badgestyle = "danger";
+} else if ($expired_date < 6) {
+    $badgestyle = "warning";
+} else if ($expired_date > 6) {
+    $badgestyle = "info";
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="tr">
 
@@ -90,18 +103,20 @@ if (!isset($_SESSION['login']) || !isset($_SESSION["accountID"])) {
                 <li class="nav-item d-none d-sm-inline-block">
                     <a class="nav-link loadContent" href="#" data-page="index" data-title="Ana Sayfa">Puantor |
                         Puantaj
-                        Takip</a>
+                        Takip </a>
                 </li>
             </ul>
             <div class="flex-grow">
-
-                <marquee behavior="" direction="rihgt" onmouseover="stop()" onmouseout="start()">
-                    <span class="text-blue">
-                        Deneme sürümünün bitmesine kalan süre <span class="badge badge-danger p-2">14</span>
-                        gün,kullanmaya devam etmek için lütfen satın alın
-                    </span>
-                </marquee>
-
+                <?php if ($user_state != 1) { ?>
+                    <marquee behavior="" direction="rihgt" onmouseover="stop()" onmouseout="start()">
+                        <span class="text-blue">
+                            Deneme sürümünün bitmesine kalan süre <span
+                                class="badge badge-<?php echo $badgestyle; ?> p-2"><?php echo $expired_date; ?></span>
+                            gün.Kullanmaya devam etmek için lütfen satın alın
+                        </span>
+                    </marquee>
+                <?php }
+                ; ?>
             </div>
 
             <!-- Right navbar links -->
@@ -477,9 +492,9 @@ if (!isset($_SESSION['login']) || !isset($_SESSION["accountID"])) {
 
                     <div id="content" class="maincontent">
                         <?php
-                                                
-                            require_once   "pages/index.php";
-                         ?>
+
+                        require_once "pages/index.php";
+                        ?>
                     </div>
                 </div><!-- /.container-fluid -->
 

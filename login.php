@@ -2,6 +2,7 @@
 ob_start();
 session_start();
 require_once "config/connect.php";
+require_once "config/functions.php";
 
 ?>
 <!DOCTYPE html>
@@ -30,53 +31,75 @@ require_once "config/connect.php";
         <div class="login-logo">
             <a href="#"><b>Puantor | </b>Puantaj Takip</a>
         </div>
-        <!-- /.login-logo -->
-
-       
-
         <?php
 
-$email = "";
-$message = "";
+        $email = "";
+        $message = "";
         // Kullanıcı adı ve parola boş değilse
-        if ($_POST && !empty($_POST['email']) && !empty($_POST['password'])) {
+        
+        if ($_POST) {
 
-            $email = $_POST["email"]; ;
+            $email = $_POST["email"];
             $password = $_POST["password"];
 
-            $query =  $con->prepare("SELECT * FROM users WHERE email = ?");
-            $query->execute([$email]);
-            $account = $query->fetch(PDO::FETCH_ASSOC);
-           // echo  "password " . $account["password"];
+            if ($email == null) {
+                showAlert("Mail adresini boş bırakmayınız!!!");
+            } else if($password == null ) {
+                showAlert("Şifreyi boş bırakmayınız!!!");
+            }else{
 
-            if ($account && password_verify($password, $account["password"])) {
-                session_regenerate_id();
-                $_SESSION['login'] = true;
-                $_SESSION['email'] = $_POST['email'];
-                $_SESSION['LoginIP'] = $_SERVER["REMOTE_ADDR"];
-                $_SESSION['userAgent'] = $_SERVER["HTTP_USER_AGENT"];
+                $query = $con->prepare("SELECT * FROM users WHERE email = ?");
+                $query->execute([$email]);
+                $account = $query->fetch(PDO::FETCH_ASSOC);
 
-                $_SESSION['companyID'] = $account["account_id"];
-                $_SESSION['UserFullName'] = $account["full_name"];
-                $_SESSION['accountType'] = $account["account_type"];
-                $_SESSION['accountID'] = $account["account_id"];
-                $_SESSION['id'] = $account["id"];
-              
 
-                // Giriş başarılı mesajını göster
-                echo '<div class="alert alert-info" role="alert">Giriş başarılı! Ana Sayfaya yönlendiriliyorsunuz.</div>';
+                $sql = $con->prepare("SELECT * FROM accounts WHERE id = ?");
+                $sql->execute(array($account["account_id"]));
+                $result = $sql->fetch(PDO::FETCH_OBJ);
 
-                // Sayfayı yönlendir
-                echo '<meta http-equiv="refresh" content="2;url=index.php">';
 
-                //exit(); // header işleminden sonra kodun devam etmemesi için exit kullanılır
-            } else {
-                echo '<div class="alert alert-danger" role="alert">Hatalı parola veya şifre!</div>';
+                $tarih1 = new DateTime($result->created_at);
+                $tarih2 = new DateTime("now");
+
+                // Farkı hesapla
+                $fark = $tarih1->diff($tarih2);
+
+                // Farkı gün olarak al
+                $farkGun = 14 - $fark->days;
+                $user_state =  $result->state != null ? 1 : 0 ;
+ 
+                if ($user_state == 0 && $farkGun < 1) {
+                    echo '<div class="alert alert-warning" role="alert">Deneme süreniz dolmuştur. Lütfen satın alın</div>';
+                } else if ($account && password_verify($password, $account["password"])) {
+                    session_regenerate_id();
+                    $_SESSION['login'] = true;
+                    $_SESSION['email'] = $_POST['email'];
+                    $_SESSION['LoginIP'] = $_SERVER["REMOTE_ADDR"];
+                    $_SESSION['userAgent'] = $_SERVER["HTTP_USER_AGENT"];
+
+                    $_SESSION['companyID'] = $account["account_id"];
+                    $_SESSION['UserFullName'] = $account["full_name"];
+                    $_SESSION['accountType'] = $account["account_type"];
+                    $_SESSION['expired_date'] =$farkGun;
+                    $_SESSION['state'] =$user_state;
+                    $_SESSION['accountID'] = $account["account_id"];
+                    $_SESSION['id'] = $account["id"];
+
+        
+                    // Giriş başarılı mesajını göster
+                    echo '<div class="alert alert-info" role="alert">Giriş başarılı! Ana Sayfaya yönlendiriliyorsunuz.</div>';
+
+                    // Sayfayı yönlendir
+                    echo '<meta http-equiv="refresh" content="2;url=index.php">';
+
+                    //exit(); // header işleminden sonra kodun devam etmemesi için exit kullanılır
+                } else {
+                    echo '<div class="alert alert-danger" role="alert">Hatalı parola veya şifre!</div>';
+                }
+
             }
-        } else {
-            if ($message != null) {
-                echo '<div class="alert alert-danger" role="alert">' . $message . '</div>';
-            }
+
+
 
 
         }
@@ -85,7 +108,7 @@ $message = "";
             $(document).ready(function () {
                 // show the alert
                 setTimeout(function () {
-                    $(".alert").fadeOut("slow");
+                    $(".alert-info,.alert-danger").fadeOut("slow");
                 }, 3000);
             });
         </script>

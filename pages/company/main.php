@@ -22,6 +22,8 @@
             <button type="button" data-title="Yeni Firma" id="save"
                 onclick="submitFormbyAjax('company/main','<?php echo $params_json ?>')"
                 class="btn btn-info d-none"><i class="fas fa-save mr-2"></i> Kaydet</button>
+
+                
         </div><!-- /.card-header -->
     </div><!-- /.card-header -->
     <div class="card-body">
