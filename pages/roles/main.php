@@ -46,28 +46,4 @@ require_once  "../../include/requires.php";
     </div><!-- /.card-body -->
 </div>
 <!-- /.card -->
-
-<script>
-    $("#liste").on("click", function () {
-        $("#save").addClass("d-none");
-    })
-
-    $("#yeni").on("click", function () {
-        $("#save").removeClass("d-none");
-    })
-    $(function () {
-
-        var pagetitle = $("#page-title").text();
-        if (pagetitle == "Yetki Grupları") {
-            $("#liste").tab("show");
-        }
-
-    })
-    $(function () {
-        $(".tabMenu").click(function () {
-            var navLinkText = $(this).data("title");
-            $("#page-title").text(navLinkText);
-            setActiveMenu(this);
-        });
-    });
-</script>
+<script src="../../src/component.js"></script>

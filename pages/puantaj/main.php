@@ -36,6 +36,7 @@ $dates = generateDates($year, $month, $days);
 $search_name = isset($_GET["search_name"]) ? $_GET["search_name"] : "";
 $search_job = isset($_GET["search_job"]) ? $_GET["search_job"] : "";
 $search_projects = isset($_GET["search_projects"]) ? $_GET["search_projects"] : "";
+
 if ($search_name == null & $search_job == null & $search_projects == null) {
     $collapsed = "collapse";
 } else {
@@ -375,12 +376,13 @@ if ($project_id == null) {
 
                         </a>
                         <div class="btn ml-3">
-                            <button type="button" class="btn btn-default" data-toggle="dropdown">Rapor Al <i class="fa-solid fa-caret-down ml-3"></i> </button>
+                            <button type="button" class="btn btn-default" data-toggle="dropdown">Rapor Al <i
+                                    class="fa-solid fa-caret-down ml-3"></i> </button>
 
                             <div class="dropdown-menu" role="menu">
                                 <a class="dropdown-item" href="#">Puantajı Excele Aktar</a>
                                 <!-- <div class="dropdown-divider"></div> -->
-                               
+
                             </div>
                         </div>
                     </div>
@@ -473,13 +475,15 @@ if ($project_id == null) {
 
 
                 while ($person = $sql->fetch(PDO::FETCH_ASSOC)) {
+                    $job_start_date = $person["job_start_date"];
                     ?>
                     <tr>
                         <td class="text-nowrap" style="min-width:12vw;" data-id="<?php echo $person["id"] ?>"><a
                                 class="btn-user-modal" type="button">
                                 <?php echo $person["full_name"] ?></a></td>
-                        <td class="text-nowrap" style="min-width:10vw;"><a class="user-job" href="#">
-                                <?php echo $person["job"] ?></a></td>
+                        <td class="text-nowrap" style="min-width:10vw;">
+                            <?php echo $person["job"] ?>
+                        </td>
 
 
                         <?php
@@ -497,25 +501,29 @@ if ($project_id == null) {
                             <?php
 
                             $puantaj_id = kayitVarmi($company_id, $person["id"], $year, $month);
-                            if ($puantaj_id > 0) {
-                                $query = $con->prepare("SELECT * FROM puantaj where id = ?");
-                                $query->execute(array($puantaj_id));
-                                $puantaj_data = $query->fetch(PDO::FETCH_ASSOC);
-                                $data_json = json_decode($puantaj_data["datas"], true);
+                            if ($job_start_date <= $date) {
+                                if ($puantaj_id > 0) {
+                                    $query = $con->prepare("SELECT * FROM puantaj where id = ?");
+                                    $query->execute(array($puantaj_id));
+                                    $puantaj_data = $query->fetch(PDO::FETCH_ASSOC);
+                                    $data_json = json_decode($puantaj_data["datas"], true);
 
-                                $value = isset($data_json[$date]) ? $data_json[$date] : "0";
-                                $func->puantajClass($value);
-                                // echo "<td class='gun noselect' data-id=''>" . $value . "</td>";
+                                    $value = isset($data_json[$date]) ? $data_json[$date] : "0";
+                                    $func->puantajClass($value);
+                                    // echo "<td class='gun noselect' data-id=''>" . $value . "</td>";
                     
-                            } else {
-                                if (isWeekend($date)) {
-                                    $func->puantajClass(6);
                                 } else {
-                                    echo "<td class='gun noselect'></td>";
+
+                                    if (isWeekend($date)) {
+                                        $func->puantajClass(6);
+                                    } else {
+                                        echo "<td class='gun noselect'></td>";
+                                    }
+
                                 }
-
+                            } else {
+                                echo "<td class='noselect text-center' style='background:#ddd'>---</td>";
                             }
-
                             ?>
 
                         <?php endforeach; ?>
@@ -594,3 +602,48 @@ if ($project_id == null) {
         })
 
     </script>
+
+
+
+
+
+
+    <!-- <script>
+        $(document).ready(function () {
+            function formatOption(option) {
+                if (!option.id) {
+                    return option.text;
+                }
+
+                var $option = $('<span>' + option.text + ' <span class="person-count"></span></span>');
+
+                $.ajax({
+                    url: '../../ajax.php',
+                    type: 'POST',
+                    data: {
+                        id: option.id,
+                        action: "person-count"
+                    },
+                    success: function (response) {
+                        var result = JSON.parse(response);
+                        var result = JSON.parse(response);
+                        var countText = result.length > 0 ? result.length : 0;
+                        if (result.length > 0) {
+                            // Örneğin, dönen verinin sayısını göstermek istiyorsanız
+                            var $countSpan = $('<span class="badge badge-danger float-right">').text(countText);
+                        } else {
+                            var $countSpan = $('<span class="float-right">').text(countText);
+                            
+                        }
+                        $option.find('.person-count').append($countSpan);
+                    }
+                });
+                return $option;
+            }
+
+            $('#company').select2({
+                templateResult: formatOption,
+                templateSelection: formatOption
+            });
+        });
+    </script> -->

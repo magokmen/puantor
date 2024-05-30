@@ -5,20 +5,19 @@ $func = new Functions;
 
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Recover Password</title>
+    <title>Şifre Sıfırlama</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
-    <!-- icheck bootstrap -->
-    <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+
     <!-- Theme style -->
     <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
 
@@ -28,65 +27,47 @@ $func = new Functions;
 <body class="hold-transition login-page">
     <div class="login-box">
         <div class="login-logo">
-            <a href="index.php"><b>Puantor</b>| Puantaj Takip</a>
+            <a href="index.php"><b>Puantor</b> | Puantaj Takip</a>
         </div>
         <?php
 
-
-        // if ($_POST) {
-        //     $password = $func->security($_POST["password"]);
-        //     $password_repeat = $func->security($_POST["password_repeat"]);
-        //     if ($password == null || $password_repeat == null) {
-        //         echo showAlert("Şifreler boş olamaz!");
-        //     } else if ($password != $password_repeat) {
-        //         echo showAlert("Şifreler uyuşmuyor!");
-        //     } elseif ($password == null || $password_repeat == null || $password == '' || $password_repeat == '') {
-        //         echo showAlert("Şifreler boş olamaz!");
-        //     } else {
-        //         try {
-        //             header("location:login.php");
-        //         } catch (PDOException $ex) {
-        //             echo showAlert("Error: " . $ex->getMessage());
-        //         }
-        //     }
-        // }
-        
-        // ?>
-        <?php
-        
-        if ($_POST) {
-            
+        // Şifre sıfırlama işlemi
+        if ($_POST && isset($_POST["change"])) {
             $email = $func->security($_GET['email']);
             $token = $func->security($_GET['token']);
             $newPassword = $func->security($_POST['new_password']);
+            $password_errors = validate_password($newPassword);
             $confirmPassword = $func->security($_POST['confirm_password']);
 
             // Şifrelerin eşleştiğini kontrol et
             if ($newPassword !== $confirmPassword) {
                 echo showAlert("Şifreler eşleşmiyor.");
-
-            }
-
-            // Tokeni ve süresini kontrol et
-            $stmt = $con->prepare("SELECT * FROM password_reset WHERE email = :email");
-            $stmt->execute(['email' => $email]);
-            $resetRequest = $stmt->fetch();
-// echo showAlert(date("U") . "-" . $resetRequest['expires'] , "info");
-echo "token :" . $resetRequest['token'] ; 
-echo "token : 2 " . $token ;
-            if ($resetRequest && password_verify($token, $resetRequest['token']) && date("U") < $resetRequest['expires']) {
-                // Şifreyi güncelle
-                $newPasswordHash = password_hash($newPassword, PASSWORD_DEFAULT);
-                $stmt = $con->prepare("UPDATE users SET password = :password WHERE email = :email");
-                $stmt->execute(['password' => $newPasswordHash, 'email' => $email]);
-
-                // Tokeni sil
-                $stmt = $con->prepare("DELETE FROM password_reset WHERE email = :email");
-                $stmt->execute(['email' => $email]);
-
-                echo showAlert("Şifreniz başarıyla sıfırlandı.", "info");
+            } elseif (!empty($password_errors)) {
+                // Hataları göster
+                foreach ($password_errors as $error) {
+                    echo showAlert($error);
+                }
             } else {
-                echo showAlert("Geçersiz veya süresi dolmuş token.");
+                // Tokeni ve süresini kontrol et
+                $stmt = $con->prepare("SELECT * FROM password_reset WHERE email = :email ORDER BY id DESC");
+                $stmt->execute(['email' => $email]);
+                $resetRequest = $stmt->fetch();
+
+                if ($resetRequest && password_verify($token, $resetRequest['token']) && date("U") < $resetRequest['expires']) {
+                    // Şifreyi güncelle
+                    $newPasswordHash = password_hash($newPassword, PASSWORD_DEFAULT);
+                    $stmt = $con->prepare("UPDATE users SET password = :password WHERE email = :email");
+                    $stmt->execute(['password' => $newPasswordHash, 'email' => $email]);
+
+                    // Tokeni sil
+                    $stmt = $con->prepare("DELETE FROM password_reset WHERE email = :email");
+                    $stmt->execute(['email' => $email]);
+
+                    echo showAlert("Şifreniz başarıyla sıfırlandı. Ana sayfaya yönlendiriliyorsunuz", "info");
+                    header("Refresh:3; url=login.php");
+                } else {
+                    echo showAlert("Geçersiz veya süresi dolmuş token.");
+                }
             }
         } else if ($_GET['token'] && $_GET['email']) {
             $token = $_GET['token'];
@@ -97,12 +78,13 @@ echo "token : 2 " . $token ;
 
 
 
+
         <script>
             $(document).ready(function () {
                 // show the alert
                 setTimeout(function () {
                     $(".alert").fadeOut("slow");
-                }, 3000);
+                }, 6000);
             });
         </script>
 
@@ -114,8 +96,8 @@ echo "token : 2 " . $token ;
                 <p class="login-box-msg">Yeni şifrenize yalnızca bir adım kaldı, şifrenizi şimdi değiştirin.</p>
 
                 <form action="" method="post">
-                    <input type="text" name="token" value="<?php echo htmlspecialchars($token); ?>">
-                    <input type="text" name="email" value="<?php echo htmlspecialchars($email); ?>">
+                    <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
+                    <input type="hidden" name="email" value="<?php echo htmlspecialchars($email); ?>">
                     <div class="input-group mb-3">
                         <input type="password" name="new_password" class="form-control"
                             placeholder="Yeni Şifrenizi giriniz">
@@ -136,7 +118,8 @@ echo "token : 2 " . $token ;
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary btn-block">Şifremi Değiştir</button>
+                            <button type="submit" name="change" class="btn btn-primary btn-block">Şifremi
+                                Değiştir</button>
                         </div>
                         <!-- /.col -->
                     </div>

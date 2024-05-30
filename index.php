@@ -1,13 +1,8 @@
-<?php
-
-// Kök dizinini tanımlayın
-require_once  "include/requires.php";
-
+<?php require_once "include/requires.php";
 if (!isset($_SESSION['login']) || !isset($_SESSION["accountID"])) {
     header("Location: logout.php");
     exit;
-}
-?>
+} ?>
 <!DOCTYPE html>
 <html lang="tr">
 
@@ -67,7 +62,8 @@ if (!isset($_SESSION['login']) || !isset($_SESSION["accountID"])) {
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
     <title>Puantor | Puantaj Takip Uygulaması</title>
-    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
+        rel="stylesheet">
 
 
 </head>
@@ -82,21 +78,34 @@ if (!isset($_SESSION['login']) || !isset($_SESSION["accountID"])) {
             <img class="animation__shake" src="src/img/preload.png" alt="AdminLTELogo" height="60" width="60">
         </div>
 
+
+
         <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light d-flex justify-content-between">
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a class="nav-link loadContent" href="#" data-page="index" data-title="Ana Sayfa">Puantor | Puantaj
+                    <a class="nav-link loadContent" href="#" data-page="index" data-title="Ana Sayfa">Puantor |
+                        Puantaj
                         Takip</a>
                 </li>
             </ul>
+            <div class="flex-grow">
+
+                <marquee behavior="" direction="rihgt" onmouseover="stop()" onmouseout="start()">
+                    <span class="text-blue">
+                        Deneme sürümünün bitmesine kalan süre <span class="badge badge-danger p-2">14</span>
+                        gün,kullanmaya devam etmek için lütfen satın alın
+                    </span>
+                </marquee>
+
+            </div>
 
             <!-- Right navbar links -->
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav ">
                 <!-- Navbar Search -->
                 <li class="nav-item">
                     <a class="nav-link" data-widget="navbar-search" href="#" role="button">
@@ -284,8 +293,8 @@ if (!isset($_SESSION['login']) || !isset($_SESSION["accountID"])) {
                             <!-- fonksiyon ile yönlendirmek istenirse a'nın classındaki loadcontent classı çıkarılmalı, -->
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="#" onclick="RoutePagewithParams('projects/main','type=1')"
-                                        data-title="Alınan Projeler" class="nav-link nav-menu">
+                                    <a href="#" data-page="projects/main" data-params="type=1"
+                                        data-title="Alınan Projeler" class="nav-link nav-menu loadContent">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
                                             Alınan Projeler</strong>
@@ -294,8 +303,8 @@ if (!isset($_SESSION['login']) || !isset($_SESSION["accountID"])) {
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" onclick="RoutePagewithParams('projects/main','type=2')"
-                                        data-title="Verilen Projeler" class="nav-link nav-menu">
+                                    <a href="#" data-page="projects/main" data-params="type=2"
+                                        data-title="Verilen Projeler" class="nav-link nav-menu loadContent">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Verilen Projeler</p>
                                     </a>
@@ -328,7 +337,7 @@ if (!isset($_SESSION['login']) || !isset($_SESSION["accountID"])) {
                         </li>
 
                         <li class="nav-item">
-                            <a href="#" class="nav-link" data-page="Tanımlamalar" data-title="Müşteriler">
+                            <a href="#" class="nav-link" data-page="Tanımlamalar" data-title="Tanımlamalar">
                                 <!-- <a class="nav-link nav-menu loadContent" href="#" data-page="Tanımlamalar" data-title="Müşteriler"> -->
                                 <i class="nav-icon fa-solid fa-gears"></i>
                                 <p>
@@ -339,7 +348,7 @@ if (!isset($_SESSION['login']) || !isset($_SESSION["accountID"])) {
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="#" data-page="defines/parameters" data-title="Yeni Kullanıcı"
+                                    <a href="#" data-page="params/main" data-title="Parametre Listesi"
                                         class="nav-link nav-menu loadContent">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Parametre Tanımla</p>
@@ -349,7 +358,7 @@ if (!isset($_SESSION['login']) || !isset($_SESSION["accountID"])) {
 
 
                             </ul>
-                    
+
                         </li>
 
                         <li class="nav-item">
@@ -393,8 +402,9 @@ if (!isset($_SESSION['login']) || !isset($_SESSION["accountID"])) {
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link nav-menu loadContent" href="#" data-page="roles/main" data-title="Yetki Grupları">
-                               
+                            <a class="nav-link nav-menu loadContent" href="#" data-page="roles/main"
+                                data-title="Yetki Grupları">
+
                                 <i class="nav-icon fa-solid fa-lock-open"></i>
                                 <p>
                                     Yetkiler
@@ -466,9 +476,10 @@ if (!isset($_SESSION['login']) || !isset($_SESSION["accountID"])) {
                     </div><!-- /.row -->
 
                     <div id="content" class="maincontent">
-                        <?php 
-                        
-                        require "pages/index.php"; ?>
+                        <?php
+                                                
+                            require_once   "pages/index.php";
+                         ?>
                     </div>
                 </div><!-- /.container-fluid -->
 

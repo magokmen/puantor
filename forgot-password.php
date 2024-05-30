@@ -1,11 +1,11 @@
 <?php require_once "config/connect.php";
 require_once "config/functions.php";
 require_once "include/send-mail.php";
-use SendMail\SendMail;
+// use SendMail\SendMail;
 $func = new Functions();
 
-$mail = new SendMail;
-$mail->send("beyzade83@hotmail.com","deneme","baslik");
+
+
 
 
 ?>
@@ -29,6 +29,9 @@ $mail->send("beyzade83@hotmail.com","deneme","baslik");
   <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="apple-touch-icon" sizes="180x180" href="src/img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="src/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="src/img/favicon-16x16.png">
 </head>
 
 <body class="hold-transition login-page">
@@ -36,10 +39,11 @@ $mail->send("beyzade83@hotmail.com","deneme","baslik");
     <div class="login-logo">
       <a href="index.php"><b>Puantor</b> | Puantaj Takip</a>
     </div>
-
+    
+    
     <?php
     $email = "";
-    if ($_POST ) {
+    if ($_POST && isset($_POST["send"]) ) {
 
       $email = $func->security($_POST["email"]);
       if ($email == null) {
@@ -60,13 +64,16 @@ $mail->send("beyzade83@hotmail.com","deneme","baslik");
             // Kullanıcıya şifre sıfırlama bağlantısı gönder
             $resetLink = "https://puantor.mbeyazilim.com/recover-password.php?token=" . $token . "&email=" . urlencode($email);
             $subject = "Şifre Sıfırlama Talebi";
-            $message = "Şifrenizi sıfırlamak için aşağıdaki bağlantıya tıklayın:\n\n" . $resetLink;
+            $message = "Şifrenizi sıfırlamak için aşağıdaki bağlantıya tıklayın" . "</br><a href=".$resetLink.">".$resetLink."</a>";
 
-            // Email gönderme fonksiyonu
-            mail($email, $subject, $message);
+            // // Email gönderme fonksiyonu
+            $mailer = new SendMail();
 
+            if($mailer->send($email,$message , "Şifre Sıfırlama")){
+              echo showAlert("Şifre sıfırlama maili başarıyla gönderildi.", "info");
+              exit();
+            };
 
-            echo showAlert($resetLink, "info");
             //header("location: recover-password.php");
           } else {
             echo showAlert("Mail adresi geçerli değil");
@@ -83,7 +90,7 @@ $mail->send("beyzade83@hotmail.com","deneme","baslik");
       $(document).ready(function () {
         // show the alert
         setTimeout(function () {
-          $(".alert").fadeOut("slow");
+          $(".alert-danger").fadeOut("slow");
         }, 5000);
       });
     </script>
@@ -91,7 +98,7 @@ $mail->send("beyzade83@hotmail.com","deneme","baslik");
     <!-- /.login-logo -->
     <div class="card">
       <div class="card-body login-card-body">
-        <p class="login-box-msg">Şifrenizi mi unuttunuz? Endişelenmeyin! Kısa sürede şifrenizi sıfırlaycağız</p>
+        <p class="login-box-msg">Şifrenizi mi unuttunuz? Endişelenmeyin! Kısa sürede şifrenizi sıfırlayacağız</p>
 
         <form action="" method="post">
           
@@ -106,7 +113,7 @@ $mail->send("beyzade83@hotmail.com","deneme","baslik");
           </div>
           <div class="row">
             <div class="col-12">
-              <button type="submit" name="reset" class="btn btn-primary btn-block">Gönder</button>
+              <button type="submit" name="send" class="btn btn-primary btn-block">Gönder</button>
             </div>
             <!-- /.col -->
           </div>

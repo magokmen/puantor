@@ -25,27 +25,4 @@
     </div><!-- /.card-body -->
 </div>
 <!-- /.card -->
-
-<script>
-    $(function () {
-
-        var pagetitle = $("#page-title").text();
-        if (pagetitle == "Kullanıcı Listesi") {
-            $("#liste").tab("show");
-        }
-
-        if (pagetitle == "Yeni Kullanıcı") {
-            $("#yeni").tab("show");
-        }
-
-    })
-    $(function () {
-        $(".tabMenu").click(function () {
-            var navLinkText = $(this).data("title");
-            $("#page-title").text(navLinkText);
-            setActiveMenu(this);
-        });
-    });
-
-
-</script>
+<script src="../../src/component.js"></script>
