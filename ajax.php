@@ -2,12 +2,12 @@
 
 require_once "config/connect.php";
 require_once "config/functions.php";
-if ($_POST && $_POST["action"] == "kasa" ) {
-    $vault_id =$_POST["vault_id"];
+if ($_POST && $_POST["action"] == "kasa") {
+    $vault_id = $_POST["vault_id"];
 
     $sql = $con->prepare("SELECT * FROM transactions WHERE vault_id = ?");
-    $sql->execute(array($vault_id)); 
-   $result = $sql->fetchAll(PDO::FETCH_ASSOC);
+    $sql->execute(array($vault_id));
+    $result = $sql->fetchAll(PDO::FETCH_ASSOC);
 
     $res = array(
         "message" => $vault_id,
@@ -19,7 +19,7 @@ if ($_POST && $_POST["action"] == "kasa" ) {
     return false;
 
 
-} 
+}
 
 
 
@@ -48,8 +48,8 @@ if ($_POST && $_POST["action"] == "puantaj") {
 
         try {
 
-           
-            $puantaj_id = kayitVarmi($company_id,$full_name, $year, $months);
+
+            $puantaj_id = kayitVarmi($company_id, $full_name, $year, $months);
 
             if ($puantaj_id > 0) {
                 $sql = $con->prepare("UPDATE puantaj SET datas = ? WHERE id = ?");
@@ -65,9 +65,9 @@ if ($_POST && $_POST["action"] == "puantaj") {
             );
 
         } catch (PDOException $ex) {
-            $res=array(
+            $res = array(
                 "employee" => $full_name,
-                "message" =>"Bir hata oluştu. Hata mesajı :" .  $ex->getMessage(),
+                "message" => "Bir hata oluştu. Hata mesajı :" . $ex->getMessage(),
                 "status" => 400
             );
 
@@ -79,7 +79,7 @@ if ($_POST && $_POST["action"] == "puantaj") {
     return false;
 
 
-} 
+}
 
 
 if ($_POST && $_POST["action"] == "proje") {
@@ -124,5 +124,36 @@ if ($_POST && $_POST["action"] == "ilce") {
         echo '<option disabled >İl bulunamadı</option>';
     }
 }
+
+
+
+
+if ($_POST && $_POST["action"] == "person-count") {
+    if (isset($_POST['id'])) {
+        $id = intval($_POST['id']);
+
+        try {
+          
+            $sql = $con->prepare("SELECT * FROM person WHERE company_id = ?");
+            $sql->execute([$id]);
+            $result = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+            if (count($result) > 0) {
+                // JSON formatında çıktı veriyoruz
+                echo json_encode($result);
+            } else {
+                // Sonuç yoksa boş bir JSON dizisi döndürün
+                echo json_encode([]);
+            }
+        } catch (PDOException $e) {
+            // Hata durumunda hata mesajı döndürülür
+            echo json_encode(["error" => $e->getMessage()]);
+        }
+    } else {
+        // ID belirtilmemişse boş bir JSON dizisi döndürülür
+        echo json_encode([]);
+    }
+}
+?>
 
 

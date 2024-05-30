@@ -560,3 +560,29 @@ function formatdDate($date)
     // Yeni formatta tarihi stringe dönüştürme
     return date("d.m.Y", $timestamp);
 }
+
+function validate_password($password) {
+    $errors = [];
+    
+    // Büyük harf kontrolü
+    if (!preg_match('/[A-Z]/', $password)) {
+        $errors[] = "Şifre en az bir büyük harf içermelidir.";
+    }
+    
+    // Küçük harf kontrolü
+    if (!preg_match('/[a-z]/', $password)) {
+        $errors[] = "Şifre en az bir küçük harf içermelidir.";
+    }
+    
+    // Özel karakter kontrolü
+    if (!preg_match('/[\W_]/', $password)) { // \W harf ve rakam olmayan karakterler için kullanılır
+        $errors[] = "Şifre en az bir özel karakter içermelidir.";
+    }
+
+    // Şifre uzunluğu kontrolü (opsiyonel)
+    if (strlen($password) < 8) {
+        $errors[] = "Şifre en az 8 karakter uzunluğunda olmalıdır.";
+    }
+    
+    return $errors;
+}

@@ -61,6 +61,7 @@ $message = "";
                 $_SESSION['accountType'] = $account["account_type"];
                 $_SESSION['accountID'] = $account["account_id"];
                 $_SESSION['id'] = $account["id"];
+              
 
                 // Giriş başarılı mesajını göster
                 echo '<div class="alert alert-info" role="alert">Giriş başarılı! Ana Sayfaya yönlendiriliyorsunuz.</div>';

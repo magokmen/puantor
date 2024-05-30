@@ -1,28 +1,35 @@
-<?php require_once "../../include/requires.php"; ?>
+<?php
+require_once "../../include/requires.php"; 
+
+?>
+
 
 <div class="card card-outline card-info">
     <div class="card-header p-2">
-
         <div class="d-flex justify-content-between">
+
+
             <ul class="nav nav-pills">
-                <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Şirket Listesi"
-                        data-toggle="tab">Şirket Listesi</a>
+                <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Parametre Listesi"
+                        data-toggle="tab">Parametre Listesi</a>
                 </li>
-                <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Şirket Listesi"
-                        data-toggle="tab">Yeni Şirket</a></li>
+                <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Yeni Parametre"
+                        data-toggle="tab">Yeni Parametre</a></li>
+
 
             </ul>
-
-
             <?php
             $params = array("method" => "add");
             $params_json = $func->jsonEncode($params);
             ?>
 
-            <button type="button" data-title="Yeni Firma" id="save"
-                onclick="submitFormbyAjax('company/main','<?php echo $params_json ?>')"
-                class="btn btn-info d-none"><i class="fas fa-save mr-2"></i> Kaydet</button>
-        </div><!-- /.card-header -->
+            <button type="button" id="save" data-title="Yeni Parametre"
+                onclick="submitFormbyAjax('params/add','<?php echo $params_json ?>')"
+                class="btn btn-info d-none">
+                <i class="fas fa-save mr-2"></i>Kaydet</button>
+        </div>
+
+        
     </div><!-- /.card-header -->
     <div class="card-body">
         <div class="tab-content">
@@ -38,8 +45,6 @@
                 <?php include "list.php" ?>
             </div>
         </div>
-
-
 
     </div><!-- /.card-body -->
 </div>

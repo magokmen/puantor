@@ -1,3 +1,40 @@
+// function submitFormbyAjax(page, params, messageType = "alert") {
+//   var form = document.getElementById("myForm");
+//   var formData = new FormData(form);
+//   if (validateForm()) {
+//     if (params != "") {
+//       var parsedParams = JSON.parse(params);
+//       for (var key in parsedParams) {
+//         formData.append(key, parsedParams[key]);
+//       }
+//     }
+
+//     //formData elemanlarını console ekranında göstermek için
+//     // formData.forEach(function (value, key) {
+//     //   console.log(key + ": " + value);
+//     // });
+
+//     // Dinamik olarak formun gönderileceği sayfayı belirle
+//     var submitUrl = "pages/" + page + ".php";
+
+//     fetch(submitUrl, {
+//       method: "POST",
+//       body: formData,
+//     })
+//       .then((response) => response.text())
+//       .then((data) => {
+//         // Sunucudan gelen HTML ile sayfa içeriğini güncelle
+//         updatePageContent(data);
+//         var successMessage = "İşlem Başarı ile gerçekleşti";
+//         if (messageType === "alert") {
+//           showMessage(successMessage, "success");
+//         } else {
+//           toastrdefaultsuccess(successMessage);
+//         }
+//       })
+//       .catch((error) => console.error(error));
+//   }
+// }
 function submitFormbyAjax(page, params, messageType = "alert") {
   var form = document.getElementById("myForm");
   var formData = new FormData(form);
@@ -9,30 +46,42 @@ function submitFormbyAjax(page, params, messageType = "alert") {
       }
     }
 
-    //formData elemanlarını console ekranında göstermek için
-    // formData.forEach(function (value, key) {
-    //   console.log(key + ": " + value);
-    // });
-
     // Dinamik olarak formun gönderileceği sayfayı belirle
     var submitUrl = "pages/" + page + ".php";
+    // console.log(submitUrl);
+    $.ajax({
+      url: submitUrl,
+      data: formData,
+      type: "POST",
+      processData: false,
+      contentType: false,
+      success: function (response) {
+   
+        var data = JSON.parse(response);
+        if (data.status == 200) {
+          // Başarı mesajı ve sayfa içeriği güncelleme
+          var successMessage = data.message;
+          RoutePage(data.page,"", pTitle = data.pTitle); 
 
-    fetch(submitUrl, {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.text())
-      .then((data) => {
-        // Sunucudan gelen HTML ile sayfa içeriğini güncelle
-        updatePageContent(data);
-        var successMessage = "İşlem Başarı ile gerçekleşti";
-        if (messageType === "alert") {
-          showMessage(successMessage, "success");
+          if (messageType === "alert") {
+            showMessage(successMessage, "success");
+          } else {
+            toastrdefaultsuccess(successMessage);
+          }
         } else {
-          toastrdefaultsuccess(successMessage);
+          var errorMessage = data.message;
+          if (messageType === "alert") {
+            showMessage(errorMessage, "error");
+          } else {
+            toastrdefaulterror(errorMessage);
+          }
         }
-      })
-      .catch((error) => console.error(error));
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.error("AJAX error: " + textStatus + ": " + errorThrown);
+        showMessage("Beklenmeyen bir hata oluştu.", "error");
+      },
+    });
   }
 }
 
@@ -184,8 +233,7 @@ function updateUrlAddresses(page) {
   window.history.pushState("", "", "/" + page);
 }
 
-
-function RoutePagewithParams(page, params = "", ) {
+function RoutePagewithParams(page, params = "") {
   $("#content").empty(); // İçeriği temizle
   $("#content").animate({ opacity: 0 }, 300, function () {
     $(this).load("pages/" + page + ".php?" + params, function () {
@@ -195,24 +243,27 @@ function RoutePagewithParams(page, params = "", ) {
   });
 }
 
-function RoutePage(page, element = "") {
-
+function RoutePage(page, element = "",pTitle = "") {
   var pageTitleElement = $("#page-title");
   var params = element ? $(element).data("params") : "";
-  var title = element ? $(element).data("title") : "";
-  pageTitleElement.text(title);
+  if(pTitle != ""){
+    pageTitleElement.text(pTitle);
+  }else{
+    var title = element ? $(element).data("title") : "";
+    pageTitleElement.text(title);
+  }
+  
 
-  console.log(page);
 
   $("#content").empty(); // İçeriği temizle
-   if (page != null) {
+  if (page != null) {
     $("#content").animate({ opacity: 0 }, 300, function () {
       $(this).load("pages/" + page + ".php?" + params, function () {
         // Yükleme tamamlandığında içeriği gösterme işlemi
         $(this).animate({ opacity: 1 }, 300);
       });
     });
-   }
+  }
 }
 
 function pageTitle(page, title) {
@@ -223,11 +274,17 @@ function pageTitle(page, title) {
   document.title = title;
   pageTitleElement.text(title);
 }
+
+$(function () {
+  $(".loadContent").on("click", loadPage);
+});
+
 function loadPage(e) {
   e.preventDefault();
 
   var page = $(this).data("page");
   var title = $(this).data("title");
+  var params = $(this).data("params");
 
   pageTitle(page, title);
 
@@ -244,7 +301,7 @@ function loadPage(e) {
     },
     success: function () {
       // Sayfa varsa
-      pagelink = "pages/" + page + ".php";
+      pagelink = "pages/" + page + ".php?" + params;
       loadContent(pagelink);
     },
   });
@@ -259,10 +316,6 @@ function loadContent(pagelink) {
     });
   });
 }
-
-$(function () {
-  $(".loadContent").on("click", loadPage);
-});
 
 function updateBreadcrumb(pageName) {
   // Mevcut breadcrumb'ın içeriğini temizle

@@ -1,71 +1,67 @@
 <?php
-namespace SendMail ;
+
 // permcontrol("mailandsmssend");
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-use PDOException;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\SMTP;
 
 require 'vendor/autoload.php';
 
-//MÜSTERİLER SAYFASINDAN MAİL GÖNDERMEK İÇİN
+// MÜŞTERİLER SAYFASINDAN MAİL GÖNDERMEK İÇİN
 
-class SendMail {
-    // public $from = set("company_name") ;
-
-    function send($address,$content,$subject = null, $file = null){
-        
+class SendMail
+{
+    // public $from = set("company_name");
+    /**
+     * Create a message and send it.
+     * Uses the sending method specified by $Mailer.
+     *
+     * @throws Exception
+     *
+     * @return bool false on error - See the ErrorInfo property for details of the error
+     */
+   public function send($address, $content, $subject = null, $file = null)
+    {
+        global $con;
 
         try {
-            
-			if (!empty($address)) {
-                
-				$mail = new PHPMailer();
-				$mail->IsSMTP();
-				$mail->SMTPDebug = 2;
-				$mail->SMTPAuth = true;
-           
-				$mail->SMTPSecure   = 'tls'; // Güvenli bağlantı için tls kullanıyoruz
-				$mail->Host         = "mt-zelda.guzelhosting.com"; //set("mail_host"); // Mail sunucusunun adresi (IP de olabilir)
-				$mail->Port         = "25";
-				$mail->IsHTML(true);
-   				$mail->Encoding     = 'base64';
-				$mail->SetLanguage("tr", "phpmailer/language");
-				$mail->Username     = "_mainaccount@mbeyazilim.com" ;//set('mail_username'); // Gönderici adresiniz (e-posta adresiniz)
-				$mail->Password     = "kpQ~+9^Gh(8x" ; //set('mail_password'); // Mail adresimizin sifresi
-				$mail->setFrom($address, "beyzade83@hotmail.com");
+            if (!empty($address)) {
+                $mail = new PHPMailer(true);
+                $mail->isSMTP();
+                $mail->SMTPDebug = 0; // Hata ayıklamayı kapat
+                $mail->SMTPAuth = true;
+                $mail->SMTPSecure = 'tls'; // Güvenli bağlantı için TLS kullanıyoruz
+                $mail->Host = "mt-zelda.guzelhosting.com"; //set("mail_host"); // Mail sunucusunun adresi (IP de olabilir)
+                $mail->Port = 587; // TLS için genellikle port 587 kullanılır
+                $mail->isHTML(true);
+                $mail->Encoding = 'base64';
+                $mail->setLanguage("tr", "phpmailer/language/");
+                $mail->Username = "puantor@mbeyazilim.com"; //set('mail_username'); // Gönderici adresiniz (e-posta adresiniz)
+                $mail->Password = "*vn-hwC}.L1D"; // set('mail_password'); // Mail adresinizin şifresi
+                $mail->setFrom("puantor@mbeyazilim.com", "Puantor");
+                $mail->addAddress($address); // Gönderilen Alıcı
+                if ($file) {
+                    $mail->addAttachment($file); // Yüklenen dosyayı ekle
+                }
+                $mail->Subject = $subject;
+                $mail->Body = $content;
+                $mail->CharSet = "UTF-8";
 
-	     		$mail->AddAttachment($file); // Yüklenen dosyayı ekle
-				$mail->Subject      = $subject;
-				$mail->Body         = $content;
-                $mail->CharSet      = "UTF-8";
-				if ($mail->Send()) {
-
-					// //Eğer başarılı ise veritabanına kayıt edilir
-					// $sql= $con->prepare("INSERT INTO mail_logs SET tomail = ?, from_mail = ?, mail_file = ? , mail_body = ? ,sender = ?");
-					// $sql->execute(array($mailto,$mail_from,$dosya_adi,$mailicerik,sesset("id")));
-					// header("Location: index.php?p=send-mail&send=true");
-
-				} else {
-					
-
-				}
-			} else {
-				
-
-			}
-			
-	} catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
-		
-	}
+                if ($mail->send()) {
+                    $sql = $con->prepare("INSERT INTO mail_logs (tomail, from_mail, mail_file, mail_body, sender) VALUES (?, ?, ?, ?, ?)");
+                    $sql->execute([$address, "PUANTOR", $file ?? "", $content, 1]);
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
 
-
-    
-}
-
-    
