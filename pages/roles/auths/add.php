@@ -1,6 +1,6 @@
 <?php
 require_once "../../../include/requires.php";
-echo "sdf";
+echo "sdfkbvv";
 if ($_POST) {
 
     $authName = $_POST["authName"];
