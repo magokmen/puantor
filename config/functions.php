@@ -345,7 +345,7 @@ class Functions
         }
 
         // Select elemanını başlat
-        $select = "<select id=" . $name . " class='select2' style='min-width:100%' name=\"$name\">\n";
+        $select = "<select id=" . $name . " class='select2' style='width:100%' name=\"$name\">\n";
 
         // Ayları select elemanına ekle
         foreach ($months as $key => $value) {

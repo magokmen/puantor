@@ -70,3 +70,14 @@ $("#startdate,#enddate").datetimepicker({
   format: "DD.MM.YYYY",
   locale: "tr",
 });
+
+
+    $(function () {
+        $('.check').bootstrapToggle({
+            onstyle: "primary",
+            size: "xs",
+            toogle: "toogle",
+
+        });
+    })
+
