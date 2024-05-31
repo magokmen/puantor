@@ -3,7 +3,7 @@ session_start();
 require_once "config/connect.php";
 require_once "config/functions.php";
 $func = new Functions();
-echo "jghgdfgdfgsdfgdfgfd";
+echo "jghgdfgfsgdf";
 
 ?>
 <!DOCTYPE html>
