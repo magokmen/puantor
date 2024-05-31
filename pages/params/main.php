@@ -13,7 +13,7 @@ require_once "../../include/requires.php";
                 <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Parametre Listesi"
                         data-toggle="tab">Parametre Listesi</a>
                 </li>
-                <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Yeni Parametre"
+                <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Parametre Listesi"
                         data-toggle="tab">Yeni Parametre</a></li>
 
 

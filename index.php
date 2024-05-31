@@ -246,6 +246,17 @@ if ($expired_date < 3) {
                                 </p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-menu loadContent" href="#" data-page="bordro/main"
+                                data-title="Bordro">
+                                <i class="nav-icon fa-solid fa-money-bills"></i>
+                                <!-- <i class="nav-icon fa-solid fa-calculator"></i> -->
+                               
+                                <p>
+                                    Bordro
+                                </p>
+                            </a>
+                        </li>
 
 
                         <!-- <li class="nav-item">

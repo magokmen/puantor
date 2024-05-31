@@ -30,6 +30,7 @@ if ($_POST && $_POST["action"] == "puantaj") {
     $year = $_POST["year"];
     $months = $_POST["months"];
     $data = ($_POST["data"]);
+    $update_date = date("Y-m-d H:i:s");
 
     // Gönderilen JSON verisini doğrudan kontrol et
     $puantajData = json_decode($data, true);
@@ -52,8 +53,8 @@ if ($_POST && $_POST["action"] == "puantaj") {
             $puantaj_id = kayitVarmi($company_id, $full_name, $year, $months);
 
             if ($puantaj_id > 0) {
-                $sql = $con->prepare("UPDATE puantaj SET datas = ? WHERE id = ?");
-                $sql->execute(array($records_json, $puantaj_id));
+                $sql = $con->prepare("UPDATE puantaj SET datas = ?,updated_at = ? WHERE id = ?");
+                $sql->execute(array($records_json,$update_date, $puantaj_id));
 
             } else {
                 $sql = $con->prepare("INSERT INTO puantaj SET company_id = ?, project_id = ?, person = ? , yil = ?, ay = ?, datas = ?");
@@ -81,6 +82,54 @@ if ($_POST && $_POST["action"] == "puantaj") {
 
 }
 
+if ($_POST && $_POST["action"] == "puantaj-kapat") {
+    $company_id = $_POST["company_id"];
+    $yil = $_POST["yil"];
+    $ay = $_POST["ay"];
+    $state_val = $_POST["state_val"];
+    $sql = $con->prepare("SELECT * FROM puantaj WHERE company_id = ? AND yil = ? AND ay= ?");
+    $sql->execute(array($company_id,$yil,$ay));
+   
+
+while( $result = $sql->fetch(PDO::FETCH_ASSOC)){
+    $up_query = $con->prepare("UPDATE puantaj SET isClosed = ? WHERE id = ?");
+    $up_query ->execute(array($state_val,$result["id"]));
+
+}
+
+    $res=array(
+        "statu" => 200,
+        "message" => "Başarılı"
+    );
+    echo json_encode($res);
+    return;
+
+}
+
+
+if ($_POST && $_POST["action"] == "bordro-gorsun") {
+    $company_id = $_POST["company_id"];
+    $yil = $_POST["yil"];
+    $ay = $_POST["ay"];
+    $state_val = $_POST["state_val"];
+    $sql = $con->prepare("SELECT * FROM puantaj WHERE company_id = ? AND yil = ? AND ay= ?");
+    $sql->execute(array($company_id,$yil,$ay));
+   
+
+while( $result = $sql->fetch(PDO::FETCH_ASSOC)){
+    $up_query = $con->prepare("UPDATE puantaj SET isView = ? WHERE id = ?");
+    $up_query ->execute(array($state_val,$result["id"]));
+
+}
+
+    $res=array(
+        "statu" => 200,
+        "message" => "Başarılı"
+    );
+    echo json_encode($res);
+    return;
+
+}
 
 if ($_POST && $_POST["action"] == "proje") {
     $company_id = $_POST["company_id"];
@@ -154,6 +203,3 @@ if ($_POST && $_POST["action"] == "person-count") {
         echo json_encode([]);
     }
 }
-?>
-
-
