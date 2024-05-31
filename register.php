@@ -4,7 +4,6 @@ require_once "config/connect.php";
 require_once "config/functions.php";
 $func = new Functions();
 
-
 ?>
 <!DOCTYPE html>
 <html lang="tr">
