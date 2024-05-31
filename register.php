@@ -3,6 +3,8 @@ session_start();
 require_once "config/connect.php";
 require_once "config/functions.php";
 $func = new Functions();
+
+echo  "deneme";
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -24,7 +26,6 @@ $func = new Functions();
 </head>
 
 <body class="hold-transition login-page">
-
 
 
     <div class="login-box">
