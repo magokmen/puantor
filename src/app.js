@@ -9,7 +9,7 @@ function submitFormbyAjax(page, params, messageType = "alert") {
       }
     }
 
-    //formData elemanlarını console ekranında göstermek için
+    // formData elemanlarını console ekranında göstermek için
     // formData.forEach(function (value, key) {
     //   console.log(key + ": " + value);
     // });
