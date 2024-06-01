@@ -21,10 +21,12 @@ function submitFormbyAjax(page, params, messageType = "alert") {
       method: "POST",
       body: formData,
     })
+   
       .then((response) => response.text())
       .then((data) => {
         // Sunucudan gelen HTML ile sayfa içeriğini güncelle
         updatePageContent(data);
+        
         var successMessage = "İşlem Başarı ile gerçekleşti";
         if (messageType === "alert") {
           showMessage(successMessage, "success");

@@ -17,7 +17,7 @@ if ($_POST) {
         //seçilil olan checkbox'larda döngüye girerek veritabanına kaydeder
         foreach ($_POST["checkedDataIds"] as $chk) {
             $sql = $ac->prepare("INSERT INTO userauths (roleID,authID) VALUES(?,?)");
-            $sql->execute(array($$roleId, $chk));
+            $sql->execute(array($roleId, $chk));
         }
     }
 }
@@ -91,7 +91,7 @@ if ($_POST) {
 
                     <div class="card card-outline p-0 collapsed-card shadow-sm <?php echo $cardClass; ?> mb-3">
                         <div class="card-header">
-                            <input type="checkbox" class="check">
+                            <input type="checkbox" class="check" data-id="<?php echo $row["id"] ?>">
                             <span class="ml-2">
                                 <?php echo $row["authTitle"]; ?>
                             </span>
