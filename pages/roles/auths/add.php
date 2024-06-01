@@ -1,45 +1,24 @@
 <?php
 require_once "../../../include/requires.php";
+//permtrue("personlist");
+$roleId = isset($_GET['id']) ? $_GET['id'] : $_POST['id'];
 
 if ($_POST) {
 
-    $authName = $_POST["authName"];
-    $authDescription = $_POST["authDescription"];
-    if ($authName != null) {
+    //CHECKBOX'LARI SAY
+    $checkcount = isset($_POST["checkedDataIds"]) ? count($_POST["checkedDataIds"]) : 0;
 
-        //CHECKBOX'LARI SAY
-        $checkcount = isset($_POST["checkedDataIds"]) ? count($_POST["checkedDataIds"]) : 0;
+    //EN AZ BİR ADET YETKİ SEÇİLİ İSE İŞLEME DEVAM ET
+    if ($checkcount > 0) {
+        //ÖNCELİKLE TABLODAKİ YETKİLERİ SİL, SONRA TEKRAR KAYIT YAP
+        $delauths = $ac->prepare("DELETE FROM userauths WHERE roleID = ?");
+        $delauths->execute(array($roleId));
 
-        //EN AZ BİR ADET YETKİ SEÇİLİ İSE İŞLEME DEVAM ET
-        if ($checkcount > 0) {
-            $query = $ac->prepare("INSERT INTO userroles (roleName, roleDescription, isActive) VALUES (?, ?, ?)");
-            $query->execute(array($authName, $authDescription, 1));
-            $lastid = $ac->lastInsertId();
-
-
-            if ($query) {
-                //seçilil olan checkbox'larda döngüye girerek veritabanına kaydeder
-                foreach ($_POST["checkedDataIds"] as $chk) {
-                    $sql = $ac->prepare("INSERT INTO userauths (roleID,authID) VALUES(?,?)");
-                    $sql->execute(array($lastid, $chk));
-                }
-
-                if ($sql) {
-                    header("Location:index.php?p=permission-new&st=success");
-                    exit();
-                }
-            }
-        } else {
-            //en az bir adet yetki seçili değilse uyarı ver
-            header("Location:index.php?p=permission-new&st=authempties");
-            exit();
+        //seçilil olan checkbox'larda döngüye girerek veritabanına kaydeder
+        foreach ($_POST["checkedDataIds"] as $chk) {
+            $sql = $ac->prepare("INSERT INTO userauths (roleID,authID) VALUES(?,?)");
+            $sql->execute(array($$roleId, $chk));
         }
-
-    } else {
-
-
-        header("Location:index.php?p=permission-new&st=empties");
-        exit();
     }
 }
 
@@ -61,49 +40,61 @@ if ($_POST) {
                         data-toggle="tab">Listeye Dön</a>
                 </li>
             </ul>
+
+
             <?php
             $params = array(
-                "method" => "update",
-            
-      
+                "method" => "add",
+                "id" => $roleId
             );
             $params_json = $func->jsonEncode($params);
             ?>
 
-            <button type="button" id="save" data-title="Proje Güncelle"
-                onclick="submitFormbyAjax('projects/edit','<?php echo $params_json ?>')"
+            <button type="button" id="save" data-title="Yetki Tanımlama"
+                onclick="submitFormbyAjax('roles/auths/add','<?php echo $params_json ?>')"
                 class="btn btn-info">Kaydet</button>
         </div>
-
     </div><!-- /.card-header -->
     <div class="card-body">
 
-        <form>
+        <form id="myForm">
 
-            <div class="row">
+            <div class="container">
                 <?php
 
-                $sql = $con->prepare("SELECT * FROM authority WHERE isActive = ? ORDER BY authGroup ASC");
+                $sql = $con->prepare("SELECT * FROM authority WHERE isActive = ? ORDER BY authGroup ASC, id ASC");
                 $sql->execute(array(1));
 
                 $group = 0;
-                $number = 1;
-
+                $groupCounter = 0; // Grupları saymak için
+                $colors = ['bg-danger', 'bg-warning', 'bg-success', 'bg-info', 'bg-primary', 'bg-secondary', 'bg-dark', 'bg-info']; // Canlı renk dizisi
+                $colorIndex = 0; // Başlangıç renk indeksi
+                
                 while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
                     if ($group != $row["authGroup"]) {
-                        echo $group == 0 ? "<div class='col-md-4'>" : "</div><div class='col-md-4'>";
+                        if ($groupCounter % 3 == 0 && $groupCounter != 0) {
+                            echo "</div><div class='w-100 mb-4'></div><div class='row'>"; // Her üç gruptan sonra boşluk bırakıp yeni satıra geç
+                        } elseif ($groupCounter % 3 == 0) {
+                            echo "<div class='row'>"; // Yeni satır başlangıcı
+                        }
+                        $groupCounter++;
+                        $colorIndex = ($colorIndex + 1) % count($colors); // Renk indeksini değiştir
+                    }
+
+                    // isModule değeri 1 ise ek bir sınıf ekle
+                    $cardClass = $row["isModule"] == 1 ? $colors[$colorIndex] . ' text-white' : 'bg-light';
+
+                    if ($group != $row["authGroup"]) {
+                        echo $group != 0 ? "</div><div class='col-md-4'>" : "<div class='col-md-4'>"; // Yeni grup için yeni sütun başlat
                     }
                     ?>
 
-                    <div class="card card-outline p-0 collapsed-card shadow-sm">
+                    <div class="card card-outline p-0 collapsed-card shadow-sm <?php echo $cardClass; ?> mb-3">
                         <div class="card-header">
                             <input type="checkbox" class="check">
                             <span class="ml-2">
-
                                 <?php echo $row["authTitle"]; ?>
                             </span>
-
-
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                     <i class="fas fa-plus"></i>
@@ -119,15 +110,10 @@ if ($_POST) {
                     </div>
                     <?php
                     $group = $row["authGroup"];
-                    $number += 1;
                 }
-                echo '</div>' ?>
-
+                echo '</div></div>' ?>
             </div>
-
         </form>
-
-
     </div>
 </div>
 
@@ -138,7 +124,8 @@ if ($_POST) {
 <script>
     $(function () {
         $('.check').bootstrapToggle({
-            onstyle: "primary",
+            onstyle: "success",
+            offstyle: "danger",
             size: "xs",
             toogle: "toogle",
 
@@ -146,8 +133,8 @@ if ($_POST) {
     })
     $("#liste").click(function () {
         var type = $("#type").val();
-       
-       RoutePagewithParams("roles/main","")
+
+        RoutePagewithParams("roles/main", "")
         $("#page-title").text($(this).data("title"));
     })
 </script>
@@ -168,8 +155,6 @@ if ($_POST) {
             // Formu submit et
             $('#myForm').submit();
         });
-        // $("input[data-bootstrap-switch]").each(function () {
-        //     $(this).bootstrapSwitch('state', $(this).prop('checked'));
-        // })
+
     });
 </script>

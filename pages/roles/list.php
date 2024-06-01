@@ -62,20 +62,20 @@ if ($_POST && isset($_POST["action"]) == "delete-roles") {
                 <td>
                     <?php echo $value["isActive"] == 1 ? "Aktif" : "Pasif"; ?>
                 </td>
-   
+
 
                 <td class="">
 
                     <i class="fa-solid fa-ellipsis-vertical list-button" data-toggle="dropdown"></i>
                     <ul class="dropdown-menu">
                         <li class="dropdown-item"><i class="fa-solid fa-edit dropdown-list-icon"></i><a href="#"
-                                onclick="RoutePagewithParams('auths/edit','id=<?php echo $value['id'] ?>&type=<?php echo $type ;?>')" 
+                                onclick="RoutePagewithParams('roles/edit','id=<?php echo $value['id'] ?>&type=<?php echo $type; ?>')"
                                 data-title="Yetki Grubu Düzenle">
                                 Güncelle
                             </a>
                         </li>
                         <li class="dropdown-item"><i class="fa-solid fa-edit dropdown-list-icon"></i><a href="#"
-                                onclick="RoutePage('roles/auths/add',this)" data-params="id=<?php echo $value['id'] ?>" 
+                                onclick="RoutePage('roles/auths/add',this)" data-params="id=<?php echo $value['id'] ?>"
                                 data-title="Yetki Grubu Düzenle">
                                 Yetkileri Düzenle
                             </a>
@@ -91,7 +91,7 @@ if ($_POST && isset($_POST["action"]) == "delete-roles") {
                         ?>
 
                         <li class="dropdown-item"><i class="fa-solid fa-trash-can dropdown-list-icon"></i><a href="#"
-                                onclick="deleteRecordByAjax('auths/main','<?php echo $params_json ?>')">Sil!</a></li>
+                                onclick="deleteRecordByAjax('roles/main','<?php echo $params_json ?>')">Sil!</a></li>
                     </ul>
                 </td>
             </tr>
@@ -101,7 +101,7 @@ if ($_POST && isset($_POST["action"]) == "delete-roles") {
     <tfoot>
 
         <tr>
-        <th>id</th>
+            <th>id</th>
             <th>Yetki Adı</th>
             <th>Açıklama</th>
             <th>Durunu</th>
