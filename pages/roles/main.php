@@ -1,5 +1,5 @@
-<?php 
-require_once  "../../include/requires.php"; 
+<?php
+require_once "../../include/requires.php";
 // permtrue("personlist");
 
 ?>
@@ -9,20 +9,20 @@ require_once  "../../include/requires.php";
 
             <ul class="nav nav-pills">
                 <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Yetkiler"
-                        data-toggle="tab">Yetki Grupları </a>
+                        data-toggle="tab">Yetki Grupları</a>
                 </li>
                 <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Yetkiler"
                         data-toggle="tab">Yeni Yetki</a></li>
 
             </ul>
             <?php
-           
+
             $params = array("method" => "add");
             $params_json = $func->jsonEncode($params);
             ?>
 
             <button type="button" id="save" data-title="Yeni Firma"
-                onclick="submitFormbyAjax('auths/main','<?php echo $params_json ?>')" class="btn btn-info d-none">
+                onclick="submitFormbyAjax('roles/main','<?php echo $params_json ?>')" class="btn btn-info d-none">
                 <i class="fas fa-save mr-2"></i>Kaydet</button>
         </div>
     </div><!-- /.card-header -->

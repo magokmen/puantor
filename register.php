@@ -3,7 +3,7 @@ session_start();
 require_once "config/connect.php";
 require_once "config/functions.php";
 $func = new Functions();
-echo "";
+
 
 
 ?>
@@ -78,17 +78,17 @@ echo "";
                 try {
 
                     $con->beginTransaction();
-                        $sql = $con->prepare("INSERT INTO accounts SET company_name= ? , full_name= ?, email= ? , password = ? ");
-                        $sql->execute(array($company_name, $full_name, $email, $password_hashed));
-                        $lastid = $con->lastInsertId();
+                    $sql = $con->prepare("INSERT INTO accounts SET company_name= ? , full_name= ?, email= ? , password = ? ");
+                    $sql->execute(array($company_name, $full_name, $email, $password_hashed));
+                    $lastid = $con->lastInsertId();
 
 
-                        $userquery = $con->prepare("INSERT INTO users SET account_id= ? , full_name= ?, email= ? , password = ? ");
-                        $userquery->execute(array($lastid, $full_name, $email, $password_hashed));
+                    $userquery = $con->prepare("INSERT INTO users SET account_id= ? , full_name= ?, email= ? , password = ? ");
+                    $userquery->execute(array($lastid, $full_name, $email, $password_hashed));
 
 
-                        $compquery = $con->prepare("INSERT INTO companies SET account_id= ? , company_name= ?, email= ? ");
-                        $compquery->execute(array($lastid, $company_name, $email));                  
+                    $compquery = $con->prepare("INSERT INTO companies SET account_id= ? , company_name= ?, email= ? ");
+                    $compquery->execute(array($lastid, $company_name, $email));
                     $con->commit();
 
                     showAlert("Başarı ile kayıt oluşturuldu.Giriş sayfasına yönlendiriliyorsunuz", "success");
