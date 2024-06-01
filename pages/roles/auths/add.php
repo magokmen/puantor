@@ -10,21 +10,14 @@ if ($_POST) {
 
     //EN AZ BİR ADET YETKİ SEÇİLİ İSE İŞLEME DEVAM ET
     if ($checkcount > 0) {
-        $lastid = $ac->lastInsertId();
+        //ÖNCELİKLE TABLODAKİ YETKİLERİ SİL, SONRA TEKRAR KAYIT YAP
+        $delauths = $ac->prepare("DELETE FROM userauths WHERE roleID = ?");
+        $delauths->execute(array($roleId));
 
-
-        if ($query) {
-            //ÖNCELİKLE TABLODAKİ YETKİLERİ SİL, SONRA TEKRAR KAYIT YAP
-            $delauths = $ac->prepare("DELETE FROM userauths WHERE roleID = ?");
-            $delauths->execute(array($roleId));
-
-            //seçilil olan checkbox'larda döngüye girerek veritabanına kaydeder
-            foreach ($_POST["checkedDataIds"] as $chk) {
-                $sql = $ac->prepare("INSERT INTO userauths (roleID,authID) VALUES(?,?)");
-                $sql->execute(array($lastid, $chk));
-            }
-
-
+        //seçilil olan checkbox'larda döngüye girerek veritabanına kaydeder
+        foreach ($_POST["checkedDataIds"] as $chk) {
+            $sql = $ac->prepare("INSERT INTO userauths (roleID,authID) VALUES(?,?)");
+            $sql->execute(array($$roleId, $chk));
         }
     }
 }
