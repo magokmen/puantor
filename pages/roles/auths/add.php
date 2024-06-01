@@ -3,25 +3,13 @@ require_once "../../../include/requires.php";
 //permtrue("personlist");
 $roleId = isset($_GET['id']) ? $_GET['id'] : $_POST['id'];
 
-if ($_POST) {
+$sql = $con->prepare("SELECT * FROM userauths WHERE roleID = ?");
+$sql->execute(array($roleId));
+$result = $sql->fetch(PDO::FETCH_ASSOC);
+ $auths = json_decode($result["auths"], true); // true parametresi ile array olarak döndürür
 
-    //CHECKBOX'LARI SAY
-    $checkcount = isset($_POST["checkedDataIds"]) ? count($_POST["checkedDataIds"]) : 0;
 
-    //EN AZ BİR ADET YETKİ SEÇİLİ İSE İŞLEME DEVAM ET
-    if ($checkcount > 0) {
-        //ÖNCELİKLE TABLODAKİ YETKİLERİ SİL, SONRA TEKRAR KAYIT YAP
-        $delauths = $ac->prepare("DELETE FROM userauths WHERE roleID = ?");
-        $delauths->execute(array($roleId));
-
-        //seçilil olan checkbox'larda döngüye girerek veritabanına kaydeder
-        foreach ($_POST["checkedDataIds"] as $chk) {
-            $sql = $ac->prepare("INSERT INTO userauths (roleID,authID) VALUES(?,?)");
-            $sql->execute(array($roleId, $chk));
-        }
-    }
-}
-
+// echo "role id :" . $roleId;
 ?>
 <style>
     .card {
@@ -40,25 +28,13 @@ if ($_POST) {
                         data-toggle="tab">Listeye Dön</a>
                 </li>
             </ul>
-
-
-            <?php
-            $params = array(
-                "method" => "add",
-                "id" => $roleId
-            );
-            $params_json = $func->jsonEncode($params);
-            ?>
-
-            <button type="button" id="save" data-title="Yetki Tanımlama"
-                onclick="submitFormbyAjax('roles/auths/add','<?php echo $params_json ?>')"
-                class="btn btn-info">Kaydet</button>
+            <button type="button" id="save" data-title="Yetki Tanımlama" class="btn btn-info">Kaydet</button>
         </div>
     </div><!-- /.card-header -->
     <div class="card-body">
 
         <form id="myForm">
-
+            <input type="hidden" value="<?php echo $roleId; ?>" id="roleId">
             <div class="container">
                 <?php
 
@@ -71,6 +47,8 @@ if ($_POST) {
                 $colorIndex = 0; // Başlangıç renk indeksi
                 
                 while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
+                    $checked = isset($auths[$row["id"]]) == "on" ? "checked" : '';
+
                     if ($group != $row["authGroup"]) {
                         if ($groupCounter % 3 == 0 && $groupCounter != 0) {
                             echo "</div><div class='w-100 mb-4'></div><div class='row'>"; // Her üç gruptan sonra boşluk bırakıp yeni satıra geç
@@ -91,7 +69,7 @@ if ($_POST) {
 
                     <div class="card card-outline p-0 collapsed-card shadow-sm <?php echo $cardClass; ?> mb-3">
                         <div class="card-header">
-                            <input type="checkbox" class="check" data-id="<?php echo $row["id"] ?>">
+                            <input type="checkbox" class="check" <?php echo $checked ;?> data-id="<?php echo $row["id"] ?>">
                             <span class="ml-2">
                                 <?php echo $row["authTitle"]; ?>
                             </span>
@@ -141,19 +119,35 @@ if ($_POST) {
 
 <script>
     $(document).ready(function () {
-        $('#submitButton').on('click', function () {
+        var formData = {};
+        var roleId = $("#roleId").val();
+        $('#save').on('click', function () {
             $('input[type="checkbox"]:checked').each(function () {
                 // Checkbox'un data-id değeri
                 var dataId = $(this).data('id');
-                // Checkbox'un data-id değerini form verilerine ekle
-                $('<input>').attr({
-                    type: 'hidden',
-                    name: 'checkedDataIds[]', // Gönderilecek alanın adı
-                    value: dataId // Gönderilecek değer
-                }).appendTo('form');
+                // Checkbox'un değeri
+                var value = $(this).val();
+                // formData'ya ekle
+                formData[dataId] = value;
+
             });
-            // Formu submit et
-            $('#myForm').submit();
+            $.ajax({
+                url: "ajax.php",
+                type: "POST",
+                data: {
+                    "data": JSON.stringify(formData), // JSON formatında gönder
+                    "action": "auth-define",
+                    "roleId": $('#roleId').val() // roleId inputundan alınan değeri ekle
+                },
+                success: function (data) {
+                    var res = JSON.parse(data);
+                   swal.fire({
+                    title : "Başarılı!",
+                    icon:"success",
+                    text : res.message,
+                   })
+                }
+            })
         });
 
     });

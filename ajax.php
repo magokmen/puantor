@@ -222,9 +222,9 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
             $upd_maas_query = $con->prepare("UPDATE maas_gelir SET company_id = ? ,
                                                         person_id = ?,  yil = ? , ay = ?, 
                                                         datas= ? , toplam_maas = ? , calc_date = ?  WHERE id = ? ");
-            $upd_maas_query->execute(array($company_id, $row["person"], $yil, $ay, $maas_data, $toplam_ucret,$calc_date, $maas_id));
+            $upd_maas_query->execute(array($company_id, $row["person"], $yil, $ay, $maas_data, $toplam_ucret, $calc_date, $maas_id));
             $statu = 200;
-            $message = $calc_date .  "  tarihinde İşlem  Başarılı Güncellendi!";
+            $message = $calc_date . "  tarihinde İşlem  Başarılı Güncellendi!";
 
         } else {
             if (!empty($maas_data)) {
@@ -338,3 +338,52 @@ if ($_POST && $_POST["action"] == "person-count") {
         echo json_encode([]);
     }
 }
+
+if ($_POST && $_POST["action"] == "auth-define") {
+    $data = $_POST["data"];
+    $roleId = $_POST["roleId"];
+
+    // JSON verisini PHP array olarak decode et
+    $data_array = json_decode($data, true);
+
+    // Eğer decode işlemi başarılı ise (JSON hatası yoksa)
+    if (json_last_error() === JSON_ERROR_NONE) {
+        // JSON array'ini tekrar JSON string'e çevir
+        $data_json = json_encode($data_array);
+
+        if (!empty($roleId)) {
+            try {
+                if (roleVarmi($roleId)) {
+                    // PDO prepare ve execute kullanarak veriyi ekle
+                    $sql = $con->prepare("UPDATE userauths set auths = ?");
+                    $sql->execute(array($data_json));
+                } else {
+
+                    // PDO prepare ve execute kullanarak veriyi ekle
+                    $sql = $con->prepare("INSERT INTO userauths (roleId, auths) VALUES (?, ?)");
+                    $sql->execute(array($roleId, $data_json));
+                }
+
+                $status = 200;
+                $message = "İşlem başarılı";
+            } catch (PDOException $ex) {
+                $status = 400;
+                $message = "Hata: " . $ex->getMessage();
+            }
+        } else {
+            $status = 400;
+            $message = "Role ID boş olamaz.";
+        }
+    } else {
+        $status = 400;
+        $message = "Geçersiz JSON verisi.";
+    }
+
+    $res = array(
+        "state" => $status,
+        "message" => $message
+    );
+    echo json_encode($res);
+    exit();
+}
+

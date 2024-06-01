@@ -613,6 +613,15 @@ function maasHesaplimi($company_id, $person, $year, $months)
     $result = $sql->fetch(PDO::FETCH_ASSOC);
     return $result ? $result["id"] : 0; // Eğer kayıt bulunamazsa null döndür
 }
+
+function roleVarmi($roleID)
+{
+    global $con;
+    $sql = $con->prepare("SELECT * FROM userauths where roleID = ? ");
+    $sql->execute(array($roleID));
+    $result = $sql->fetch(PDO::FETCH_ASSOC);
+    return $result ? $result["id"] : 0; // Eğer kayıt bulunamazsa null döndür
+}
 function formatdDate($date)
 {
     // Zaman damgası oluşturma
