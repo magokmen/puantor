@@ -31,16 +31,14 @@ if ($_POST && $_POST['method'] == "Delete") {
 
         <tr>
             <th>id</th>
+            <th>Adı Soyadı</th>
             <th>Firma Adı</th>
-            <th>Parametre Adı</th>
-            <th>Parametre Türü</th>
-            <th>Başlangıç Tarihi</th>
-            <th>Bitiş Tarihi</th>
-            <th>Değer</th>
-            <th>Hesap Türü</th>
-            <th>Açıklama</th>
-            <th>Durum</th>
-            <th>OLuşturulma Tarihi</th>
+            <th>Proje Adi</th>
+            <th>Yıl</th>
+            <th>Ay</th>
+            <th>Brüt Tutar</th>
+            <th>Kesinti</th>
+            <th>Net Ele Geçen</th>
             <th>#</th>
 
         </tr>
@@ -79,18 +77,18 @@ if ($_POST && $_POST['method'] == "Delete") {
                 <td>
                     <?php echo $row["param_val"]; ?>
                 </td>
-              
+
                 <td>
-                    <?php echo $row["calc_type"] ; ?>
+                    <?php echo $row["calc_type"]; ?>
                 </td>
                 <td>
-                    <?php echo $row["description"] ; ?>
+                    <?php echo $row["description"]; ?>
                 </td>
                 <td>
-                    <?php echo $row["state"] ; ?>
+                    <?php echo $row["state"]; ?>
                 </td>
                 <td>
-                    <?php echo $row["created_at"] ; ?>
+                    <?php echo $row["created_at"]; ?>
                 </td>
                 <td class="">
 
@@ -121,17 +119,15 @@ if ($_POST && $_POST['method'] == "Delete") {
     <tfoot>
 
         <tr>
-        <th>id</th>
+            <th>id</th>
+            <th>Adı Soyadı</th>
             <th>Firma Adı</th>
-            <th>Parametre Adı</th>
-            <th>Parametre Türü</th>
-            <th>Başlangıç Tarihi</th>
-            <th>Bitiş Tarihi</th>
-            <th>Değer</th>
-            <th>Hesap Türü</th>
-            <th>Açıklama</th>
-            <th>Durum</th>
-            <th>OLuşturulma Tarihi</th>
+            <th>Proje Adi</th>
+            <th>Yıl</th>
+            <th>Ay</th>
+            <th>Brüt Tutar</th>
+            <th>Kesinti</th>
+            <th>Net Ele Geçen</th>
             <th>#</th>
 
         </tr>

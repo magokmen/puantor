@@ -13,16 +13,7 @@ function isWeekend($date)
     // Haftasonu kontrolü (Sadece Pazar)
     return ($dayOfWeek == 7);
 }
-function generateDates($year, $month, $days)
-{
-    $dateList = [];
-    for ($day = 1; $day <= $days; $day++) {
-        // Tarih formatını ayarlama (d.m.Y)
-        $formattedDate = sprintf("%02d.%02d.%d", $day, $month, $year);
-        $dateList[] = $formattedDate;
-    }
-    return $dateList;
-}
+
 
 
 $company_id = isset($_GET["company_id"]) ? $_GET["company_id"] : 0;
@@ -31,7 +22,9 @@ $year = isset($_GET["year"]) ? $_GET["year"] : date('Y');
 $month = isset($_GET["months"]) ? $_GET["months"] : date('m');
 
 $days = $func->daysInMonth($month, $year);
+$format = "d.m.Y";
 $dates = generateDates($year, $month, $days);
+
 
 $search_name = isset($_GET["search_name"]) ? $_GET["search_name"] : "";
 $search_job = isset($_GET["search_job"]) ? $_GET["search_job"] : "";
@@ -49,12 +42,8 @@ if ($search_name == null & $search_job == null & $search_projects == null) {
 
 //Firmaya göre kayıt yapılan personeller getirilir
 if ($project_id == null) {
-    // $search_name = "%" . $search_name . "%";
-    // $search_job = "%" . $search_job . "%";
-    // $search_projects = "%" . $search_projects . "%";
     $sql = $con->prepare("SELECT * FROM person WHERE company_id = ?");
     $sql->execute(array($company_id));
-
 } else {
 
     // SQL sorgusunu hazırlayalım
@@ -475,7 +464,8 @@ if ($project_id == null) {
 
 
                 while ($person = $sql->fetch(PDO::FETCH_ASSOC)) {
-                    $job_start_date = $person["job_start_date"];
+                    $job_start_date = DateTime::createFromFormat($format, $person["job_start_date"]);
+
                     ?>
                     <tr>
                         <td class="text-nowrap" style="min-width:12vw;" data-id="<?php echo $person["id"] ?>"><a
@@ -496,12 +486,13 @@ if ($project_id == null) {
 
                            ?></td>
                         <?php
-                        foreach ($dates as $date): ?>
-
+                        foreach ($dates as $date):
+                            $month_date = DateTime::createFromFormat($format, $date);
+                            ?>
                             <?php
 
                             $puantaj_id = kayitVarmi($company_id, $person["id"], $year, $month);
-                            if ($job_start_date <= $date) {
+                            if ($job_start_date <= $month_date) {
                                 if ($puantaj_id > 0) {
                                     $query = $con->prepare("SELECT * FROM puantaj where id = ?");
                                     $query->execute(array($puantaj_id));

@@ -3,10 +3,31 @@ require_once "../../plugins/datatables/datatable.php";
 require_once "../../include/requires.php";
 
 
+
+
+
 $company_id = isset($_GET["company_id"]) ? $_GET["company_id"] : 0;
 $project_id = isset($_GET["project_id"]) ? $_GET["project_id"] : 0;
 $year = isset($_GET["year"]) ? $_GET["year"] : date('Y');
 $month = isset($_GET["months"]) ? $_GET["months"] : date('m');
+
+
+$disabled = $company_id == 0 ? "disabled" : "";
+$days = $func->daysInMonth($month, $year);
+$dates = generateDates($year, $month, $days);
+
+
+
+//Firmaya göre kayıt yapılan personeller getirilir
+if ($project_id == null) {
+    $sql = $con->prepare("SELECT * FROM SQLMaas WHERE company_id = ? AND yil = ? AND ay = ?");
+    $sql->execute(array($company_id, $year, $month));
+} else {
+
+    // SQL sorgusunu hazırlayalım
+    $sql = $con->prepare("SELECT * FROM SQLMaas WHERE company_id = ? AND yil = ? AND ay = ? AND project_id REGEXP CONCAT('[[:<:]]', ?, '[[:>:]]')");
+    $sql->execute(array($company_id, $year, $month, $project_id));
+}
 
 ?>
 
@@ -21,7 +42,7 @@ $month = isset($_GET["months"]) ? $_GET["months"] : date('m');
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group p-2">
-                    <input type="checkbox" class="check" disabled id="bordro-view">
+                    <input type="checkbox" class="check" <?php echo $disabled ;?>  id="bordro-view">
                     <span class="ml-1">Personel Bordrosunu Görsün</span>
 
 
@@ -29,20 +50,16 @@ $month = isset($_GET["months"]) ? $_GET["months"] : date('m');
             </div>
             <div class="col-md-3">
                 <div class="form-group p-2">
-                    <input type="checkbox" class="check" disabled id="donem-kapat">
+                    <input type="checkbox" class="check" <?php echo $disabled ;?> id="donem-kapat">
                     <span class="ml-1">Puantajda İşlem Yapılmasın</span>
                 </div>
             </div>
-            
-            <style>
-                .right-btn{
-                    display: flex;
-                    justify-content: flex-end;
-                }
 
-            </style>
-            <div class="col-md-6 right-btn">
-                <button type="button" class="btn btn-default mr-2" data-toggle="dropdown">Rapor Al <i
+
+            <div class="col-md-6">
+                <button type="button" id="hesapla" onclick="maas_hesapla()" class="btn btn-primary float-right"><i class="fas fa-save mr-2"></i>
+                    Hesapla</button>
+                <button type="button" class="btn btn-default mr-2 float-right" data-toggle="dropdown">Rapor Al <i
                         class="fa-solid fa-caret-down"></i> </button>
 
                 <div class="dropdown-menu" role="menu">
@@ -51,12 +68,11 @@ $month = isset($_GET["months"]) ? $_GET["months"] : date('m');
 
                 </div>
 
-                <button type="button" id="" class="btn btn-primary"><i class="fas fa-save mr-2"></i>
-                    Hesapla</button>
+
             </div>
 
         </div>
-       
+
 
 
 
@@ -97,20 +113,20 @@ $month = isset($_GET["months"]) ? $_GET["months"] : date('m');
         </div>
 
 
-        <table id="example1" class="table table-bordered table-striped table-responsive-sm table-hover">
+        <table id="example1" class="table table-bordered table-striped table-responsive table-hover">
             <thead>
 
                 <tr>
                     <th>id</th>
+                    <th>Puantaj ID</th>
+                    <th>Adı Soyadı</th>
                     <th>Firma Adı</th>
-                    <th>Parametre Adı</th>
-                    <th>Parametre Türü</th>
-                    <th>Başlangıç Tarihi</th>
-                    <th>Bitiş Tarihi</th>
-                    <th>Değer</th>
-                    <th>Hesap Türü</th>
-                    <th>Açıklama</th>
-                    <th>Durum</th>
+                    <th>Proje Adi</th>
+                    <th>Yıl</th>
+                    <th>Ay</th>
+                    <th class="text-center">Brüt Tutar</th>
+                    <th>Kesinti</th>
+                    <th>Net Ele Geçen</th>
                     <th>Hesaplama Tarihi</th>
                     <th>#</th>
 
@@ -121,10 +137,6 @@ $month = isset($_GET["months"]) ? $_GET["months"] : date('m');
 
                 <?php
 
-                $sql = $con->prepare("Select * from parameters WHERE account_id = ? ORDER BY id desc;");
-                $sql->execute(array($account_id));
-
-
                 while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
 
                     ?>
@@ -133,35 +145,44 @@ $month = isset($_GET["months"]) ? $_GET["months"] : date('m');
                             <?php echo $row["id"]; ?>
                         </td>
                         <td>
-                            <?php echo $row["company_id"]; ?>
+                            <?php echo $row["puantaj_id"]; ?>
                         </td>
                         <td>
-                            <?php echo $row["param_name"]; ?>
+                            <?php echo $row["full_name"]; ?>
                         </td>
                         <td>
-                            <?php echo $row["param_type"]; ?>
+                            <?php echo $func->getCompanyName($row["company_id"]); ?>
                         </td>
-                        <td>
-                            <?php echo $row["start_date"]; ?>
+                        <?php
+                        $projectNames = $func->getProjectNames($row["project_id"]);
+                        ?>
+                        <td class="text-nowrap" data-tooltip="<?php echo $projectNames; ?>">
+                            <?php
+
+                            echo $func->shortProjectsName($projectNames);
+
+                            ?>
                         </td>
-                        <td>
-                            <?php echo $row["end_date"]; ?>
+
+                        <td class="text-center">
+                            <?php echo $row["yil"]; ?>
                         </td>
-                        <td>
-                            <?php echo $row["param_val"]; ?>
+                        <td class="text-center">
+                            <?php echo $row["ay"]; ?>
+                        </td>
+
+                        <td class="text-center">
+                            <?php echo tlFormat($row["toplam_maas"]); ?>
                         </td>
 
                         <td>
-                            <?php echo $row["calc_type"]; ?>
+
                         </td>
                         <td>
-                            <?php echo $row["description"]; ?>
+
                         </td>
                         <td>
-                            <?php echo $row["state"]; ?>
-                        </td>
-                        <td>
-                            <?php echo $row["created_at"]; ?>
+                            <?php echo $row["hesaplama_tarihi"]; ?>
                         </td>
                         <td class="">
 
@@ -194,15 +215,15 @@ $month = isset($_GET["months"]) ? $_GET["months"] : date('m');
 
                 <tr>
                     <th>id</th>
+                    <th>Puantaj ID</th>
+                    <th>Adı Soyadı</th>
                     <th>Firma Adı</th>
-                    <th>Parametre Adı</th>
-                    <th>Parametre Türü</th>
-                    <th>Başlangıç Tarihi</th>
-                    <th>Bitiş Tarihi</th>
-                    <th>Değer</th>
-                    <th>Hesap Türü</th>
-                    <th>Açıklama</th>
-                    <th>Durum</th>
+                    <th>Proje Adi</th>
+                    <th>Yıl</th>
+                    <th>Ay</th>
+                    <th>Brüt Tutar</th>
+                    <th>Kesinti</th>
+                    <th>Net Ele Geçen</th>
                     <th>Hesaplama Tarihi</th>
                     <th>#</th>
 
