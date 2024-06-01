@@ -277,6 +277,58 @@ class Functions
         echo $places;
     }
 
+    // public function paramsTur($name,$id)
+    // {
+    //     global $con;
+    //     $html = ' <select id="'.$name.'" name="'.$name.'" required multiple class="form-control select2"
+    //                         style="width: 100%;">
+    //                         <option value="0" disabled>Tur Seçiniz</option>';
+
+    //     $sql = $con->prepare("Select * from puantajturu");
+    //      $sql->execute();
+
+    //     while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
+    //         $html .= '<option ' . ($id == $row["id"] ? " selected" : "") . ' value=' . $row['id'] . '>' . $row['PuantajAdi'] . '</option>';
+    //     }
+    //     ;
+
+    //     $html .= ' </select>';
+    //     echo $html;
+    // }
+    public function paramsTur($name, $id)
+    {
+        global $con;
+        $html = '<select id="'.$name.'" name="'.$name.'" required multiple class="form-control select2" style="width: 100%;">
+                    <option value="0" disabled>Tur Seçiniz</option>';
+    
+        // Veritabanından tüm puantaj türlerini gruplarına göre al
+        $sql = $con->prepare("SELECT * FROM puantajturu ORDER BY Turu");
+        $sql->execute();
+    
+        $currentGroup = null;
+    
+        while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
+            // Yeni bir grup başlıyorsa, önceki grubu kapat ve yeni grubu aç
+            if ($currentGroup !== $row["Turu"]) {
+                if ($currentGroup !== null) {
+                    $html .= '</optgroup>';
+                }
+                $currentGroup = $row["Turu"];
+                $html .= '<optgroup label="'.$currentGroup.'">';
+            }
+    
+            $html .= '<option ' . ($id == $row["id"] ? " selected" : "") . ' value=' . $row['id'] . '>' . $row['PuantajAdi'] . '</option>';
+        }
+    
+        // Son grup optgroup'u kapat
+        if ($currentGroup !== null) {
+            $html .= '</optgroup>';
+        }
+    
+        $html .= ' </select>';
+        echo $html;
+    }
+    
 
     function getPuantajTuruList($turu)
     {
@@ -307,6 +359,7 @@ class Functions
         return $output;
     }
 
+    
     function puantajClass($turu)
     {
         global $con;
@@ -552,6 +605,14 @@ function kayitVarmi($company_id, $person, $year, $months)
     return $result ? $result["id"] : 0; // Eğer kayıt bulunamazsa null döndür
 }
 
+function maasHesaplimi($company_id, $person, $year, $months)
+{
+    global $con;
+    $sql = $con->prepare("SELECT * FROM maas_gelir where company_id = ? AND  person_id = ? AND yil = ? AND ay = ? ");
+    $sql->execute(array($company_id, $person, $year, $months));
+    $result = $sql->fetch(PDO::FETCH_ASSOC);
+    return $result ? $result["id"] : 0; // Eğer kayıt bulunamazsa null döndür
+}
 function formatdDate($date)
 {
     // Zaman damgası oluşturma
@@ -585,4 +646,28 @@ function validate_password($password) {
     }
     
     return $errors;
+}
+
+function generateDates($year, $month, $days)
+{
+    $dateList = [];
+    for ($day = 1; $day <= $days; $day++) {
+        // Tarih formatını ayarlama (d.m.Y)
+        $formattedDate = sprintf("%02d.%02d.%d", $day, $month, $year);
+        $dateList[] = $formattedDate;
+    }
+    return $dateList;
+}
+
+
+function tlFormat($val)
+{
+	$tlFormat = number_format($val, 2, ',', '.');
+	return $tlFormat;
+}
+
+function formatNumber($num)
+{
+	$formatted = number_format($num, 2, ',', '.'); // Sayıyı formatla
+	return str_replace('.', '#', str_replace(',', '.', str_replace('#', ',', $formatted))); // Nokta ve virgül yer değiştirme
 }

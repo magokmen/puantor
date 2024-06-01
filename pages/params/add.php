@@ -19,6 +19,15 @@ if ($_POST) {
     $calc_type = $_POST["calc_type"];
     $description = $_POST["description"];
 
+    // $params= "";
+
+    // if(isset($_POST["param_type"])){
+    //     foreach ($_POST["param_type"] as $param) {
+    //         $params .= $param . "|";
+    //     }
+    //     $params = rtrim($params, "|");
+    // }
+
     //Tarihlerin doğruluğunu kontrol edin
     if ($start_date > $end_date) {
         $res = array(
@@ -120,12 +129,13 @@ if ($_POST) {
         </div>
         <div class="row">
             <div class="form-group col-md-6">
-                <label for="param_type">Parametre Türü</label> <span style="color:red"> (*)</span>
-                <select required name="param_type" id="param_type" class="select2">
-                    <option value="">Tür seçiniz</option>
-                    <option value="1" selected>Günlük Ücret</option>
-                    <option value="2">Kesinti</option>
-                    <option value="3">Gelir</option>
+                <label for="param_type">Uygulanacak Puantaj Türleri</label> <span style="color:red"> (*)</span>
+                <!-- <?php echo $func->paramsTur("param_type[]","") ;?> -->
+                <select name="param_type" id="param_type" class="select2">
+                    <option value="0">Parametre Türü seçiniz</option>
+                    <option value="1">Günlük Ücret</option>
+                    <option value="2">Saatlik Ücret</option>
+
                 </select>
             </div>
 

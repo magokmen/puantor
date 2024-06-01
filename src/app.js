@@ -1,40 +1,40 @@
-// function submitFormbyAjax(page, params, messageType = "alert") {
-//   var form = document.getElementById("myForm");
-//   var formData = new FormData(form);
-//   if (validateForm()) {
-//     if (params != "") {
-//       var parsedParams = JSON.parse(params);
-//       for (var key in parsedParams) {
-//         formData.append(key, parsedParams[key]);
-//       }
-//     }
+function submitFormbyAjax(page, params, messageType = "alert") {
+  var form = document.getElementById("myForm");
+  var formData = new FormData(form);
+  if (validateForm()) {
+    if (params != "") {
+      var parsedParams = JSON.parse(params);
+      for (var key in parsedParams) {
+        formData.append(key, parsedParams[key]);
+      }
+    }
 
-//     //formData elemanlarını console ekranında göstermek için
-//     // formData.forEach(function (value, key) {
-//     //   console.log(key + ": " + value);
-//     // });
+    //formData elemanlarını console ekranında göstermek için
+    // formData.forEach(function (value, key) {
+    //   console.log(key + ": " + value);
+    // });
 
-//     // Dinamik olarak formun gönderileceği sayfayı belirle
-//     var submitUrl = "pages/" + page + ".php";
+    // Dinamik olarak formun gönderileceği sayfayı belirle
+    var submitUrl = "pages/" + page + ".php";
 
-//     fetch(submitUrl, {
-//       method: "POST",
-//       body: formData,
-//     })
-//       .then((response) => response.text())
-//       .then((data) => {
-//         // Sunucudan gelen HTML ile sayfa içeriğini güncelle
-//         updatePageContent(data);
-//         var successMessage = "İşlem Başarı ile gerçekleşti";
-//         if (messageType === "alert") {
-//           showMessage(successMessage, "success");
-//         } else {
-//           toastrdefaultsuccess(successMessage);
-//         }
-//       })
-//       .catch((error) => console.error(error));
-//   }
-// }
+    fetch(submitUrl, {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        // Sunucudan gelen HTML ile sayfa içeriğini güncelle
+        updatePageContent(data);
+        var successMessage = "İşlem Başarı ile gerçekleşti";
+        if (messageType === "alert") {
+          showMessage(successMessage, "success");
+        } else {
+          toastrdefaultsuccess(successMessage);
+        }
+      })
+      .catch((error) => console.error(error));
+  }
+}
 function submitFormbyAjax(page, params, messageType = "alert") {
   var form = document.getElementById("myForm");
   var formData = new FormData(form);
