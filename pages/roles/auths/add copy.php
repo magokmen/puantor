@@ -2,41 +2,27 @@
 require_once "../../../include/requires.php";
 //permtrue("personlist");
 $roleId = isset($_GET['id']) ? $_GET['id'] : $_POST['id'];
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // $roleId'ü alıyoruz
 
+if ($_POST) {
 
-    // Seçili olan selectlerin data-id'lerini alıyoruz
-    $selectedAuths = isset($_POST['selected_auths']) ? $_POST['selected_auths'] : [];
+    //CHECKBOX'LARI SAY
+    $checkcount = isset($_POST["checkedDataIds"]) ? count($_POST["checkedDataIds"]) : 0;
 
-    // Veritabanına kaydetmek için SQL sorgusunu oluşturuyoruz
-    $sql = "INSERT INTO userauths (roleID, authID) VALUES ";
-    $values = array();
-    foreach ($selectedAuths as $authID) {
-        $values[] = "(:roleID, :authID)";
-    }
-    $sql .= implode(", ", $values);
+    //EN AZ BİR ADET YETKİ SEÇİLİ İSE İŞLEME DEVAM ET
+    if ($checkcount > 0) {
+        //ÖNCELİKLE TABLODAKİ YETKİLERİ SİL, SONRA TEKRAR KAYIT YAP
+        $delauths = $ac->prepare("DELETE FROM userauths WHERE roleID = ?");
+        $delauths->execute(array($roleId));
 
-    try {
-        // SQL sorgusunu hazırla ve çalıştır
-        $stmt = $con->prepare($sql);
-        $stmt->bindParam(':roleID', $roleId, PDO::PARAM_INT);
-        foreach ($selectedAuths as $authID) {
-            $stmt->bindParam(':authID', $authID, PDO::PARAM_INT);
-            $stmt->execute();
+        //seçilil olan checkbox'larda döngüye girerek veritabanına kaydeder
+        foreach ($_POST["checkedDataIds"] as $chk) {
+            $sql = $ac->prepare("INSERT INTO userauths (roleID,authID) VALUES(?,?)");
+            $sql->execute(array($$roleId, $chk));
         }
-
-        // Başarılı bir şekilde kaydedildiğini kontrol et
-        echo "Veriler başarıyla kaydedildi.";
-    } catch (PDOException $e) {
-        // Hata durumunda istisna mesajını göster
-        echo "Hata: " . $e->getMessage();
     }
 }
+
 ?>
-
-
-
 <style>
     .card {
         word-wrap: normal;
@@ -54,6 +40,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         data-toggle="tab">Listeye Dön</a>
                 </li>
             </ul>
+
+
             <?php
             $params = array(
                 "method" => "add",
@@ -69,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div><!-- /.card-header -->
     <div class="card-body">
 
-        <form action="" id="myForm" method="post">
+        <form id="myForm">
 
             <div class="container">
                 <?php
@@ -103,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <div class="card card-outline p-0 collapsed-card shadow-sm <?php echo $cardClass; ?> mb-3">
                         <div class="card-header">
-                            <input type="checkbox" class="check" data-id="<?php echo $row["id"] ?>">
+                            <input type="checkbox" class="check">
                             <span class="ml-2">
                                 <?php echo $row["authTitle"]; ?>
                             </span>
@@ -129,28 +117,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </div>
 
+
+
+
+
 <script>
+    $(function () {
+        $('.check').bootstrapToggle({
+            onstyle: "success",
+            offstyle: "danger",
+            size: "xs",
+            toogle: "toogle",
 
+        });
+    })
+    $("#liste").click(function () {
+        var type = $("#type").val();
 
-    // Butona tıklandığında submitFormbyAjax fonksiyonunu çağır
-    $("#save").click(function () {
-        // Seçili olan selectlerin değerlerini al
-        var selectedAuths = [];
-        $(".check:checked").each(function () {
-            selectedAuths.push($(this).data("id"));
+        RoutePagewithParams("roles/main", "")
+        $("#page-title").text($(this).data("title"));
+    })
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#submitButton').on('click', function () {
+            $('input[type="checkbox"]:checked').each(function () {
+                // Checkbox'un data-id değeri
+                var dataId = $(this).data('id');
+                // Checkbox'un data-id değerini form verilerine ekle
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'checkedDataIds[]', // Gönderilecek alanın adı
+                    value: dataId // Gönderilecek değer
+                }).appendTo('form');
+            });
+            // Formu submit et
+            $('#myForm').submit();
         });
 
-        // Kaydetmek için gerekli verileri topla
-        var roleId = "<?php echo isset($_GET['id']) ? $_GET['id'] : (isset($_POST['id']) ? $_POST['id'] : '') ?>";
-        var postData = {
-            id: roleId,
-            selected_auths: selectedAuths
-        };
-
-        // POST isteğiyle verileri PHP tarafına gönder
-        $.post("", postData, function (response) {
-            // Cevap mesajını göster
-            alert(response);
-        });
     });
 </script>
