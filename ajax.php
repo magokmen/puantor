@@ -172,7 +172,7 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
 
             if ($key != null) {
                 $tur = $puantaj["Turu"];
-                if ($tur == "Normal Çalışma") {
+                if ($tur != "Saatlik"  ) {
                     #normal çalışma ise günlük saat üzerinden puantajdaki saat hesaplanır
                     $prm = $con->prepare("SELECT * FROM parameters WHERE param_type = ? AND start_date <= ? AND end_date>= ?");
                     $prm->execute(array(1, $start_date, $end_date));
@@ -192,10 +192,10 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
                         echo json_encode($res);
                         return;
                     }
-                    $pnt[] = $ucret;
                     $puantaj_saati = $puantaj["PuantajSaati"];
                     $tutar = ($puantaj_saati / 8) * $ucret;
                     $toplam_ucret = $toplam_ucret + $tutar;
+                    $pnt[] = $toplam_ucret;
 
                     if (isset($puantaj_turu_tutar[$puantaj["id"]])) {
                         // Eğer "tur_id" değeri zaten varsa, mevcut "tutar" değerine ekleyin
@@ -241,7 +241,7 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
 
     $res = array(
         "statu" => $statu,
-        "message" => $message,
+        "message" => $pnt,
     );
     echo json_encode($res);
     return;
@@ -287,7 +287,6 @@ if ($_POST && $_POST["action"] == "proje") {
     }
 }
 
-
 if ($_POST && $_POST["action"] == "ilce") {
     $il_id = $_POST["il_id"];
 
@@ -308,9 +307,6 @@ if ($_POST && $_POST["action"] == "ilce") {
         echo '<option disabled >İl bulunamadı</option>';
     }
 }
-
-
-
 
 if ($_POST && $_POST["action"] == "person-count") {
     if (isset($_POST['id'])) {

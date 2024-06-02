@@ -6,7 +6,7 @@ $roleId = isset($_GET['id']) ? $_GET['id'] : $_POST['id'];
 $sql = $con->prepare("SELECT * FROM userauths WHERE roleID = ?");
 $sql->execute(array($roleId));
 $result = $sql->fetch(PDO::FETCH_ASSOC);
- $auths = json_decode($result["auths"], true); // true parametresi ile array olarak döndürür
+$auths = json_decode($result["auths"], true); // true parametresi ile array olarak döndürür
 
 
 // echo "role id :" . $roleId;
@@ -28,14 +28,22 @@ $result = $sql->fetch(PDO::FETCH_ASSOC);
                         data-toggle="tab">Listeye Dön</a>
                 </li>
             </ul>
-            <button type="button" id="save" data-title="Yetki Tanımlama" class="btn btn-info">Kaydet</button>
+            <button type="button" id="save" data-title="Yetki Tanımlama" class="btn btn-info">
+               <i class="fas fa-save mr-2"></i> Kaydet</button>
         </div>
     </div><!-- /.card-header -->
+   <style>
+    .bg-header{
+        background-color: #d9d9d9;
+        font-weight: bold;
+        border: 1px solid #aaa;
+    }
+   </style>
     <div class="card-body">
 
         <form id="myForm">
             <input type="hidden" value="<?php echo $roleId; ?>" id="roleId">
-            <div class="container">
+            <!-- <div class="container"> -->
                 <?php
 
                 $sql = $con->prepare("SELECT * FROM authority WHERE isActive = ? ORDER BY authGroup ASC, id ASC");
@@ -60,7 +68,11 @@ $result = $sql->fetch(PDO::FETCH_ASSOC);
                     }
 
                     // isModule değeri 1 ise ek bir sınıf ekle
-                    $cardClass = $row["isModule"] == 1 ? $colors[$colorIndex] . ' text-white' : 'bg-light';
+                    
+                    //  $cardClass = $row["isModule"] == 1 ? $colors[$colorIndex] . ' text-white' : 'bg-light';
+                     $cardClass = $row["isModule"] == 1 ? "bg-header" : 'bg-light';
+                     
+                   
 
                     if ($group != $row["authGroup"]) {
                         echo $group != 0 ? "</div><div class='col-md-4'>" : "<div class='col-md-4'>"; // Yeni grup için yeni sütun başlat
@@ -90,7 +102,7 @@ $result = $sql->fetch(PDO::FETCH_ASSOC);
                     $group = $row["authGroup"];
                 }
                 echo '</div></div>' ?>
-            </div>
+            <!-- </div> -->
         </form>
     </div>
 </div>

@@ -1,6 +1,6 @@
 <?php
 require_once "../../include/requires.php";
-// permtrue("personlist");
+//  permtrue("personlist");
 
 ?>
 <div class="card card-outline card-info">

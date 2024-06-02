@@ -136,16 +136,23 @@ class Functions
                             style="width: 100%;">
                             <option value="">Şirket Seçiniz</option>';
 
-        $sql = $con->prepare("Select id,company_name from companies WHERE account_id = ?");
+        $sql = $con->prepare("Select id,company_name,isDefault from companies WHERE account_id = ?");
         $sql->execute(array($account_id));
+
 
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
             $company_name = $row['company_name'];
-            $html .= '<option ' . ($id == $row["id"] ? " selected" : '') . ' value=' . $row["id"] . '>' . $company_name . '</option>';
+            if($id == $row["id"] ){
+                $selected = " selected";
+            } else{
+                $selected = '';
+            }
+            $html .= '<option ' . $selected. ' value=' . $row["id"] . '>' . $company_name .  '</option>';
         }
         ;
 
         $html .= ' </select>';
+        
         echo $html;
     }
 
@@ -306,7 +313,7 @@ class Functions
         $sql->execute();
     
         $currentGroup = null;
-    
+      
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
             // Yeni bir grup başlıyorsa, önceki grubu kapat ve yeni grubu aç
             if ($currentGroup !== $row["Turu"]) {
@@ -373,7 +380,19 @@ class Functions
             echo "<td class='gun noselect'></td>";
         }
     }
-
+function gunAdi($gun){
+    $gun = date("D",strtotime($gun));
+    $gunler = array(
+        "Mon" => "Pzt",
+        "Tue" => "Sal",
+        "Wed" => "Çar",
+        "Thu" => "Per",
+        "Fri" => "Cum",
+        "Sat" => "Cmt",
+        "Sun" => "Paz"
+    );
+    return $gunler[$gun];
+}
     function getMonthsSelect($name = 'months', $selected = null)
     {
         // Ayları tanımla
@@ -528,19 +547,11 @@ function permtrue($var)
 {
     global $con;
     $authid = authid($var);
-    $pcheck = $con->prepare("SELECT * FROM userauths WHERE roleId = ? and authID = ?");
-    $pcheck->execute(array(sesset("id"), $authid));
-    $auth = $pcheck->fetchAll(PDO::FETCH_ASSOC);
+    $pcheck = $con->prepare("SELECT * FROM userauths WHERE roleID = ? AND JSON_CONTAINS_PATH(auths, 'one', '$.\"$authid\"')");
+    $pcheck->execute(array(11));
+    $auth = $pcheck->fetch(PDO::FETCH_ASSOC);
 
-    if (count($auth) > 0) {
-        return "true";
-    } else {
-        $rootDir = $_SERVER['DOCUMENT_ROOT'];
-        //go($rootDir. "/505.php");
-         go("../../505.php");
-        exit();
-    }
-
+    return isset($auth["id"]) ? true : false;
 }
 
 

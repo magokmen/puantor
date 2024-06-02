@@ -251,7 +251,7 @@ if ($expired_date < 3) {
                                 data-title="Bordro">
                                 <i class="nav-icon fa-solid fa-money-bills"></i>
                                 <!-- <i class="nav-icon fa-solid fa-calculator"></i> -->
-                               
+
                                 <p>
                                     Bordro
                                 </p>
@@ -427,19 +427,21 @@ if ($expired_date < 3) {
 
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-menu loadContent" href="#" data-page="roles/main"
-                                data-title="Yetki Grupları">
 
-                                <i class="nav-icon fa-solid fa-lock-open"></i>
-                                <p>
-                                    Yetkiler
+                        <?php
+                        if (permtrue("yetkiler")) { ?>
+                            <li class="nav-item">
+                                <a class="nav-link nav-menu loadContent" href="#" data-page="roles/main"
+                                    data-title="Yetki Grupları">
 
-                                </p>
-                            </a>
+                                    <i class="nav-icon fa-solid fa-lock-open"></i>
+                                    <p>
+                                        Yetkiler
+                                    </p>
+                                </a>
 
-                        </li>
-
+                            </li>
+                        <?php } ?>
 
                         <li class="nav-item">
                             <a class="nav-link nav-menu loadContent" href="#" data-page="settings" data-title="Ayarlar">

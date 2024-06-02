@@ -8,26 +8,16 @@ require_once "../../include/requires.php";
 
 $company_id = isset($_GET["company_id"]) ? $_GET["company_id"] : 0;
 $project_id = isset($_GET["project_id"]) ? $_GET["project_id"] : 0;
-$year = isset($_GET["year"]) ? $_GET["year"] : date('Y');
-$month = isset($_GET["months"]) ? $_GET["months"] : date('m');
+$year       = isset($_GET["year"]) ? $_GET["year"] : date('Y');
+$month      = isset($_GET["months"]) ? $_GET["months"] : date('m');
 
 
-$disabled = $company_id == 0 ? "disabled" : "";
-$days = $func->daysInMonth($month, $year);
-$dates = generateDates($year, $month, $days);
+$disabled   = $company_id == 0 ? "disabled" : "";
+$days       = $func->daysInMonth($month, $year);
+$dates      = generateDates($year, $month, $days);
 
 
 
-//Firmaya göre kayıt yapılan personeller getirilir
-if ($project_id == null) {
-    $sql = $con->prepare("SELECT * FROM SQLMaas WHERE company_id = ? AND yil = ? AND ay = ?");
-    $sql->execute(array($company_id, $year, $month));
-} else {
-
-    // SQL sorgusunu hazırlayalım
-    $sql = $con->prepare("SELECT * FROM SQLMaas WHERE company_id = ? AND yil = ? AND ay = ? AND project_id REGEXP CONCAT('[[:<:]]', ?, '[[:>:]]')");
-    $sql->execute(array($company_id, $year, $month, $project_id));
-}
 
 ?>
 
@@ -42,7 +32,7 @@ if ($project_id == null) {
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group p-2">
-                    <input type="checkbox" class="check" <?php echo $disabled ;?>  id="bordro-view">
+                    <input type="checkbox" class="check" <?php echo $disabled; ?> id="bordro-view">
                     <span class="ml-1">Personel Bordrosunu Görsün</span>
 
 
@@ -50,14 +40,15 @@ if ($project_id == null) {
             </div>
             <div class="col-md-3">
                 <div class="form-group p-2">
-                    <input type="checkbox" class="check" <?php echo $disabled ;?> id="donem-kapat">
+                    <input type="checkbox" class="check" <?php echo $disabled; ?> id="donem-kapat">
                     <span class="ml-1">Puantajda İşlem Yapılmasın</span>
                 </div>
             </div>
 
 
             <div class="col-md-6">
-                <button type="button" id="hesapla" onclick="maas_hesapla()" class="btn btn-primary float-right"><i class="fas fa-save mr-2"></i>
+                <button type="button" id="hesapla" onclick="maas_hesapla()" class="btn btn-primary float-right"><i
+                        class="fas fa-save mr-2"></i>
                     Hesapla</button>
                 <button type="button" class="btn btn-default mr-2 float-right" data-toggle="dropdown">Rapor Al <i
                         class="fa-solid fa-caret-down"></i> </button>
@@ -73,7 +64,12 @@ if ($project_id == null) {
 
         </div>
 
-
+        <style>
+            .months {
+                height: 360px !important;
+                max-height: 360px !important;
+            }
+        </style>
 
 
     </div><!-- /.card-header -->
@@ -111,9 +107,21 @@ if ($project_id == null) {
             </div>
 
         </div>
+        <?php
 
+        //Firmaya göre kayıt yapılan personeller getirilir
+        if ($project_id == null) {
+            $sql = $con->prepare("SELECT * FROM sqlmaas WHERE company_id = ? AND yil = ? AND ay = ?");
+            $sql->execute(array($company_id, $year, $month));
+        } else {
 
-        <table id="example1" class="table table-bordered table-striped table-responsive table-hover">
+            // SQL sorgusunu hazırlayalım
+            $sql = $con->prepare("SELECT * FROM sqlmaas WHERE company_id = ? AND yil = ? AND ay = ? AND project_id REGEXP CONCAT('[[:<:]]', ?, '[[:>:]]')");
+            $sql->execute(array($company_id, $year, $month, $project_id));
+        }
+        ?>
+
+        <table id="example1" class="table table-bordered table-striped table-responsive-sm table-hover">
             <thead>
 
                 <tr>

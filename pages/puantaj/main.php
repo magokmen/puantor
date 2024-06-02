@@ -15,7 +15,6 @@ function isWeekend($date)
 }
 
 
-
 $company_id = isset($_GET["company_id"]) ? $_GET["company_id"] : 0;
 $project_id = isset($_GET["project_id"]) ? $_GET["project_id"] : 0;
 $year = isset($_GET["year"]) ? $_GET["year"] : date('Y');
@@ -66,6 +65,16 @@ if ($project_id == null) {
 
     }
 
+    .gunadi {
+        width: 40px !important;
+        max-width: 40px !important;
+
+    }
+
+    table.dataTable.table-sm>thead>tr>th:not(.sorting_disabled) {
+        padding: 7px !important;
+    }
+
     .dataTables_wrapper .dataTables_filter {
         display: none;
     }
@@ -73,16 +82,13 @@ if ($project_id == null) {
     .table {
         padding-bottom: 15px !important;
 
-
     }
 
     .table tbody tr td {
         max-height: 35px !important;
         height: 35px !important;
-        padding: 2px !important;
+        padding: 4px !important;
         vertical-align: middle !important;
-
-
     }
 
     .table tr td,
@@ -121,7 +127,6 @@ if ($project_id == null) {
     th.vertical span {
         writing-mode: vertical-rl;
         transform: rotate(180deg);
-
         width: 40px;
         white-space: nowrap;
         bottom: 0;
@@ -192,18 +197,15 @@ if ($project_id == null) {
         line-height: 70px;
         color: #222;
     }
+ table{
+    width: 100% !important;
+ }
 
     [data-tooltip]:before {
         text-align: left;
     }
 </style>
-<!-- <a href="javascript:" data-tooltip="* Tüm kolonu seçmek için tarihe basınız 
- * Seçimi kaldırmak için tekrar basınız
- * Seçili alanı silmek için delete tuşuna basınız.
- * Yaptığınız değişiklikleri kaydetmeyi unutmayın" data-tooltip-location="right">
 
-    <i class="fa-solid fa-circle-info"></i>
-</a> -->
 
 <div class="card card-outline card-info p-3">
 
@@ -438,168 +440,170 @@ if ($project_id == null) {
             </div>
         </div>
 
-
-        <table id="pTable" class="table  table-sm table-responsive p-2">
-            <thead>
-                <tr>
-
-                    <th class="ld">Adı Soyadı</th>
-                    <th class="ld">Unvanı</th>
-                    <th class="ld">Projesi</th>
-                    <?php foreach ($dates as $date): ?>
-                        <th class="vertical"><span><?php echo $date; ?></span></th>
-                    <?php endforeach; ?>
-                    <!-- <?php
-                    for ($i = 1; $i < 31; $i++) {
-                        ?>
-                    <th class="vertical"><span>Header <?php echo $i; ?></span></th>
-                    <?php
-                    }
-                    ?> -->
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-
-
-
-                while ($person = $sql->fetch(PDO::FETCH_ASSOC)) {
-                    $job_start_date = DateTime::createFromFormat($format, $person["job_start_date"]);
-
-                    ?>
-                    <tr>
-                        <td class="text-nowrap" style="min-width:12vw;" data-id="<?php echo $person["id"] ?>"><a
-                                class="btn-user-modal" type="button">
-                                <?php echo $person["full_name"] ?></a></td>
-                        <td class="text-nowrap" style="min-width:10vw;">
-                            <?php echo $person["job"] ?>
-                        </td>
-
-
-                        <?php
-                        $projectNames = $func->getProjectNames($person["project_id"]);
-                        ?>
-
-                        <td class="text-nowrap" data-tooltip="<?php echo $projectNames; ?>"><?php
-
-                           echo $func->shortProjectsName($projectNames);
-
-                           ?></td>
-                        <?php
-                        foreach ($dates as $date):
-                            $month_date = DateTime::createFromFormat($format, $date);
-                            ?>
-                            <?php
-
-                            $puantaj_id = kayitVarmi($company_id, $person["id"], $year, $month);
-                            if ($job_start_date <= $month_date) {
-                                if ($puantaj_id > 0) {
-                                    $query = $con->prepare("SELECT * FROM puantaj where id = ?");
-                                    $query->execute(array($puantaj_id));
-                                    $puantaj_data = $query->fetch(PDO::FETCH_ASSOC);
-                                    $data_json = json_decode($puantaj_data["datas"], true);
-
-                                    $value = isset($data_json[$date]) ? $data_json[$date] : "0";
-                                    $func->puantajClass($value);
-                                    // echo "<td class='gun noselect' data-id=''>" . $value . "</td>";
-                    
-                                } else {
-
-                                    if (isWeekend($date)) {
-                                        $func->puantajClass(6);
-                                    } else {
-                                        echo "<td class='gun noselect'></td>";
-                                    }
-
-                                }
-                            } else {
-                                echo "<td class='noselect text-center' style='background:#ddd'>---</td>";
-                            }
-                            ?>
-
-                        <?php endforeach; ?>
-
-                    </tr>
-                    <?php
-                }
-                ?>
-            </tbody>
-        </table>
-
-
     </div>
 
-    <script src="plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <table id="pTable" class="table table-sm table-responsive p-2 responsive-table">
+        <thead>
+           
+            <tr>
 
-    <script src="pages/puantaj/app.js"></script>
-    <script>
-        $(document).ready(function () {
+                <th class="ld">Adı Soyadı</th>
+                <th class="ld">Unvanı</th>
+                <th class="ld">Projesi</th>
+                <?php foreach ($dates as $date):
+                 $style ='';
+                 if(isWeekend($date)){
+                    $style = "background-color:#99A98F;color:white";
+                }  
+                    echo '<th class="vertical" style="'.$style.'"><span>'  . $date  . '</span></th>'
+                    ?>
+                    
+                <?php endforeach; ?>
+            </tr>
 
-            $('.select2').select2({
-                minimumResultsForSearch: Infinity
-            })
-            function filterWaitingDemand() {
-                var table = $('#pTable').DataTable();
-                table.column(5).search('Ma').draw();
+        </thead>
+        <tbody>
+            <?php
 
+
+
+            while ($person = $sql->fetch(PDO::FETCH_ASSOC)) {
+                $job_start_date = DateTime::createFromFormat($format, $person["job_start_date"]);
+
+                ?>
+                <tr>
+                    <td class="text-nowrap" style="min-width:12vw;" data-id="<?php echo $person["id"] ?>"><a
+                            class="btn-user-modal" type="button">
+                            <?php echo $person["full_name"] ?></a></td>
+
+                    <td class="text-nowrap" style="min-width:10vw;">
+                        <?php echo $person["job"] ?>
+                    </td>
+
+
+                    <?php
+                    $projectNames = $func->getProjectNames($person["project_id"]);
+                    ?>
+
+                    <td class="text-nowrap" data-tooltip="<?php echo $projectNames; ?>"><?php
+
+                       echo $func->shortProjectsName($projectNames);
+
+                       ?></td>
+                    <?php
+                    foreach ($dates as $date):
+                        $month_date = DateTime::createFromFormat($format, $date);
+                        ?>
+                        <?php
+
+                        $puantaj_id = kayitVarmi($company_id, $person["id"], $year, $month);
+                        if ($job_start_date <= $month_date) {
+                            if ($puantaj_id > 0) {
+                                $query = $con->prepare("SELECT * FROM puantaj where id = ?");
+                                $query->execute(array($puantaj_id));
+                                $puantaj_data = $query->fetch(PDO::FETCH_ASSOC);
+                                $data_json = json_decode($puantaj_data["datas"], true);
+
+                                $value = isset($data_json[$date]) ? $data_json[$date] : "0";
+                                $func->puantajClass($value);
+                                // echo "<td class='gun noselect' data-id=''>" . $value . "</td>";
+                
+                            } else {
+
+                                if (isWeekend($date)) {
+                                    $func->puantajClass(6);
+                                } else {
+                                    echo "<td class='gun noselect'></td>";
+                                }
+
+                            }
+                        } else {
+                            echo "<td class='noselect text-center' style='background:#ddd'>---</td>";
+                        }
+                        ?>
+
+                    <?php endforeach; ?>
+
+                </tr>
+                <?php
             }
+            ?>
+        </tbody>
+    </table>
 
+</div>
 
+<script src="plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
 
+<script src="pages/puantaj/app.js"></script>
+<script>
+    $(document).ready(function () {
 
-            var table = new DataTable('#pTable', {
-                //filter: false,
-                //    searching : true,
-                ordering: false,
-                language: {
-                    info: '_PAGES_ sayfadan _PAGE_. sayfa gösteriliyor',
-                    infoEmpty: 'Hiç kayıt bulunamadı',
-                    infoFiltered: '(_MAX_ kayıt filtrelendi)',
-                    lengthMenu: 'Her sayfada _MENU_ kayıt göster',
-                    zeroRecords: 'Kayıt Yok!',
-                    search: "Ara",
-                    paginate: {
-                        "first": "İlk",
-                        "last": "Son",
-                        "next": "Sonraki",
-                        "previous": "Önceki"
-                    },
-                },
-            });
-
-            // #column3_search is a <input type="text"> element
-            $('#search_name').on('keyup', function () {
-                table
-                    .columns(0)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#search_job').on('keyup', function () {
-                table
-                    .columns(1)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#search_projects').on('keyup', function () {
-                table
-                    .columns(2)
-                    .search(this.value)
-                    .draw();
-            });
-
+        $('.select2').select2({
+            minimumResultsForSearch: Infinity
         })
+        function filterWaitingDemand() {
+            var table = $('#pTable').DataTable();
+            table.column(5).search('Ma').draw();
 
-    </script>
+        }
+
+
+
+
+        var table = new DataTable('#pTable', {
+            //filter: false,
+            //    searching : true,
+            ordering: false,
+            language: {
+                info: '_PAGES_ sayfadan _PAGE_. sayfa gösteriliyor',
+                infoEmpty: 'Hiç kayıt bulunamadı',
+                infoFiltered: '(_MAX_ kayıt filtrelendi)',
+                lengthMenu: 'Her sayfada _MENU_ kayıt göster',
+                zeroRecords: 'Kayıt Yok!',
+                search: "Ara",
+                paginate: {
+                    "first": "İlk",
+                    "last": "Son",
+                    "next": "Sonraki",
+                    "previous": "Önceki"
+                },
+            },
+        });
+
+        // #column3_search is a <input type="text"> element
+        $('#search_name').on('keyup', function () {
+            table
+                .columns(0)
+                .search(this.value)
+                .draw();
+        });
+
+        $('#search_job').on('keyup', function () {
+            table
+                .columns(1)
+                .search(this.value)
+                .draw();
+        });
+
+        $('#search_projects').on('keyup', function () {
+            table
+                .columns(2)
+                .search(this.value)
+                .draw();
+        });
+
+    })
+
+</script>
 
 
 
 
 
 
-    <!-- <script>
+<!-- <script>
         $(document).ready(function () {
             function formatOption(option) {
                 if (!option.id) {

@@ -3,11 +3,8 @@ session_start();
 require_once "config/connect.php";
 require_once "config/functions.php";
 $func = new Functions();
-<<<<<<< HEAD
-=======
 
 
->>>>>>> 5eb87c96cfbeb689ce88cb27f4d9adeb75ad055d
 
 ?>
 <!DOCTYPE html>

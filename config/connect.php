@@ -4,6 +4,7 @@
 // $password = "54tJ29L^tg1[";
 // $hostname = "45.84.189.194";
 // $database = "mbeyazil_puantor";
+setlocale(LC_TIME, 'tr_TR.UTF-8', 'turkish');
 $username = "root";
 $password = "";
 $hostname = "localhost";
