@@ -24,7 +24,7 @@ require_once "../../include/requires.php";
             ?>
 
             <button type="button" id="save" data-title="Yeni Parametre"
-                onclick="submitFormbyAjax('params/add','<?php echo $params_json ?>')"
+                onclick="submitFormReturnJson('params/add','<?php echo $params_json ?>')"
                 class="btn btn-info d-none">
                 <i class="fas fa-save mr-2"></i>Kaydet</button>
         </div>

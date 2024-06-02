@@ -8,7 +8,7 @@ if ($account_id == '') {
 }
 
 
-if ($_POST) {
+if ($_POST && $_POST["method"] = "add") {
 
     $company_id = $_POST["company"];
     $param_name = $_POST["param_name"];
@@ -19,14 +19,6 @@ if ($_POST) {
     $calc_type = $_POST["calc_type"];
     $description = $_POST["description"];
 
-    // $params= "";
-
-    // if(isset($_POST["param_type"])){
-    //     foreach ($_POST["param_type"] as $param) {
-    //         $params .= $param . "|";
-    //     }
-    //     $params = rtrim($params, "|");
-    // }
 
     //Tarihlerin doğruluğunu kontrol edin
     if ($start_date > $end_date) {

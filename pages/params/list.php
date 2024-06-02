@@ -104,8 +104,10 @@ if ($_POST && $_POST['method'] == "Delete") {
                         </li>
 
                         <!-- <?php
-                        $params = array("id" => $row["id"], "message" => $row["param_name"]);
-                        $params_json = $func->jsonEncode($params);
+                        $params = array(
+                            "id"        => $row["id"], 
+                            "message"   => $row["param_name"]);
+                        $params_json    = $func->jsonEncode($params);
                         ?> -->
 
                         <li class="dropdown-item">

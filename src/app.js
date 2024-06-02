@@ -74,55 +74,55 @@ function submitFormbyAjax(page, params, messageType = "alert") {
        .catch((error) => console.error(error));
   }
  }
-// function submitFormbyAjax(page, params, messageType = "alert") {
-//   var form = document.getElementById("myForm");
-//   var formData = new FormData(form);
-//   if (validateForm()) {
-//     if (params != "") {
-//       var parsedParams = JSON.parse(params);
-//       for (var key in parsedParams) {
-//         formData.append(key, parsedParams[key]);
-//       }
-//     }
+function submitFormReturnJson(page, params, messageType = "alert") {
+  var form = document.getElementById("myForm");
+  var formData = new FormData(form);
+  if (validateForm()) {
+    if (params != "") {
+      var parsedParams = JSON.parse(params);
+      for (var key in parsedParams) {
+        formData.append(key, parsedParams[key]);
+      }
+    }
 
-//     // Dinamik olarak formun gönderileceği sayfayı belirle
-//     var submitUrl = "pages/" + page + ".php";
-//     // console.log(submitUrl);
-//     $.ajax({
-//       url: submitUrl,
-//       data: formData,
-//       type: "POST",
-//       processData: false,
-//       contentType: false,
-//       success: function (response) {
+    // Dinamik olarak formun gönderileceği sayfayı belirle
+    var submitUrl = "pages/" + page + ".php";
+    // console.log(submitUrl);
+    $.ajax({
+      url: submitUrl,
+      data: formData,
+      type: "POST",
+      processData: false,
+      contentType: false,
+      success: function (response) {
    
-//         var data = JSON.parse(response);
-//         if (data.status == 200) {
-//           // Başarı mesajı ve sayfa içeriği güncelleme
-//           var successMessage = data.message;
-//           RoutePage(data.page,"", pTitle = data.pTitle); 
+        var data = JSON.parse(response);
+        if (data.status == 200) {
+          // Başarı mesajı ve sayfa içeriği güncelleme
+          var successMessage = data.message;
+          RoutePage(data.page,"", pTitle = data.pTitle); 
 
-//           if (messageType === "alert") {
-//             showMessage(successMessage, "success");
-//           } else {
-//             toastrdefaultsuccess(successMessage);
-//           }
-//         } else {
-//           var errorMessage = data.message;
-//           if (messageType === "alert") {
-//             showMessage(errorMessage, "error");
-//           } else {
-//             toastrdefaulterror(errorMessage);
-//           }
-//         }
-//       },
-//       error: function (jqXHR, textStatus, errorThrown) {
-//         console.error("AJAX error: " + textStatus + ": " + errorThrown);
-//         showMessage("Beklenmeyen bir hata oluştu.", "error");
-//       },
-//     });
-//   }
-// }
+          if (messageType === "alert") {
+            showMessage(successMessage, "success");
+          } else {
+            toastrdefaultsuccess(successMessage);
+          }
+        } else {
+          var errorMessage = data.message;
+          if (messageType === "alert") {
+            showMessage(errorMessage, "error");
+          } else {
+            toastrdefaulterror(errorMessage);
+          }
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.error("AJAX error: " + textStatus + ": " + errorThrown);
+        showMessage("Beklenmeyen bir hata oluştu.", "error");
+      },
+    });
+  }
+}
 
 function formatDate(date) {
   let day = date.getDate();

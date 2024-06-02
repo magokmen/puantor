@@ -444,7 +444,21 @@ if ($project_id == null) {
 
     <table id="pTable" class="table table-sm table-responsive p-2 responsive-table">
         <thead>
-           
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+
+                <?php foreach ($dates as $date): ?>
+                   <?php 
+                   $style ='';
+                    if(isWeekend($date)){
+                        $style = "background-color:#99A98F;color:white";
+                    }
+                    echo ' <th class="gunadi" style="'.$style.'">'.$func->gunadi($date); '.</th>' ?>
+                <?php endforeach; ?>
+
+            </tr>
             <tr>
 
                 <th class="ld">Adı Soyadı</th>

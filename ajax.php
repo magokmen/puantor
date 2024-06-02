@@ -172,14 +172,15 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
 
             if ($key != null) {
                 $tur = $puantaj["Turu"];
-                if ($tur != "Saatlik"  ) {
+                if ($tur == "Saatlik"  ) {
+
                     #normal çalışma ise günlük saat üzerinden puantajdaki saat hesaplanır
                     $prm = $con->prepare("SELECT * FROM parameters WHERE param_type = ? AND start_date <= ? AND end_date>= ?");
                     $prm->execute(array(1, $start_date, $end_date));
                     $paramVal = $prm->fetch(PDO::FETCH_ASSOC);
 
 
-                    // $ucret =isset($paramVal["param_val"]) ? $paramVal["param_val"] : 0 ;
+                    //Döneme ait paramaetre varsa günlük ücreti alır yoksa geri mesaj döner
                     if (isset($paramVal["param_val"])) {
                         $ucret = $paramVal["param_val"];
                     } else {
@@ -241,7 +242,7 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
 
     $res = array(
         "statu" => $statu,
-        "message" => $pnt,
+        "message" => $message,
     );
     echo json_encode($res);
     return;
