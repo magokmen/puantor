@@ -37,6 +37,7 @@ if ($_POST && $_POST['method'] == "Delete") {
             <th>Email</th>
             <th>Açılış Tarihi</th>
             <th>Kapanış Tarihi</th>
+            <th>Varsayılan Yap</th>
             <th>Durum</th>
             <th>#</th>
 
@@ -75,6 +76,19 @@ if ($_POST && $_POST['method'] == "Delete") {
                 </td>
                 <td>
                     <?php echo $row["close_date"]; ?>
+                </td>
+                <td class="text-center">
+                    <?php
+                    if ($row["isDefault"] == 1) {
+                        $checked = "checked";
+                    } else {
+                        $checked = "";
+                    }
+                    echo "<input data-id=" . $row["id"] . " type='checkbox' " . $checked . " class='check'>";
+
+
+                    ?>
+
                 </td>
                 <td>
                     <?php echo ($row["close_date"] == '') ? "Aktif" : "Pasif"; ?>
@@ -115,6 +129,7 @@ if ($_POST && $_POST['method'] == "Delete") {
             <th>Email</th>
             <th>Açılış Tarihi</th>
             <th>Kapanış Tarihi</th>
+            <th>Varsayılan Yap</th>
             <th>Durum</th>
             <th>#</th>
 
@@ -125,3 +140,12 @@ if ($_POST && $_POST['method'] == "Delete") {
 <!-- /.content -->
 <?php
 include_once "../../plugins/datatables/datatablescripts.php" ?>
+
+<script>
+    $(".check").on("change", function () {
+        if ($(this).prop("checked")) {
+            $(".check").not(this).bootstrapToggle('off');
+        }
+    });
+
+</script>

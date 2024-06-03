@@ -93,8 +93,8 @@ if ($_POST && $_POST['method'] == "Delete") {
                     <?php echo $value["address"] ?>
                 </td>
 
-                <td>
-                    <?php echo $value["daily_wages"] ?>
+                <td class="text-center">
+                    <?php echo tlformat($value["daily_wages"]) . " TL" ?>
                 </td>
 
                 <td>

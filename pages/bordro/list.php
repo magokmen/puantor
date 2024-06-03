@@ -74,7 +74,7 @@ if ($_POST && $_POST['method'] == "Delete") {
                 <td>
                     <?php echo $row["end_date"]; ?>
                 </td>
-                <td>
+                <td class="text-center">
                     <?php echo $row["param_val"]; ?>
                 </td>
 

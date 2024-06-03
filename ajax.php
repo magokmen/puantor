@@ -306,7 +306,7 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
 
     $res = array(
         "statu" => $statu,
-        "message" => $pnt,
+        "message" => "İşlem Başarılı!",
     );
     echo json_encode($res);
     return;

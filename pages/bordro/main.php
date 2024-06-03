@@ -121,7 +121,7 @@ $dates = generateDates($year, $month, $days);
         }
         ?>
 
-        <table id="example1" class="table table-bordered table-striped table-responsive table-hover">
+        <table id="example1" class="table table-bordered table-striped table-responsive-sm table-hover">
             <thead>
 
                 <tr>
