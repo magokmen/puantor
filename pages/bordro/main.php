@@ -8,13 +8,13 @@ require_once "../../include/requires.php";
 
 $company_id = isset($_GET["company_id"]) ? $_GET["company_id"] : 0;
 $project_id = isset($_GET["project_id"]) ? $_GET["project_id"] : 0;
-$year       = isset($_GET["year"]) ? $_GET["year"] : date('Y');
-$month      = isset($_GET["months"]) ? $_GET["months"] : date('m');
+$year = isset($_GET["year"]) ? $_GET["year"] : date('Y');
+$month = isset($_GET["months"]) ? $_GET["months"] : date('m');
 
 
-$disabled   = $company_id == 0 ? "disabled" : "";
-$days       = $func->daysInMonth($month, $year);
-$dates      = generateDates($year, $month, $days);
+$disabled = $company_id == 0 ? "disabled" : "";
+$days = $func->daysInMonth($month, $year);
+$dates = generateDates($year, $month, $days);
 
 
 
@@ -53,8 +53,8 @@ $dates      = generateDates($year, $month, $days);
                 <button type="button" class="btn btn-default mr-2 float-right" data-toggle="dropdown">Rapor Al <i
                         class="fa-solid fa-caret-down"></i> </button>
 
-                <div class="dropdown-menu" role="menu">
-                    <a class="dropdown-item" href="#">Puantajı Excele Aktar</a>
+                <div class="dropdown-menu" role="menu" id="excele_aktar">
+                    <a class="dropdown-item" href="pages/bordro/toxls.php">Bordroyu Excele Aktar</a>
                     <!-- <div class="dropdown-divider"></div> -->
 
                 </div>
@@ -121,7 +121,7 @@ $dates      = generateDates($year, $month, $days);
         }
         ?>
 
-        <table id="example1" class="table table-bordered table-striped table-responsive-sm table-hover">
+        <table id="example1" class="table table-bordered table-striped table-responsive table-hover">
             <thead>
 
                 <tr>
@@ -135,6 +135,8 @@ $dates      = generateDates($year, $month, $days);
                     <th class="text-center">Brüt Tutar</th>
                     <th>Kesinti</th>
                     <th>Net Ele Geçen</th>
+                    <th class="text-center">Puantajda İşlem Yapılmasın</th>
+                    <th class="text-center">Pers. Bord. Görsün</th>
                     <th>Hesaplama Tarihi</th>
                     <th>#</th>
 
@@ -189,6 +191,22 @@ $dates      = generateDates($year, $month, $days);
                         <td>
 
                         </td>
+                        <td class="text-center">
+                            <?php
+                            if ($row["isClosed"] == 1) {
+                                echo "<i class='fas fa-check text-green'></i>";
+                            }
+
+                            //echo $row["isView"]; ?>
+                        </td>
+                        <td class="text-center">
+                            <?php
+                            if ($row["isView"] == 1) {
+                                echo "<i class='fas fa-check text-green'></i>";
+                            }
+
+                            //echo $row["isView"]; ?>
+                        </td>
                         <td>
                             <?php echo $row["hesaplama_tarihi"]; ?>
                         </td>
@@ -232,6 +250,8 @@ $dates      = generateDates($year, $month, $days);
                     <th>Brüt Tutar</th>
                     <th>Kesinti</th>
                     <th>Net Ele Geçen</th>
+                    <th class="text-center">Puantajda İşlem Yapılmasın</th>
+                    <th class="text-center">Pers. Bord. Görsün</th>
                     <th>Hesaplama Tarihi</th>
                     <th>#</th>
 
@@ -249,3 +269,16 @@ include_once "../../plugins/datatables/datatablescripts.php" ?>
 
 <script src="../../src/component.js"></script>
 <script src="pages/bordro/app.js"></script>
+
+<script>
+    $("#excele_aktar").click(function () {
+        var company_id = $("#company").val();
+        if (company_id == "" ) {
+            alert("Lütfen bir şirket seçiniz");
+            return false;
+        } else {
+
+            window.location.href = "pages/bordro/toxls.php";
+        }
+    });
+</script>

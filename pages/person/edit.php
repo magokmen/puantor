@@ -232,7 +232,7 @@ $person = $sql->fetch(PDO::FETCH_ASSOC);
 
                             </div>
                             <div class="form-group">
-                                <label for="daily_wages">Günlük Ücreti<span style="color:red">(*)</span> </label>
+                                <label for="daily_wages">Günlük Ücreti<span style="color:red">(*)</span><small>İlgili dönemdeki parametreden yüksek olması durumunda buradan hesaplanır.</small> </label>
                                 <input required type="text" id="daily_wages" name="daily_wages" class="form-control"
                                 value="<?php echo $person["daily_wages"]; ?>" >
                             </div>

@@ -165,7 +165,7 @@ if ($_POST && $_POST["method"] == "add") {
 
                     </div>
                     <div class="form-group">
-                        <label for="gunluk_ucret">Günlük Ücreti<span style="color:red">(*)</span> </label>
+                        <label for="gunluk_ucret">Günlük Ücreti<span style="color:red">(*)</span><small>İlgili dönemdeki parametreden yüksek olması durumunda buradan hesaplanır.</small> </label>
                         <input required type="text" id="gunluk_ucret" name="gunluk_ucret" class="form-control">
                     </div>
 

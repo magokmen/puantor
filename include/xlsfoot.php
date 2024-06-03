@@ -2,6 +2,15 @@
 
 
 
+
+
+
+## array içine yazılan sütunlarda genişliği otomatik yap. ##
+foreach ($columns as $column) {
+    $sheet->getActiveSheet()->getColumnDimension($column)->setAutoSize(true);
+}
+
+
 // Rename worksheet
 $sheet->getActiveSheet()->setTitle('Sayfa1');
 

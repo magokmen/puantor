@@ -12,7 +12,6 @@ $hostname = "localhost";
 $database = "puantor";
 
 
-global $con;
 try {
     $con = new PDO(
         "mysql:host=$hostname;dbname=$database",

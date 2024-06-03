@@ -1,42 +1,29 @@
-<?php 
+<?php
+#exceli oluşturmak için gereken ÜST kodlar bir dosyaya alındı
 require '../../include/xlshead.php';
 
+#excel dosyasının adı
+$file_name      = "bordro";
+
+#varsayılan olarak bu kadar değerde döner
+$colums         = array("A", "B", "C", "D", "E");
+
+#kolon sayısı ile aynı sayıda olmak zorunda, yoksa hata verir
+$columnNames    = ['id', 'Adı Soyadı', 'Firma Adı', 'Proje Adı', 'Yıl', "Ay","Brüt" , "Kesinti","Net Ele Geçen","Hesaplama Tarihi"];
+
+#veritabanından alınacak kolon isimleri
+$field          = [ 'id', 'full_name', 'company_id', 'project', 'yil', 'ay', 'toplam_maas', 'kesinti', 'elegecen', 'hesaplama_tarihi'];
 
 
-// Add some data
-$sheet->setActiveSheetIndex(0)
-    ->setCellValue('A1', 'id')
-    ->setCellValue('B1', 'Adı Soyadı')
-    ->setCellValue('C1', 'Kimlik No')
-    ->setCellValue('D1', 'Günlük Ücret')
-    ->setCellValue('E1', 'İşe Başlama');
+#sorguyu değiştirmek gerekirse buradan değiştirilir
+$sql            = $con->prepare("SELECT * FROM sqlmaas");
+$sql            ->execute();
+$persons        = $sql->fetchAll(PDO::FETCH_ASSOC);
 
 
-$sql=$con->prepare("SELECT * FROM person");
-$sql->execute();
-$persons = $sql->fetchAll(PDO::FETCH_OBJ);
-
-$i=2;
-foreach ($persons as $person){
-
-  
-     $sheet->setActiveSheetIndex(0)
-     ->setCellValue('A' . $i, $person->id)
-     ->setCellValue('B' . $i, $person->full_name)
-     ->setCellValue('C' . $i, $person->kimlik_no)
-     ->setCellValue('D' . $i, $person->daily_wages)
-     ->setCellValue('E' . $i, $person->job_start_date);
-
-    $i++;
-
-}
-
-## array içine yazılan sütunlarda genişliği otomatik yap. ##
-$colums = array("A","B","C","D","E");
-foreach($colums as $column){
-    $sheet->getActiveSheet()->getColumnDimension($column)->setAutoSize(true);
-}
-
-$file_name="person";
-
+#exceli oluşturmak için gereken ALT kodlar bir dosyaya alındı
 require '../../include/xlsfoot.php';
+
+
+
+

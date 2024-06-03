@@ -54,8 +54,8 @@ $(document).keydown(function (event) {
   if (event.keyCode === 46) {
     // .clicked sınıfına sahip tüm td elemanlarını seç ve içeriğini temizle
     $("td.clicked").each(function () {
+      $(this).data("id", "0");
       $(this).empty();
-      $(this).data("id", "");
       $(this).toggleClass("clicked");
       $(this).css("background-color", "white");
     });
@@ -151,42 +151,40 @@ $(".btn-user-modal").on("click", function () {
 function puantaj_olustur() {
   // JSON verisini saklamak için bir nesne oluştur
   var jsonData = {};
-
   // Tablodaki her satırı döngü ile işle
   $("table tbody tr").each(function (index) {
     var row = $(this);
     var employeeData = {}; // Her çalışan için bir nesne oluştur
 
     // Ad, soyad ve ünvan bilgisini al
-    var fullName = row.find("td:first").data("id");
+    var person_id = row.find("td:first").data("id");
     var position = row.find("td:eq(1)").text();
 
-      // Tarihler için döngü yap
-      row.find("td:gt(2)").each(function (index, td) {
-        var date = $("table thead tr:eq(1) th")
-          .eq(index + 3)
-          .text(); // İndeks + 2, 2. indeksten başlamasını sağlar
+    // Tarihler için döngü yap
+    row.find("td:gt(2)").each(function (index, td) {
+      var date = $("table thead tr:eq(1) th")
+        .eq(index + 3)
+        .text(); // İndeks + 2, 2. indeksten başlamasını sağlar
 
-        var status = $(this).data("id") ? $(this).data("id") : ""; // Durum bilgisini al
-        //console.log(date + "--" + status); //
+      var status = $(this).attr("data-id") ? $(this).attr("data-id") : ""; // Durum bilgisini al
+      //console.log(person_id + "--" + date + "--" + status); //
 
-        // Çalışanın adı, soyadı ve ünvanı ile birleştirilmiş anahtar oluştur
-        var key = fullName + " : " + position;
+      // Çalışanın adı, soyadı ve ünvanı ile birleştirilmiş anahtar oluştur
+      var key = person_id + " : " + position;
 
-        // Anahtar zaten varsa, alt nesneye yeni tarih ve durum ekleyin
-        if (jsonData[key]) {
-          jsonData[key][date] = status;
-        } else {
-          // Yoksa yeni bir alt nesne oluşturun ve anahtarla birlikte ana nesneye ekleyin
-          employeeData[date] = status;
-          jsonData[key] = employeeData;
-        }
-      });
-   
+      // Anahtar zaten varsa, alt nesneye yeni tarih ve durum ekleyin
+      if (jsonData[key]) {
+        jsonData[key][date] = status;
+      } else {
+        // Yoksa yeni bir alt nesne oluşturun ve anahtarla birlikte ana nesneye ekleyin
+        employeeData[date] = status;
+        jsonData[key] = employeeData;
+      }
+    });
   });
 
   // JSON verisini konsolda göster
-  //console.log(JSON.stringify(jsonData, null, 2));
+  // console.log(JSON.stringify(jsonData, null, 2));
 
   var company_id = $("#company option:selected").val();
   var project_id = $("#project option:selected").val();

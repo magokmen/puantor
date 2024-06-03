@@ -110,6 +110,7 @@ function maas_hesapla() {
               title: "Uyarı!",
             });
           } else {
+            console.log(res.message);
             Route();
             swal.fire({
               icon: "success",

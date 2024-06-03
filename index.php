@@ -1,4 +1,5 @@
 <?php require_once "include/requires.php";
+
 if (!isset($_SESSION['login']) || !isset($_SESSION["accountID"])) {
     header("Location: logout.php");
     exit;
