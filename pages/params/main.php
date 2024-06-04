@@ -1,9 +1,17 @@
 <?php
 require_once "../../include/requires.php"; 
 
+
+if($_POST && $_POST['method'] == "Delete"){
+
+    $id = $_POST['id'];
+    if($id > 0){
+
+        $up = $con->prepare("DELETE FROM parameters where id = ? ");
+        $result = $up->execute(array($id));
+    }
+}
 ?>
-
-
 <div class="card card-outline card-info">
     <div class="card-header p-2">
         <div class="d-flex justify-content-between">

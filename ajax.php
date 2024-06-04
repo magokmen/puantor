@@ -152,14 +152,14 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
 
     //Döneme ait parametre var mı yok mu kontrol edilir
     $prm = $con->prepare("SELECT * FROM parameters WHERE param_type = ? 
-                                                    AND start_date >= ? 
-                                                    AND end_date <=  ? 
+                                                    AND start_date <= ? 
+                                                    AND end_date >=  ? 
                                                     ORDER by id DESC ");
     $prm->execute(array(1, $start_date, $end_date));
     //$result = $prm->fetchAll(PDO::FETCH_ASSOC);
 
     while ($row = $prm->fetch(PDO::FETCH_ASSOC)) {
-        $pnt[] = $row["start_date"] . "-" . $row["end_date"] . "-" . $row["param_val"];
+        $pnt[] = $row["param_val"];
     }
 
     // Eğer döneme ait parametre yoksa hata mesajı döndür
@@ -173,7 +173,6 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
     }
 
 
-    $pnt = [];
     $statu = 0;
     $ucret_statu = 200;
 
@@ -203,6 +202,8 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
         foreach ($data_json as $value => $key) {
             //     // $params = puantaj_val($key);
             // puantaj tablosundaki datas alanından puantaj kodunu alarak turunu buluyoruz
+
+
             $sql = $con->prepare("SELECT * FROM puantajturu WHERE id = ?");
             $sql->execute(array($key));
             $puantaj = $sql->fetch(PDO::FETCH_ASSOC);
@@ -212,84 +213,115 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
                 $tur = $puantaj["Turu"];
                 if ($tur != "Saatlik") {
 
-                    // #Saatlik ücret dışındaki çalışma ise günlük saat üzerinden puantajdaki saat hesaplanır
+
+
+                    // // #Saatlik ücret dışındaki çalışma ise günlük saat üzerinden puantajdaki saat hesaplanır
                     $ctrl_date = DateTime::createFromFormat('d.m.Y', $value)->format('Y-m-d');
 
-                    // Döngüye alına tarihlerin parametrelerini kontrol ederek ücreti alır
-                    $prm = $con->prepare("SELECT * FROM parameters WHERE param_type = ? 
-                                      AND start_date <= ? 
-                                      AND end_date >= ? 
-                                      AND start_date  >= ?
-                                      AND end_date <= ? 
+
+                    try {
+
+                        // Döngüye alına tarihlerin parametrelerini kontrol ederek ücreti alır
+                        $prm = $con->prepare("SELECT * FROM parameters WHERE param_type = ? 
+                                      AND STR_TO_DATE(start_date,'%Y-%m-%d') <= ? 
+                                      AND STR_TO_DATE(end_date,'%Y-%m-%d') >= ? 
+                                      AND STR_TO_DATE(start_date,'%Y-%m-%d') <= ?
+                                      AND STR_TO_DATE(end_date,'%Y-%m-%d') >= ? 
                                       ORDER by id DESC LIMIT 1 ");
-                    $prm->execute(array(1, $ctrl_date, $ctrl_date, $start_date, $end_date));
+                        $prm->execute(array(1, $ctrl_date, $ctrl_date, $start_date, $end_date));
 
-                    // Eğer parametre varsa döngüye alınır
-                    while ($paramVal = $prm->fetch(PDO::FETCH_ASSOC)) {
 
-                        //Döneme ait paramaetre varsa günlük ücreti alır yoksa geri mesaj döner
-                        if (isset($paramVal["param_val"])) {
-                            $ucret = $paramVal["param_val"];
-                            if ($person->daily_wages > $ucret) {
-                                $ucret = $person->daily_wages;
+                        // // Eğer parametre varsa döngüye alınır
+                        while ($paramVal = $prm->fetch(PDO::FETCH_ASSOC)) {
+                            //
+
+
+
+                            // //Döneme ait paramaetre varsa günlük ücreti alır yoksa geri mesaj döner
+                            if (isset($paramVal["param_val"])) {
+                                $ucret = $paramVal["param_val"];
+                                if (isset($person->daily_wages)) {
+                                    if ($person->daily_wages > $ucret) {
+                                        $ucret = $person->daily_wages;
+                                    }
+
+                                }
+                            } else {
+                                $ucret = 0;
+                                $ucret_statu = 400;
+                                $res = array(
+                                    "statu" => 400,
+                                    "message" => "Seçilen döneme ait parametre bulunamadı!",
+                                );
+                                echo json_encode($res);
+                                return;
                             }
-                        } else {
-                            $ucret = 0;
-                            $ucret_statu = 400;
-                            $res = array(
-                                "statu" => 400,
-                                "message" => "Seçilen döneme ait parametre bulunamadı!",
-                            );
-                            echo json_encode($res);
-                            return;
+
+
+                            // puantaj kodunun saat karşılığı alınır
+                            $puantaj_saati = $puantaj["PuantajSaati"];
+
+                            // Günlük ücret hesaplanır(buradaki 8 daha sonra parametre olarak alınacak)
+                            $tutar = ($puantaj_saati / 8) * $ucret;
+
+                            // Toplam ücret hesaplanır
+                            $toplam_ucret = $toplam_ucret + $tutar;
+
+
+                            // veritabanına kayıt edilecek verileri oluştur
+                            if (isset($puantaj_turu_tutar[$puantaj["id"]])) {
+                                // Eğer "tur_id" değeri zaten varsa, mevcut "tutar" değerine ekleyin
+                                $puantaj_turu_tutar[$puantaj["id"]]["tutar"] += $tutar;
+                            } else {
+                                // Yoksa yeni bir öğe ekleyin ve hesaplanmış "tutar" değerini kullanın
+                                $puantaj_turu_tutar[$puantaj["id"]] = array(
+                                    "tur_id" => $puantaj["id"],
+                                    "tutar" => $tutar
+                                );
+
+                            }
+                            $maas_data = json_encode($puantaj_turu_tutar);
+
+                            // Kontrol etmek için verileri diziye ekler
+                            // $pnt[] = "Tarih: " . $value . ";" .
+                            //     "Parametre: " . $paramVal["param_val"] . ";" .
+                            //     "Saat: " . $puantaj["PuantajSaati"] . ";" .
+                            //     "Tutar: " . $tutar . ";" .
+                            //     "Personel:" . $row["person"];
+
                         }
-
-                        // puantaj kodunun saat karşılığı alınır
-                        $puantaj_saati = $puantaj["PuantajSaati"];
-
-                        // Günlük ücret hesaplanır(buradaki 8 daha sonra parametre olarak alınacak)
-                        $tutar = ($puantaj_saati / 8) * $ucret;
-
-                        // Toplam ücret hesaplanır
-                        $toplam_ucret = $toplam_ucret + $tutar;
-
-
-                        // veritabanına kayıt edilecek verileri oluştur
-                        if (isset($puantaj_turu_tutar[$puantaj["id"]])) {
-                            // Eğer "tur_id" değeri zaten varsa, mevcut "tutar" değerine ekleyin
-                            $puantaj_turu_tutar[$puantaj["id"]]["tutar"] += $tutar;
-                        } else {
-                            // Yoksa yeni bir öğe ekleyin ve hesaplanmış "tutar" değerini kullanın
-                            $puantaj_turu_tutar[$puantaj["id"]] = array(
-                                "tur_id" => $puantaj["id"],
-                                "tutar" => $tutar
-                            );
-                        }
-
-                        //Kontrol etmek için verileri diziye ekler
-                        $pnt[] = "Tarih: " . $value . ";" .
-                            "Parametre: " . $paramVal["param_val"] . ";" .
-                            "Saat: " . $puantaj["PuantajSaati"] . ";" .
-                            "Tutar: " . $tutar . ";" .
-                            "Personel:" . $row["person"]  ;
-
-                        $maas_data = json_encode($puantaj_turu_tutar);
+                        //code here
+                    } catch (PDOException $ex) {
+                        $res = array(
+                            "statu" => 400,
+                            "message" => $ex->getMessage(),
+                        );
+                        echo json_encode($res);
+                        return;
                     }
+
 
                 }
             }
+
         }
 
         $maas_id = maasHesaplimi($company_id, $row["person"], $yil, $ay);
 
         if ($maas_id > 0) {
-            $calc_date = date("Y-m-d H:i:s");
-            $upd_maas_query = $con->prepare("UPDATE maas_gelir SET company_id = ? ,
-                                                        person_id = ?,  yil = ? , ay = ?, 
-                                                        datas= ? , toplam_maas = ? , calc_date = ?  WHERE id = ? ");
-            $upd_maas_query->execute(array($company_id, $row["person"], $yil, $ay, $maas_data, $toplam_ucret, $calc_date, $maas_id));
-            $statu = 200;
-            $message = "İşlem başarı ile güncellendi!";
+
+            try {
+
+                $calc_date = date("Y-m-d H:i:s");
+                $upd_maas_query = $con->prepare("UPDATE maas_gelir SET company_id = ? ,
+                                                            person_id = ?,  yil = ? , ay = ?, 
+                                                            datas= ? , toplam_maas = ? , calc_date = ?  WHERE id = ? ");
+                $upd_maas_query->execute(array($company_id, $row["person"], $yil, $ay, $maas_data, $toplam_ucret, $calc_date, $maas_id));
+                $message = "İşlem Başarılı!";
+            } catch (PDOException $ex) {
+                $message = $ex->getMessage();
+            }
+
 
         } else {
             if (!empty($maas_data)) {
@@ -305,8 +337,8 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
     }
 
     $res = array(
-        "statu" => $statu,
-        "message" => "İşlem Başarılı!",
+        "statu" => 200,
+        "message" => $message,
     );
     echo json_encode($res);
     return;

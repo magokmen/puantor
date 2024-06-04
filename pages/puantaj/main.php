@@ -23,9 +23,8 @@ if (isset($_GET["company_id"])) {
     $sql = $con->prepare("SELECT * FROM companies WHERE account_id = ? AND isDefault = ?");
     $sql->execute(array($account_id, 1));
     $result = $sql->fetch(PDO::FETCH_OBJ);
-    $company_id = $result->id;
+    $company_id = $result->id ?? 0;
 }
-
 
 // $company_id = isset($_GET["company_id"]) ? $_GET["company_id"] : 0;
 $project_id = isset($_GET["project_id"]) ? $_GET["project_id"] : 0;
@@ -208,6 +207,8 @@ if ($project_id == null) {
         height: 70px;
         line-height: 70px;
         color: #222;
+        position: fixed;
+        z-index: 100;
     }
 
     table {
@@ -223,7 +224,6 @@ if ($project_id == null) {
 <div class="card card-outline card-info p-3">
 
     <div class="modal fade" id="modal-default">
-
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -233,6 +233,8 @@ if ($project_id == null) {
                     </button>
 
                 </div>
+                <style>
+                </style>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-6 col-sm-5">
@@ -241,12 +243,18 @@ if ($project_id == null) {
                                 <a class="nav-link active" id="vert-tabs-home-tab" data-toggle="pill"
                                     href="#vert-tabs-home" role="tab" aria-controls="vert-tabs-home"
                                     aria-selected="true">Normal Çalışma</a>
+
+                                <a class="nav-link" id="vert-tabs-home-tab" data-toggle="pill" href="#vert-tabs-plus"
+                                    role="tab" aria-controls="vert-tabs-home" aria-selected="true">Fazla Çalışma</a>
+
                                 <a class="nav-link" id="vert-tabs-profile-tab" data-toggle="pill"
                                     href="#vert-tabs-profile" role="tab" aria-controls="vert-tabs-profile"
-                                    aria-selected="false">Fazla Mesai</a>
+                                    aria-selected="false">Saatlik Çalışma</a>
+
                                 <a class="nav-link" id="vert-tabs-messages-tab" data-toggle="pill"
                                     href="#vert-tabs-messages" role="tab" aria-controls="vert-tabs-messages"
                                     aria-selected="false">Ücretli İzin</a>
+
                                 <a class="nav-link" id="vert-tabs-settings-tab" data-toggle="pill"
                                     href="#vert-tabs-settings" role="tab" aria-controls="vert-tabs-settings"
                                     aria-selected="false">Ücretsiz</a>
@@ -256,26 +264,26 @@ if ($project_id == null) {
                             <div class="tab-content" id="vert-tabs-tabContent">
                                 <div class="tab-pane text-left fade show active hover-menu" id="vert-tabs-home"
                                     role="tabpanel" aria-labelledby="vert-tabs-home-tab">
-
                                     <?php echo $func->getPuantajTuruList('Normal Çalışma'); ?>
-
-
                                 </div>
+
+                                <div class="tab-pane fade hover-menu" id="vert-tabs-plus" role="tabpanel"
+                                    aria-labelledby="vert-tabs-profile-tab">
+                                    <?php echo $func->getPuantajTuruList('Fazla Çalışma'); ?>
+                                </div>
+
                                 <div class="tab-pane fade hover-menu" id="vert-tabs-profile" role="tabpanel"
                                     aria-labelledby="vert-tabs-profile-tab">
-
                                     <?php echo $func->getPuantajTuruList('Saatlik'); ?>
-
                                 </div>
+
                                 <div class="tab-pane fade hover-menu" id="vert-tabs-messages" role="tabpanel"
                                     aria-labelledby="vert-tabs-messages-tab">
-
                                     <?php echo $func->getPuantajTuruList('Ücretli İzin'); ?>
-
                                 </div>
+
                                 <div class="tab-pane fade hover-menu" id="vert-tabs-settings" role="tabpanel"
                                     aria-labelledby="vert-tabs-settings-tab">
-
                                     <?php echo $func->getPuantajTuruList('Ücretsiz'); ?>
 
                                 </div>
@@ -384,7 +392,8 @@ if ($project_id == null) {
                                     class="fa-solid fa-caret-down ml-3"></i> </button>
 
                             <div class="dropdown-menu" role="menu">
-                                <a class="dropdown-item" href="#">Puantajı Excele Aktar</a>
+                                <a class="dropdown-item" href="#" onclick="excelExport()" id="excele_aktar">Puantajı
+                                    Excele Aktar</a>
                                 <!-- <div class="dropdown-divider"></div> -->
 
                             </div>
@@ -539,7 +548,7 @@ if ($project_id == null) {
                             } else {
 
                                 if (isWeekend($date)) {
-                                    $func->puantajClass(6);
+                                    $func->puantajClass(53);
                                 } else {
                                     echo "<td class='gun noselect'></td>";
                                 }
@@ -630,43 +639,41 @@ if ($project_id == null) {
 
 
 
-
-<!-- <script>
-        $(document).ready(function () {
-            function formatOption(option) {
-                if (!option.id) {
-                    return option.text;
-                }
-
-                var $option = $('<span>' + option.text + ' <span class="person-count"></span></span>');
-
-                $.ajax({
-                    url: '../../ajax.php',
-                    type: 'POST',
-                    data: {
-                        id: option.id,
-                        action: "person-count"
-                    },
-                    success: function (response) {
-                        var result = JSON.parse(response);
-                        var result = JSON.parse(response);
-                        var countText = result.length > 0 ? result.length : 0;
-                        if (result.length > 0) {
-                            // Örneğin, dönen verinin sayısını göstermek istiyorsanız
-                            var $countSpan = $('<span class="badge badge-danger float-right">').text(countText);
-                        } else {
-                            var $countSpan = $('<span class="float-right">').text(countText);
-                            
-                        }
-                        $option.find('.person-count').append($countSpan);
-                    }
-                });
-                return $option;
-            }
-
-            $('#company').select2({
-                templateResult: formatOption,
-                templateSelection: formatOption
+<script>
+    function excelExport() {
+        var table = $('#pTable').DataTable();
+        var data = table.rows().data();
+        var thElements = [];
+        $('thead tr').each(function () {
+            var rowData = [];
+            $(this).find('th').each(function () {
+                rowData.push($(this).text());
             });
+            thElements.push(rowData);
         });
-    </script> -->
+        var data_array = [];
+        data.each(function (value, index) {
+            data_array.push(value);
+        });
+
+        var data = {
+            data: data_array,
+            company_id: $('#company').val(),
+            project_id: $('#project').val(),
+            year: $('#year').val(),
+            month: $('#months').val(),
+            thElements: thElements
+        }
+
+        console.log(data);
+
+        // $.ajax({
+        //     type: "POST",
+        //     url: "pages/puantaj/excel.php",
+        //     data: data,
+        //     success: function (response) {
+        //         window.location.href = response;
+        //     }
+        // });
+    }
+</script>

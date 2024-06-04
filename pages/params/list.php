@@ -39,7 +39,7 @@ if ($_POST && $_POST['method'] == "Delete") {
             <th>Değer</th>
             <th>Hesap Türü</th>
             <th>Açıklama</th>
-            <th>Durum</th>
+            <th>Aktif mi?</th>
             <th>OLuşturulma Tarihi</th>
             <th>#</th>
 
@@ -79,18 +79,22 @@ if ($_POST && $_POST['method'] == "Delete") {
                 <td>
                     <?php echo $row["param_val"]; ?>
                 </td>
-              
+
                 <td>
-                    <?php echo $row["calc_type"] ; ?>
+                    <?php echo $row["calc_type"] == 1 ? "Günlük Ücret" : "Saatlik Ücret" ;?>
                 </td>
                 <td>
-                    <?php echo $row["description"] ; ?>
+                    <?php echo $row["description"]; ?>
+                </td>
+                <td class="text-center">
+                    <?php
+                    if ($row["state"] == "on") {
+                        echo "<i class='fas fa-check text-green'></i>";
+                    }
+                    ?>
                 </td>
                 <td>
-                    <?php echo $row["state"] ; ?>
-                </td>
-                <td>
-                    <?php echo $row["created_at"] ; ?>
+                    <?php echo $row["created_at"]; ?>
                 </td>
                 <td class="">
 
@@ -105,9 +109,10 @@ if ($_POST && $_POST['method'] == "Delete") {
 
                         <!-- <?php
                         $params = array(
-                            "id"        => $row["id"], 
-                            "message"   => $row["param_name"]);
-                        $params_json    = $func->jsonEncode($params);
+                            "id" => $row["id"],
+                            "method" => "Delete"
+                        );
+                        $params_json = $func->jsonEncode($params);
                         ?> -->
 
                         <li class="dropdown-item">
@@ -123,7 +128,7 @@ if ($_POST && $_POST['method'] == "Delete") {
     <tfoot>
 
         <tr>
-        <th>id</th>
+            <th>id</th>
             <th>Firma Adı</th>
             <th>Parametre Adı</th>
             <th>Parametre Türü</th>
@@ -132,7 +137,7 @@ if ($_POST && $_POST['method'] == "Delete") {
             <th>Değer</th>
             <th>Hesap Türü</th>
             <th>Açıklama</th>
-            <th>Durum</th>
+            <th>Aktif mi?</th>
             <th>OLuşturulma Tarihi</th>
             <th>#</th>
 

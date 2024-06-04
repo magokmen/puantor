@@ -87,6 +87,7 @@ if ($_POST && $_POST['method'] == "Delete") {
                 <td>
                     <?php echo $row["state"]; ?>
                 </td>
+                
                 <td>
                     <?php echo $row["created_at"]; ?>
                 </td>

@@ -77,7 +77,7 @@ require_once "config/functions.php";
                     $_SESSION['LoginIP'] = $_SERVER["REMOTE_ADDR"];
                     $_SESSION['userAgent'] = $_SERVER["HTTP_USER_AGENT"];
 
-                    $_SESSION['companyID'] = $account["account_id"];
+                    $_SESSION['companyID'] = $account["company_id"];
                     $_SESSION['UserFullName'] = $account["full_name"];
                     $_SESSION['accountType'] = $account["account_type"];
                     $_SESSION['expired_date'] =$farkGun;

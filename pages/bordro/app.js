@@ -76,7 +76,7 @@ function Route() {
       "&company_id=" +
       company_id +
       "&project_id=" +
-      project_id
+      project_id,animate=false
   );
 }
 

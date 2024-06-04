@@ -4,9 +4,17 @@ require_once "../../include/requires.php";
 
 
 
+if (isset($_GET["company_id"])) {
+    $company_id = $_GET["company_id"];
+} else {
+
+    $sql = $con->prepare("SELECT * FROM companies WHERE account_id = ? AND isDefault = ?");
+    $sql->execute(array($account_id, 1));
+    $result = $sql->fetch(PDO::FETCH_OBJ);
+    $company_id = $result->id ?? 0;
+}
 
 
-$company_id = isset($_GET["company_id"]) ? $_GET["company_id"] : 0;
 $project_id = isset($_GET["project_id"]) ? $_GET["project_id"] : 0;
 $year = isset($_GET["year"]) ? $_GET["year"] : date('Y');
 $month = isset($_GET["months"]) ? $_GET["months"] : date('m');
@@ -196,8 +204,7 @@ $dates = generateDates($year, $month, $days);
                             if ($row["isClosed"] == 1) {
                                 echo "<i class='fas fa-check text-green'></i>";
                             }
-
-                            //echo $row["isView"]; ?>
+                            ?>
                         </td>
                         <td class="text-center">
                             <?php

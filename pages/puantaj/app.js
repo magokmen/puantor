@@ -54,7 +54,7 @@ $(document).keydown(function (event) {
   if (event.keyCode === 46) {
     // .clicked sınıfına sahip tüm td elemanlarını seç ve içeriğini temizle
     $("td.clicked").each(function () {
-      $(this).data("id", "0");
+      $(this).attr("data-id", '');
       $(this).empty();
       $(this).toggleClass("clicked");
       $(this).css("background-color", "white");
@@ -142,7 +142,7 @@ $(".btn-user-modal").on("click", function () {
   // Modal içindeki değerleri güncelle
   $(".lead-job").text(jobDescription);
   $(".lead-name").text(userName);
-  $(".avatar").text(initials);
+  // $(".avatar-user").text(initials);
 
   // Modali göster
   $("#modal-summary").modal("show");
@@ -167,7 +167,7 @@ function puantaj_olustur() {
         .text(); // İndeks + 2, 2. indeksten başlamasını sağlar
 
       var status = $(this).attr("data-id") ? $(this).attr("data-id") : ""; // Durum bilgisini al
-      //console.log(person_id + "--" + date + "--" + status); //
+     // console.log(person_id + "--" + date + "--" + status); //
 
       // Çalışanın adı, soyadı ve ünvanı ile birleştirilmiş anahtar oluştur
       var key = person_id + " : " + position;

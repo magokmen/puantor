@@ -1,59 +1,83 @@
 <?php
-
 require_once "../../include/requires.php";
 
 //  echo "Kullanıcı id :" . $account_id ;
 if ($account_id == '') {
     go("logout.php", "");
+
 }
 
-$id = isset($_GET["id"]) ? $_GET["id"] : @$_POST["id"];
-if ($_POST && $_POST["method"] == "add") {
-    $company_name = $func->security($_POST["company_name"]);
-    $company_official = $func->security($_POST["company_official"]);
-    $tax_number = $func->security($_POST["tax_number"]);
-    $address = $func->security($_POST["address"]);
-    $open_date = $func->security($_POST["open_date"]);
-    $close_date = $func->security(str_replace('dd.mm.yyyy', '', $_POST["close_date"]));
-    $description = $func->security($_POST["description"]);
+$id = isset($_GET["id"]) ? $_GET["id"] : $_POST["id"];
 
 
-    try {
-        $sql = $con->prepare("UPDATE companies SET account_id = ?, 
-                                                    company_name = ? , 
-                                                    company_official = ?,
-                                                    tax_number = ?, 
-                                                    address = ?,
-                                                    open_date = ?,
-                                                    close_date = ?,
-                                                    description = ? WHERE id = ?");
+if ($_POST && $_POST["method"] == "update") {
+    $company_id = $_POST["company"];
+    $param_name = $_POST["param_name"];
+    $param_type = $_POST["param_type"];
+    $start_date = date("Y-m-d", strtotime($_POST["start_date"]));
+    $end_date = date("Y-m-d", strtotime($_POST["end_date"]));
+    $param_val = $_POST["param_val"];
+    $state = $_POST["state"];
+    $calc_type = $_POST["calc_type"];
+    $description = $_POST["description"];
 
-        $sql->execute(
-            array(
-                $account_id,
-                $company_name,
-                $company_official,
-                $tax_number,
-                $address,
-                $open_date,
-                $close_date,
-                $description,
-                $id
-            )
+    // Tarihlerin doğruluğunu kontrol edin
+    if ($start_date > $end_date) {
+        $res = array(
+            "status" => 400,
+            "message" => "Bitiş tarihi başlama tarihinden küçük olamaz!"
         );
-    } catch (PDOException $ex) {
-        showAlert("Error: " . $ex->getMessage());
+    } else {
+        try {
+            $updq = $con->prepare("UPDATE parameters SET 
+                company_id = ? , 
+                param_name = ? , 
+                param_type = ? , 
+                start_date = ? , 
+                end_date = ? , 
+                param_val = ? , 
+                calc_type = ? , 
+                state = ? ,
+                description = ? 
+                WHERE id = ?
+            ");
+            $updq->execute(array($company_id, $param_name, $param_type, $start_date, $end_date, $param_val, $calc_type,$state, $description, $id));
+
+            $res = array(
+                "status" => 200,
+                "message" => "İşlem başarıyla gerçekleşti!",
+                "page" => "params/main",
+                "pTitle" => "Parametre Listesi"
+            );
+        } catch (PDOException $ex) {
+            $res = array(
+                "status" => 500,
+                "message" => "Veritabanı hatası: " . $ex->getMessage()
+            );
+        }
     }
+
+    echo json_encode($res); // JSON yanıtı döndürün
+    exit();
 }
 
 
-$sql = $con->prepare("SELECT * FROM companies where id = ?");
+$sql = $con->prepare("SELECT * FROM parameters WHERE id = ?");
 $sql->execute(array($id));
-$result = $sql->fetch(PDO::FETCH_OBJ);
-
+$param = $sql->fetch(PDO::FETCH_OBJ);
 
 ?>
 
+<style>
+    .card {
+        word-wrap: normal;
+    }
+
+    .container {
+        padding: 0px !important;
+        max-width: 100% !important;
+    }
+</style>
 
 <div class="card card-outline card-info">
     <div class="card-header p-2">
@@ -62,152 +86,129 @@ $result = $sql->fetch(PDO::FETCH_OBJ);
 
 
             <ul class="nav nav-pills">
-                <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Şirket Listesi"
-                        data-toggle="tab">Şirket Listesi</a>
+                <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Parametre Listesi"
+                        data-toggle="tab">Tüm Parametreler</a>
                 </li>
             </ul>
             <?php
             $params = array(
-                "method" => "add",
-                "id" => $id,
-              
+                "method" => "update",
+                "id" => $id
             );
             $params_json = $func->jsonEncode($params);
             ?>
 
-            <button type="button" id="save" data-title="Firma Güncelle"
-                onclick="submitFormbyAjax('company/edit','<?php echo $params_json ?>')" class="btn btn-info"><i
-                    class="fas fa-save mr-2"></i> Kaydet</button>
+            <button type="button" id="save" data-title="Yeni Parametre"
+                onclick="submitFormReturnJson('params/edit','<?php echo $params_json ?>')"
+                class="btn btn-info">Kaydet</button>
         </div>
 
     </div><!-- /.card-header -->
     <div class="card-body">
 
 
-
         <form id="myForm">
-            <div class="row">
-
-                <div class="col-md-6">
-                    <div class="card card-teal">
-                        <div class="card-header">
-                            <h3 class="card-title">Genel Bilgiler</h3>
-
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-
-                            <div class="form-group">
-                                <label for="company_name">Şirket Adı <span style="color:red">(*)</span></label>
-                                <input id="company_name" name="company_name" value="<?php echo $result->company_name; ?>"
-                                    type="text" class="form-control" required>
-                            </div>
+            <div class="container">
 
 
-                            <div class="form-group">
-                                <label for="company_official">Yetkili Adı</label>
-                                <input id="company_official" name="company_official"
-                                    value="<?php echo $result->company_official; ?>" type="text" class="form-control">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="tax_number">Vergi No</label>
-                                <input id="tax_number" name="tax_number" type="text"
-                                    value="<?php echo $result->tax_number; ?>" class="form-control">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="address">Adresi</label>
-                                <textarea type="text" id="address" name="address"
-                                    class="form-control"><?php echo $result->address; ?></textarea>
-                            </div>
-
-                        </div>
-                        <!-- /.card-body -->
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="company">Şirket Adı</label> <span style="color:red">(*) Parametrenin geçerli
+                            olacağı
+                            şirketiniz</span>
+                        <?php echo $func->companies("company", $param->company_id); ?>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="param_name">Parametre Adı</label><span style="color:red"> (*)</span>
+                        <input required id="param_name" name="param_name" type="text" class="form-control"
+                            value="<?php echo $param->param_name; ?>">
                     </div>
                 </div>
-                <!-- /.card -->
-                <div class="col-md-6">
-                    <div class="card card-info">
-                        <div class="card-header">
-                            <h3 class="card-title">Diğer Bilgiler</h3>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="start_date">Başlama Tarihi </label><span style="color:red"> (*)</span>
 
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                    <i class="fas fa-minus"></i>
-                                </button>
+                        <div class="input-group date" id="startdate" data-target-input="nearest">
+                            <div class="input-group-prepend" data-target="#startdate" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
-                        </div>
-                        <div class="card-body">
-
-                            <div class="form-group">
-                                <label for="open_date">Açılış Tarihi </span></label>
-
-                                <div class="input-group date" id="startdate" data-target-input="nearest">
-                                    <div class="input-group-prepend" data-target="#startdate"
-                                        data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                    </div>
-                                    <input type="text" id="open_date" name="open_date"
-                                        value="<?php echo formatdDate($result->open_date); ?>"
-                                        class="form-control datetimepicker-input" data-target="#startdate"
-                                        data-inputmask-alias="datetime" data-inputmask-inputformat="dd.mm.yyyy"
-                                        data-mask />
-
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="close_date">Kapnaış Tarihi </span></label>
-
-                                <div class="input-group date" id="enddate" data-target-input="nearest">
-                                    <div class="input-group-prepend" data-target="#enddate"
-                                        data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                    </div>
-                                    <input type="text" id="close_date" name="close_date"
-                                        value="<?php echo $result->close_date; ?>"
-                                        class="form-control datetimepicker-input" data-target="#enddate"
-                                        data-inputmask-alias="datetime" data-inputmask-inputformat="dd.mm.yyyy"
-                                        data-mask />
-
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="description">Açıklama</label>
-                                <textarea type="text" name="description"
-                                    class="form-control"><?php echo $result->description; ?></textarea>
-                            </div>
-
-
+                            <input required type="text" id="start_date" name="start_date"
+                                value="<?php echo date("d.m.Y", strtotime($param->start_date));?>" class="form-control datetimepicker-input"
+                                data-target="#startdate" data-inputmask-alias="datetime"
+                                data-inputmask-inputformat="dd.mm.yyyy" data-mask />
 
                         </div>
-                        <!-- /.card-body -->
                     </div>
-                    <!-- /.card -->
+                    <div class="form-group col-md-6">
+                        <label for="end_date">Bitiş Tarihi </label><span style="color:red"> (*)</span>
+
+                        <div class="input-group date" id="enddate" data-target-input="nearest">
+                            <div class="input-group-prepend" data-target="#enddate" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                            <input required type="text" id="end_date" name="end_date"
+                                class="form-control datetimepicker-input" value="<?php echo date("d.m.Y", strtotime($param->end_date)); ?>"
+                                data-target="#enddate" data-inputmask-alias="datetime"
+                                data-inputmask-inputformat="dd.mm.yyyy" data-mask />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="param_type">Parametre Türü</label> <span style="color:red"> (*)</span>
+                        <!-- <?php echo $func->paramsTur("param_type[]", ""); ?> -->
+                        <select name="param_type" id="param_type" class="select2 form-control">
+
+                            <option value="0">Parametre Türü seçiniz</option>
+                            <option <?php echo $param->param_type == 1 ? "selected" : "" ;?> value="1">Günlük Ücret</option>
+                            <option <?php echo $param->param_type == 2 ? "selected" : "" ;?> value="2">Saatlik Ücret</option>
+
+                        </select>
+                    </div>
+
+
+
+                    <div class="form-group col-md-3">
+                        <label for="param_val">Değer</label> <span style="color:red"> (*)</span>
+                        <input id="param_val" name="param_val" type="text" class="form-control"
+                            value="<?php echo $param->param_val; ?>">
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <label for="calc_type">Hesaplama Türü</label> <span style="color:red"> (*)</span>
+                        <select required name="calc_type" id="calc_type" class="select2 form-control">
+                            <option value="">Tür seçiniz</option>
+                            <option <?php echo $param->calc_type == 1 ? "selected" : "" ;?> value="1">TL</option>
+                            <option <?php echo $param->calc_type == 2 ? "selected" : "" ;?> value="2">Günlük Ücretin yüzdesi</option>
+                        </select>
+                    </div>
+
                 </div>
 
+
+
+                <div class="row">
+
+                    <div class="form-group col-md-6">
+                        <input  type="checkbox" name="state" <?php echo $param->state == "on" ? "checked" : "" ;?> class="check">
+                        <label class="ml-2">Yayında mı?</label>
+
+
+                    </div>
+
+
+                    <div class="form-group col-md-6">
+                        <label for="description">Açıklama</label>
+                        <textarea type="text" name="description"
+                            class="form-control"><?php echo $param->description; ?></textarea>
+                    </div>
+
+                </div>
             </div>
+        </form>
+
 
     </div>
-
-    </form>
 </div>
-
-
-<script>
-
- 
-    $("#liste").click(function () {
-        RoutePagewithParams("company/main")
-        $("#page-title").text("Şirket Listesi");
-    })
-    $("#page-title").text("Şirket Güncelle");
-
-
-</script>
+<script src="../../src/component.js"></script>

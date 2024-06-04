@@ -5,23 +5,25 @@ if ($_POST && $_POST["method"] == "add") {
     $full_name = @$_POST["full_name"];
     $kimlik_no = @$_POST["kimlik_no"];
     $sigorta_no = @$_POST["sigorta_no"];
-    $address = @$_POST["address"];
-    $gunluk_ucret = @$_POST["gunluk_ucret"];
-    $email = @$_POST["email"];
-    $iban_number = @$_POST["iban_number"];
-    $job = @$_POST["job"];
-    $company_id = @$_POST["companies"];
-  
-    $projects= "";
+    $address = $_POST["address"];
+    $gunluk_ucret = $_POST["gunluk_ucret"];
+    $email = $_POST["email"];
+    $iban_number = $_POST["iban_number"];
+    $job = $_POST["job"];
+    $company_id = $_POST["companies"];
+    $job_start_date = @$_POST["job_start_date"];
+    $job_end_date = @$_POST["job_end_date"];
 
-    if(isset($_POST["projects"])){
+    $projects = "";
+
+    if (isset($_POST["projects"])) {
         foreach ($_POST["projects"] as $project) {
             $projects .= $project . "|";
         }
         $projects = rtrim($projects, "|");
     }
 
-    
+
     // Veritabanına güncelleme işlemini gerçekleştir
     try {
 
@@ -35,7 +37,9 @@ if ($_POST && $_POST["method"] == "add") {
                                                     iban_number = ?,
                                                     job = ? ,
                                                     company_id = ?,
-                                                    project_id = ?       ");
+                                                    project_id = ?   ,
+                                                    job_start_date = ?,    
+                                                    job_end_date = ?   ");
             $insq->execute(
                 array(
                     $full_name,
@@ -47,7 +51,9 @@ if ($_POST && $_POST["method"] == "add") {
                     $iban_number,
                     $job,
                     $company_id,
-                    $projects
+                    $projects,
+                    $job_start_date,
+                    $job_end_date
                 )
             );
 
@@ -119,13 +125,13 @@ if ($_POST && $_POST["method"] == "add") {
                 <div class="card-body">
 
                     <div class="form-group">
-                        <label for="ise_baslama_tarihi">İşe Başlama Tarihi <span style="color:red">(*)</span></label>
+                        <label for="job_start_date">İşe Başlama Tarihi <span style="color:red">(*)</span></label>
 
                         <div class="input-group date" id="startdate" data-target-input="nearest">
                             <div class="input-group-prepend" data-target="#startdate" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
-                            <input required type="text" id="ise_baslama_tarihi" name="ise_baslama_tarihi"
+                            <input required type="text" id="job_start_date" name="job_start_date"
                                 class="form-control datetimepicker-input" data-target="#startdate"
                                 data-inputmask-alias="datetime" data-inputmask-inputformat="dd.mm.yyyy" data-mask />
 
@@ -158,14 +164,15 @@ if ($_POST && $_POST["method"] == "add") {
 
                     <div class="form-group">
                         <label for="companies">Projesi</label>
-                        <select class="select2" id="projects" name="projects[]" multiple="multiple" data-placeholder="Proje Seçiniz"
-                            data-dropdown-css-class="select2" style="width: 100%;">
+                        <select class="select2" id="projects" name="projects[]" multiple="multiple"
+                            data-placeholder="Proje Seçiniz" data-dropdown-css-class="select2" style="width: 100%;">
 
                         </select>
 
                     </div>
                     <div class="form-group">
-                        <label for="gunluk_ucret">Günlük Ücreti<span style="color:red">(*)</span><small>İlgili dönemdeki parametreden yüksek olması durumunda buradan hesaplanır.</small> </label>
+                        <label for="gunluk_ucret">Günlük Ücreti<span style="color:red">(*)</span><small>İlgili dönemdeki
+                                parametreden yüksek olması durumunda buradan hesaplanır.</small> </label>
                         <input required type="text" id="gunluk_ucret" name="gunluk_ucret" class="form-control">
                     </div>
 
@@ -206,7 +213,7 @@ if ($_POST && $_POST["method"] == "add") {
 
 <script src="../../src/component.js"></script>
 <script type="text/javascript">
- 
+
     $("#companies").on("change", function () {
         var company_id = $("#companies option:selected").val();
         $.ajax({
@@ -221,4 +228,7 @@ if ($_POST && $_POST["method"] == "add") {
             }
         })
     })
+
+
+
 </script>

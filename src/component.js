@@ -41,11 +41,12 @@ $(document).ready(function () {
   $(".select2bs4").select2({
     theme: "bootstrap4",
   });
-
+  
+  moment().locale('tr');
   $("[data-mask]").inputmask("dd.mm.yyyy");
   $("#startdate,#enddate").datetimepicker({
     format: "DD.MM.YYYY",
-    locale: "tr",
+    locale : moment.locale('tr'),
   });
 });
 
@@ -65,11 +66,7 @@ $("#city").on("change", function () {
   });
 });
 
-$("[data-mask]").inputmask("dd.mm.yyyy");
-$("#startdate,#enddate").datetimepicker({
-  format: "DD.MM.YYYY",
-  locale: "tr",
-});
+
 
 
     $(function () {
@@ -81,3 +78,5 @@ $("#startdate,#enddate").datetimepicker({
         });
     })
 
+
+  

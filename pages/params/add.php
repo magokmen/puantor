@@ -13,10 +13,11 @@ if ($_POST && $_POST["method"] = "add") {
     $company_id = $_POST["company"];
     $param_name = $_POST["param_name"];
     $param_type = $_POST["param_type"];
-    $start_date = $_POST["start_date"];
-    $end_date = $_POST["end_date"];
+    $start_date = date("Y-m-d", strtotime($_POST["start_date"]));
+    $end_date = date("Y-m-d", strtotime($_POST["start_date"]));
     $param_val = $_POST["param_val"];
     $calc_type = $_POST["calc_type"];
+    $state ="on";
     $description = $_POST["description"];
 
 
@@ -37,10 +38,11 @@ if ($_POST && $_POST["method"] = "add") {
                 end_date = ? , 
                 param_val = ? , 
                 calc_type = ? , 
-                description = ? , 
-                state = ? 
+                state = ? ,
+                description = ? 
             ");
-            $insq->execute(array($account_id, $company_id, $param_name, $param_type, $start_date, $end_date, $param_val, $calc_type, $description, 1));
+            $insq->execute(array($account_id, $company_id, $param_name, $param_type, $start_date, $end_date,
+             $param_val, $calc_type, $state,$description));
 
             $res = array(
                 "status" => 200,

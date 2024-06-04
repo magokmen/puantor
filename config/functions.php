@@ -351,8 +351,8 @@ class Functions
         while ($result = $sql->fetch(PDO::FETCH_ASSOC)) {
             $output .= '
             <li class="nav-item">
-                <div class="user-block">
-                    <span class="avatar" data-id="' . $result["id"] . '" style="background-color:' . htmlspecialchars($result["ArkaPlanRengi"])
+                <div class="user-block" >
+                    <span class="avatar" data-tooltip="Saati : '.$result["PuantajSaati"] .' Saat"  data-id="' . $result["id"] . '" style="background-color:' . htmlspecialchars($result["ArkaPlanRengi"])
                 . ';color:' . $result["FontRengi"] . '">' . htmlspecialchars($result["PuantajKod"]) . '</span>
                     <span class="username">' . htmlspecialchars($result["PuantajAdi"]) . '</span>
                     <span class="description">' . htmlspecialchars($result["Turu"]) . '</span>
