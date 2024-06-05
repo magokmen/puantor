@@ -228,7 +228,4 @@ if ($_POST && $_POST["method"] == "add") {
             }
         })
     })
-
-
-
 </script>

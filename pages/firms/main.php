@@ -1,16 +1,18 @@
-<?php require_once "../../include/requires.php";?>
+<?php require_once "../../include/requires.php"; ?>
 
 <div class="card card-outline card-info">
     <div class="card-header p-2">
         <div class="d-flex justify-content-between">
-
             <ul class="nav nav-pills">
-                <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Firma Listesi"
-                        data-toggle="tab">Firma Listesi</a>
-                </li>
-                <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Firma Listesi"
-                        data-toggle="tab">Yeni Firma</a></li>
-
+                <?php if (permtrue("firmaListesi")): ?>
+                    <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Firma Listesi"
+                            data-toggle="tab">Firma Listesi</a>
+                    </li>
+                <?php endif; ?>
+                <?php if (permtrue("firmaEkle")): ?>
+                    <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Firma Listesi"
+                            data-toggle="tab">Yeni Firma</a></li>
+                <?php endif; ?>
             </ul>
             <?php
             $params = array("method" => "add");

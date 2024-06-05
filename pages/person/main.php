@@ -8,12 +8,16 @@ require_once "../../include/requires.php"; ?>
 
 
             <ul class="nav nav-pills">
-                <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Personel Listesi"
-                        data-toggle="tab">Tüm Personeller</a>
-                </li>
-                <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Yeni Personel"
-                        data-toggle="tab">Yeni Personel</a></li>
-
+                <?php if (permtrue("personelYeni")): ?>
+                    <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Personel Listesi"
+                            data-toggle="tab">Tüm Personeller</a>
+                    </li>
+                <?php endif; ?>
+                <?php if (permtrue("personelListesi")): ?>
+                    <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Yeni Personel"
+                            data-toggle="tab">Yeni Personel</a>
+                    </li>
+                <?php endif; ?>
 
             </ul>
             <?php
@@ -22,12 +26,11 @@ require_once "../../include/requires.php"; ?>
             ?>
 
             <button type="button" id="save" data-title="Yeni Personel"
-                onclick="submitFormbyAjax('person/main','<?php echo $params_json ?>')"
-                class="btn btn-info d-none">
+                onclick="submitFormbyAjax('person/main','<?php echo $params_json ?>')" class="btn btn-info d-none">
                 <i class="fas fa-save mr-2"></i>Kaydet</button>
         </div>
 
-        
+
     </div><!-- /.card-header -->
     <div class="card-body">
         <div class="tab-content">
@@ -70,12 +73,12 @@ require_once "../../include/requires.php"; ?>
     })
 
     $(function () {
-  $(".tabMenu").click(function () {
-      var navLinkText = $(this).data("title");
-      $("#page-title").text(navLinkText);
-      setActiveMenu(this);
-  });
-});
+        $(".tabMenu").click(function () {
+            var navLinkText = $(this).data("title");
+            $("#page-title").text(navLinkText);
+            setActiveMenu(this);
+        });
+    });
     // $("#edit").click(function() {
     //     var title = $(this).text();
     //     $("#page-title").text(title);

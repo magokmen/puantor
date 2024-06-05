@@ -5,12 +5,16 @@
 
         <div class="d-flex justify-content-between">
             <ul class="nav nav-pills">
-                <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Şirket Listesi"
-                        data-toggle="tab">Şirket Listesi</a>
-                </li>
-                <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Şirket Listesi"
-                        data-toggle="tab">Yeni Şirket</a></li>
-
+                <?php if (permtrue("şirketlerimListesi")): ?>
+                    <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Şirket Listesi"
+                            data-toggle="tab">Şirket Listesi</a>
+                    </li>
+                <?php endif; ?>
+                <?php if (permtrue("şirketlerimEkle")): ?>
+                    <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Şirket Listesi"
+                            data-toggle="tab">Yeni Şirket</a>
+                    </li>
+                <?php endif; ?>
             </ul>
 
 
@@ -20,10 +24,10 @@
             ?>
 
             <button type="button" data-title="Yeni Firma" id="save"
-                onclick="submitFormbyAjax('company/main','<?php echo $params_json ?>')"
-                class="btn btn-info d-none"><i class="fas fa-save mr-2"></i> Kaydet</button>
+                onclick="submitFormbyAjax('company/main','<?php echo $params_json ?>')" class="btn btn-info d-none"><i
+                    class="fas fa-save mr-2"></i> Kaydet</button>
 
-                
+
         </div><!-- /.card-header -->
     </div><!-- /.card-header -->
     <div class="card-body">

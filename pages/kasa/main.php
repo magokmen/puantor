@@ -25,9 +25,6 @@ if ($_POST) {
     return false;
 }
 
-
-
-
 ?>
 
 
@@ -205,7 +202,7 @@ if ($_POST) {
                                         <span class="username">
                                             <?php echo $row["account_name"] ?>
                                         </span>
-                                        <span class="description"><?php echo $row["company_name"] ;?></span>
+                                        <span class="description"><?php echo $row["company_name"]; ?></span>
                                     </div>
                                 </li>
 
@@ -214,12 +211,14 @@ if ($_POST) {
                             }
 
                             ?>
+                            <?php if (permtrue("kasaEkle")): ?>
+                                <li class="nav-item">
+                                    <a href="#" onclick="RoutePage('kasa/add', this)" class="nav-link">
+                                        Kasa Ekle <span class="float-right badge bg-danger">Yeni</span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
 
-                            <li class="nav-item">
-                                <a href="#" onclick="RoutePage('kasa/add', this)" class="nav-link">
-                                    Kasa Ekle <span class="float-right badge bg-danger">Yeni</span>
-                                </a>
-                            </li>
                         </ul>
                     </div>
                     <!-- /.card-body -->
@@ -242,52 +241,56 @@ if ($_POST) {
                     <!-- /.card-header -->
                     <div class="card-body hover-menu">
                         <ul class="nav flex-column">
-                            <li class="nav-item" data-toggle="modal" data-target="#modal-default">
-                                <div class="user-block">
-                                    <span class="avatar" style="background-color: #055bcc;">Glr</span>
-                                    <span class="username">
-                                        Gelir Ekle
-                                    </span>
-                                    <span class="description">Seçili Kasaya Gelir Ekle</span>
-                                </div>
-                            </li>
-                            <li class="nav-item">
-                                <div class="user-block">
-                                    <span class="avatar" style="background-color: #FE7A36;">Gdr</span>
-                                    <span class="username">
-                                        Gider Ekle
+                            <?php if (permtrue("kasaGelirEkle")): ?>
+                                <li class="nav-item" data-toggle="modal" data-target="#modal-default">
+                                    <div class="user-block">
+                                        <span class="avatar" style="background-color: #055bcc;">Glr</span>
+                                        <span class="username">
+                                            Gelir Ekle
+                                        </span>
+                                        <span class="description">Seçili Kasaya Gelir Ekle</span>
+                                    </div>
+                                </li>
+                            <?php endif; ?>
+                            <?php if (permtrue("kasaGiderEkle")): ?>
+                                <li class="nav-item">
+                                    <div class="user-block">
+                                        <span class="avatar" style="background-color: #FE7A36;">Gdr</span>
+                                        <span class="username">
+                                            Gider Ekle
 
-                                    </span>
-                                    <span class="description">Seçili Kasaya Gider Ekle</span>
-                                </div>
-                            </li>
-
-                            <li class="nav-item">
-                                <div class="user-block">
-                                    <span class="avatar" style="background-color: #81689D;">Pr</span>
-                                    <span class="username">
-                                        Projeden Ödeme Al
-
-                                    </span>
-                                    <span class="description">Projeden Ödeme Al</span>
-                                </div>
-                            </li>
-
-                            <li class="nav-item">
-                                <div class="user-block">
-                                    <span class="avatar" style="background-color: #3887BE;">Pö</span>
-                                    <span class="username">
-                                        Personel Ödemesi Yap
-
-                                    </span>
-                                    <span class="description">Personel Ödemesi yap</span>
-                                </div>
-                            </li>
-                            <li class="nav-item">
+                                        </span>
+                                        <span class="description">Seçili Kasaya Gider Ekle</span>
+                                    </div>
+                                </li>
+                            <?php endif; ?>
+                            <?php if (permtrue("kasaProjeÖdemeAl")): ?>
+                                <li class="nav-item">
+                                    <div class="user-block">
+                                        <span class="avatar" style="background-color: #81689D;">Pr</span>
+                                        <span class="username">
+                                            Projeden Ödeme Al
+                                        </span>
+                                        <span class="description">Projeden Ödeme Al</span>
+                                    </div>
+                                </li>
+                            <?php endif; ?>
+                            <?php if (permtrue("kasaPersonelÖdeme")): ?>
+                                <li class="nav-item">
+                                    <div class="user-block">
+                                        <span class="avatar" style="background-color: #3887BE;">Pö</span>
+                                        <span class="username">
+                                            Personel Ödemesi Yap
+                                        </span>
+                                        <span class="description">Personel Ödemesi yap</span>
+                                    </div>
+                                </li>
+                            <?php endif; ?>
+                            <!-- <li class="nav-item">
                                 <a href="#" onclick="RoutePage('kasa/hareket-turu', this)" class="nav-link">
                                     Hareket Türü Ekle <span class="float-right badge bg-danger">Yeni</span>
                                 </a>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                     <!-- /.card-body -->
@@ -298,11 +301,18 @@ if ($_POST) {
                 <div class="card card-outline card-info">
                     <div class="card-header p-2">
                         <ul class="nav nav-pills">
-                            <li class="nav-item"><a class="tabMenu active nav-link" id="liste" href="#list"
-                                    data-title="Kasa" data-toggle="tab">Kasa Hareketleri</a>
-                            </li>
-                            <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Kasa"
-                                    data-toggle="tab">Özet</a></li>
+                            <?php if (permtrue("kasaHareketleri")): ?>
+
+                                <li class="nav-item"><a class="tabMenu active nav-link" id="liste" href="#list"
+                                        data-title="Kasa" data-toggle="tab">Kasa Hareketleri</a>
+                                </li>
+                            <?php endif; ?>
+                            <?php if (permtrue("kasaÖzeti")): ?>
+
+                                <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Kasa"
+                                        data-toggle="tab">Özet</a>
+                                </li>
+                            <?php endif; ?>
 
                         </ul>
                     </div><!-- /.card-header -->

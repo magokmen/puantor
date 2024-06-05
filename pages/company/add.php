@@ -2,11 +2,11 @@
 
 
 //  echo "Kullanıcı id :" . $account_id ;
-if ($account_id == ''){
-    go("logout.php","");
+if ($account_id == '') {
+    go("logout.php", "");
 }
 if ($_POST && $_POST["method"] == "add") {
-    $company_name =$func->security($_POST["company_name"]);
+    $company_name = $func->security($_POST["company_name"]);
     $company_official = $func->security($_POST["company_official"]);
     $tax_number = $func->security($_POST["tax_number"]);
     $address = $func->security($_POST["address"]);
@@ -29,7 +29,7 @@ if ($_POST && $_POST["method"] == "add") {
         //                                                 address = ?,
         //                                                 open_date = ?,
         //                                                 description = ?");
-        $sql->execute(array($account_id, $company_name,$company_official, $tax_number, $address, $open_date,$description));
+        $sql->execute(array($account_id, $company_name, $company_official, $tax_number, $address, $open_date, $description));
     } catch (PDOException $ex) {
         echo "Error: " . $ex->getMessage();
     }
@@ -101,9 +101,9 @@ if ($_POST && $_POST["method"] == "add") {
                             <div class="input-group-prepend" data-target="#startdate" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
-                            <input type="text" id="open_date" name="open_date"
-                                class="form-control datetimepicker-input" data-target="#startdate"
-                                data-inputmask-alias="datetime" data-inputmask-inputformat="dd.mm.yyyy" data-mask />
+                            <input type="text" id="open_date" name="open_date" class="form-control datetimepicker-input"
+                                data-target="#startdate" data-inputmask-alias="datetime"
+                                data-inputmask-inputformat="dd.mm.yyyy" data-mask />
 
                         </div>
                     </div>
@@ -124,5 +124,5 @@ if ($_POST && $_POST["method"] == "add") {
 
     </div>
     <!-- row -->
-  
+
 </form>
