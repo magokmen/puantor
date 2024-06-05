@@ -1,11 +1,11 @@
 <?php
-require_once "../../include/requires.php"; 
+require_once "../../include/requires.php";
 
 
-if($_POST && $_POST['method'] == "Delete"){
+if ($_POST && $_POST['method'] == "Delete") {
 
     $id = $_POST['id'];
-    if($id > 0){
+    if ($id > 0) {
 
         $up = $con->prepare("DELETE FROM parameters where id = ? ");
         $result = $up->execute(array($id));
@@ -16,15 +16,17 @@ if($_POST && $_POST['method'] == "Delete"){
     <div class="card-header p-2">
         <div class="d-flex justify-content-between">
 
-
-            <ul class="nav nav-pills">
-                <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Parametre Listesi"
-                        data-toggle="tab">Parametre Listesi</a>
-                </li>
-                <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Parametre Listesi"
-                        data-toggle="tab">Yeni Parametre</a></li>
-
-
+            <?php if (permtrue("tanımlamalarParametreListesi")): ?>
+                <ul class="nav nav-pills">
+                    <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Parametre Listesi"
+                            data-toggle="tab">Parametre Listesi</a>
+                    </li>
+                    <?php if (permtrue("tanımlamalarParametreEkle")): ?>
+                    <?php endif; ?>
+                    <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Parametre Listesi"
+                            data-toggle="tab">Yeni Parametre</a>
+                    </li>
+                <?php endif; ?>
             </ul>
             <?php
             $params = array("method" => "add");
@@ -32,12 +34,11 @@ if($_POST && $_POST['method'] == "Delete"){
             ?>
 
             <button type="button" id="save" data-title="Yeni Parametre"
-                onclick="submitFormReturnJson('params/add','<?php echo $params_json ?>')"
-                class="btn btn-info d-none">
+                onclick="submitFormReturnJson('params/add','<?php echo $params_json ?>')" class="btn btn-info d-none">
                 <i class="fas fa-save mr-2"></i>Kaydet</button>
         </div>
 
-        
+
     </div><!-- /.card-header -->
     <div class="card-body">
         <div class="tab-content">

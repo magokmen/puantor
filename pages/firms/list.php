@@ -74,7 +74,7 @@ if ($_POST && isset($_POST["action"]) == "delete-project") {
                     <?php echo $value["firm_official"] ?>
                 </td>
                 <td><?php echo $func->getCityName($value["city"]) ?></td>
-                <td><?php echo  $func->getTownName($value["town"]) ?></td>
+                <td><?php echo $func->getTownName($value["town"]) ?></td>
                 <td><?php echo $value["phone"] ?></td>
                 <td><?php echo $value["email"] ?></td>
                 <td><?php echo $value["address"] ?></td>
@@ -83,18 +83,20 @@ if ($_POST && isset($_POST["action"]) == "delete-project") {
 
                     <i class="fa-solid fa-ellipsis-vertical list-button" data-toggle="dropdown"></i>
                     <ul class="dropdown-menu">
-                        <li class="dropdown-item"><i class="fa-solid fa-edit dropdown-list-icon"></i><a href="#"
-                                onclick="RoutePagewithParams('firms/edit', 'id=<?php echo $value['id'] ?>')"
-                                data-title="Firma Düzenle">
-                                Düzenle
-                            </a>
-                        </li>
-
-                        <li class="dropdown-item"><i class="fa-solid fa-file-pen dropdown-list-icon"></i><a href="#">Hesap
-                                Hareketleri
-                            </a></li>
-                        <li class="dropdown-divider"></li>
-
+                        <?php if (permtrue("firmaDüzenle")): ?>
+                            <li class="dropdown-item"><i class="fa-solid fa-edit dropdown-list-icon"></i><a href="#"
+                                    onclick="RoutePagewithParams('firms/edit', 'id=<?php echo $value['id'] ?>')"
+                                    data-title="Firma Düzenle">
+                                    Düzenle
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                        <?php if (permtrue("firmaHesap")): ?>
+                            <li class="dropdown-item"><i class="fa-solid fa-file-pen dropdown-list-icon"></i><a href="#">Hesap
+                                    Hareketleri
+                                </a></li>
+                            <li class="dropdown-divider"></li>
+                        <?php endif; ?>
                         <?php
                         $params = array(
                             "id" => $value["id"],
@@ -103,9 +105,11 @@ if ($_POST && isset($_POST["action"]) == "delete-project") {
                         );
                         $params_json = $func->jsonEncode($params);
                         ?>
-
-                        <li class="dropdown-item"><i class="fa-solid fa-trash-can dropdown-list-icon"></i><a href="#"
-                                onclick="deleteRecordByAjax('firms/main','<?php echo $params_json ?>')">Sil!</a></li>
+                        <?php if (permtrue("firmaSil")): ?>
+                            <li class="dropdown-item"><i class="fa-solid fa-trash-can dropdown-list-icon"></i><a href="#"
+                                    onclick="deleteRecordByAjax('firms/main','<?php echo $params_json ?>')">Sil!</a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 </td>
             </tr>
@@ -115,7 +119,7 @@ if ($_POST && isset($_POST["action"]) == "delete-project") {
     <tfoot>
 
         <tr>
-        <th class="text-center">id</th>
+            <th class="text-center">id</th>
             <th>Firma Adı</th>
             <th>Firma Yetkilisi</th>
             <th>Şehir</th>

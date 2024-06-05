@@ -1,0 +1,55 @@
+[03-Jun-2024 23:33:43 Europe/Minsk] PHP Warning:  Undefined array key "company" in /home/mbeyazil/public_html/puantor/pages/params/add.php on line 13
+[03-Jun-2024 23:33:43 Europe/Minsk] PHP Warning:  Undefined array key "param_name" in /home/mbeyazil/public_html/puantor/pages/params/add.php on line 14
+[03-Jun-2024 23:33:43 Europe/Minsk] PHP Warning:  Undefined array key "param_type" in /home/mbeyazil/public_html/puantor/pages/params/add.php on line 15
+[03-Jun-2024 23:33:43 Europe/Minsk] PHP Warning:  Undefined array key "start_date" in /home/mbeyazil/public_html/puantor/pages/params/add.php on line 16
+[03-Jun-2024 23:33:43 Europe/Minsk] PHP Warning:  Undefined array key "end_date" in /home/mbeyazil/public_html/puantor/pages/params/add.php on line 17
+[03-Jun-2024 23:33:43 Europe/Minsk] PHP Warning:  Undefined array key "param_val" in /home/mbeyazil/public_html/puantor/pages/params/add.php on line 18
+[03-Jun-2024 23:33:43 Europe/Minsk] PHP Warning:  Undefined array key "calc_type" in /home/mbeyazil/public_html/puantor/pages/params/add.php on line 19
+[03-Jun-2024 23:33:43 Europe/Minsk] PHP Warning:  Undefined array key "description" in /home/mbeyazil/public_html/puantor/pages/params/add.php on line 20
+[03-Jun-2024 23:35:54 Europe/Minsk] PHP Warning:  Undefined array key "company" in /home/mbeyazil/public_html/puantor/pages/params/add.php on line 13
+[03-Jun-2024 23:35:54 Europe/Minsk] PHP Warning:  Undefined array key "param_name" in /home/mbeyazil/public_html/puantor/pages/params/add.php on line 14
+[03-Jun-2024 23:35:54 Europe/Minsk] PHP Warning:  Undefined array key "param_type" in /home/mbeyazil/public_html/puantor/pages/params/add.php on line 15
+[03-Jun-2024 23:35:54 Europe/Minsk] PHP Warning:  Undefined array key "start_date" in /home/mbeyazil/public_html/puantor/pages/params/add.php on line 16
+[03-Jun-2024 23:35:54 Europe/Minsk] PHP Warning:  Undefined array key "start_date" in /home/mbeyazil/public_html/puantor/pages/params/add.php on line 17
+[03-Jun-2024 23:35:54 Europe/Minsk] PHP Warning:  Undefined array key "param_val" in /home/mbeyazil/public_html/puantor/pages/params/add.php on line 18
+[03-Jun-2024 23:35:54 Europe/Minsk] PHP Warning:  Undefined array key "calc_type" in /home/mbeyazil/public_html/puantor/pages/params/add.php on line 19
+[03-Jun-2024 23:35:54 Europe/Minsk] PHP Warning:  Undefined array key "description" in /home/mbeyazil/public_html/puantor/pages/params/add.php on line 20
+[04-Jun-2024 00:01:24 Europe/Minsk] PHP Warning:  Attempt to read property "company_name" on bool in /home/mbeyazil/public_html/puantor/pages/params/edit.php on line 106
+[04-Jun-2024 00:01:24 Europe/Minsk] PHP Warning:  Attempt to read property "company_official" on bool in /home/mbeyazil/public_html/puantor/pages/params/edit.php on line 114
+[04-Jun-2024 00:01:24 Europe/Minsk] PHP Warning:  Attempt to read property "tax_number" on bool in /home/mbeyazil/public_html/puantor/pages/params/edit.php on line 120
+[04-Jun-2024 00:01:24 Europe/Minsk] PHP Warning:  Attempt to read property "address" on bool in /home/mbeyazil/public_html/puantor/pages/params/edit.php on line 126
+[04-Jun-2024 00:01:24 Europe/Minsk] PHP Warning:  Attempt to read property "open_date" on bool in /home/mbeyazil/public_html/puantor/pages/params/edit.php on line 156
+[04-Jun-2024 00:01:24 Europe/Minsk] PHP Warning:  Attempt to read property "close_date" on bool in /home/mbeyazil/public_html/puantor/pages/params/edit.php on line 173
+[04-Jun-2024 00:01:24 Europe/Minsk] PHP Warning:  Attempt to read property "description" on bool in /home/mbeyazil/public_html/puantor/pages/params/edit.php on line 184
+[04-Jun-2024 00:28:15 Europe/Minsk] PHP Warning:  Attempt to read property "company_name" on bool in /home/mbeyazil/public_html/puantor/pages/params/edit.php on line 106
+[04-Jun-2024 00:28:15 Europe/Minsk] PHP Warning:  Attempt to read property "company_official" on bool in /home/mbeyazil/public_html/puantor/pages/params/edit.php on line 114
+[04-Jun-2024 00:28:15 Europe/Minsk] PHP Warning:  Attempt to read property "tax_number" on bool in /home/mbeyazil/public_html/puantor/pages/params/edit.php on line 120
+[04-Jun-2024 00:28:15 Europe/Minsk] PHP Warning:  Attempt to read property "address" on bool in /home/mbeyazil/public_html/puantor/pages/params/edit.php on line 126
+[04-Jun-2024 00:28:15 Europe/Minsk] PHP Warning:  Attempt to read property "open_date" on bool in /home/mbeyazil/public_html/puantor/pages/params/edit.php on line 156
+[04-Jun-2024 00:28:15 Europe/Minsk] PHP Warning:  Attempt to read property "close_date" on bool in /home/mbeyazil/public_html/puantor/pages/params/edit.php on line 173
+[04-Jun-2024 00:28:15 Europe/Minsk] PHP Warning:  Attempt to read property "description" on bool in /home/mbeyazil/public_html/puantor/pages/params/edit.php on line 184
+[04-Jun-2024 10:15:37 Europe/Minsk] PHP Warning:  Attempt to read property "company_name" on bool in /home/mbeyazil/public_html/puantor/pages/params/edit.php on line 106
+[04-Jun-2024 10:15:37 Europe/Minsk] PHP Warning:  Attempt to read property "company_official" on bool in /home/mbeyazil/public_html/puantor/pages/params/edit.php on line 114
+[04-Jun-2024 10:15:37 Europe/Minsk] PHP Warning:  Attempt to read property "tax_number" on bool in /home/mbeyazil/public_html/puantor/pages/params/edit.php on line 120
+[04-Jun-2024 10:15:37 Europe/Minsk] PHP Warning:  Attempt to read property "address" on bool in /home/mbeyazil/public_html/puantor/pages/params/edit.php on line 126
+[04-Jun-2024 10:15:37 Europe/Minsk] PHP Warning:  Attempt to read property "open_date" on bool in /home/mbeyazil/public_html/puantor/pages/params/edit.php on line 156
+[04-Jun-2024 10:15:37 Europe/Minsk] PHP Warning:  Attempt to read property "close_date" on bool in /home/mbeyazil/public_html/puantor/pages/params/edit.php on line 173
+[04-Jun-2024 10:15:37 Europe/Minsk] PHP Warning:  Attempt to read property "description" on bool in /home/mbeyazil/public_html/puantor/pages/params/edit.php on line 184
+[04-Jun-2024 17:44:24 Europe/Minsk] PHP Warning:  Undefined array key "accountID" in /home/mbeyazil/public_html/puantor/include/requires.php on line 12
+[04-Jun-2024 17:44:24 Europe/Minsk] PHP Warning:  Undefined array key "expired_date" in /home/mbeyazil/public_html/puantor/include/requires.php on line 13
+[04-Jun-2024 17:44:24 Europe/Minsk] PHP Warning:  Undefined array key "state" in /home/mbeyazil/public_html/puantor/include/requires.php on line 14
+[04-Jun-2024 17:44:24 Europe/Minsk] PHP Warning:  Undefined array key "accountID" in /home/mbeyazil/public_html/puantor/include/requires.php on line 12
+[04-Jun-2024 17:44:24 Europe/Minsk] PHP Warning:  Undefined array key "expired_date" in /home/mbeyazil/public_html/puantor/include/requires.php on line 13
+[04-Jun-2024 17:44:24 Europe/Minsk] PHP Warning:  Undefined array key "state" in /home/mbeyazil/public_html/puantor/include/requires.php on line 14
+[04-Jun-2024 18:29:46 Europe/Minsk] PHP Warning:  Undefined array key "accountID" in /home/mbeyazil/public_html/puantor/include/requires.php on line 12
+[04-Jun-2024 18:29:46 Europe/Minsk] PHP Warning:  Undefined array key "expired_date" in /home/mbeyazil/public_html/puantor/include/requires.php on line 13
+[04-Jun-2024 18:29:46 Europe/Minsk] PHP Warning:  Undefined array key "state" in /home/mbeyazil/public_html/puantor/include/requires.php on line 14
+[04-Jun-2024 18:29:46 Europe/Minsk] PHP Warning:  Undefined array key "accountID" in /home/mbeyazil/public_html/puantor/include/requires.php on line 12
+[04-Jun-2024 18:29:46 Europe/Minsk] PHP Warning:  Undefined array key "expired_date" in /home/mbeyazil/public_html/puantor/include/requires.php on line 13
+[04-Jun-2024 18:29:46 Europe/Minsk] PHP Warning:  Undefined array key "state" in /home/mbeyazil/public_html/puantor/include/requires.php on line 14
+[04-Jun-2024 18:29:48 Europe/Minsk] PHP Warning:  Undefined array key "accountID" in /home/mbeyazil/public_html/puantor/include/requires.php on line 12
+[04-Jun-2024 18:29:48 Europe/Minsk] PHP Warning:  Undefined array key "expired_date" in /home/mbeyazil/public_html/puantor/include/requires.php on line 13
+[04-Jun-2024 18:29:48 Europe/Minsk] PHP Warning:  Undefined array key "state" in /home/mbeyazil/public_html/puantor/include/requires.php on line 14
+[04-Jun-2024 18:29:48 Europe/Minsk] PHP Warning:  Undefined array key "accountID" in /home/mbeyazil/public_html/puantor/include/requires.php on line 12
+[04-Jun-2024 18:29:48 Europe/Minsk] PHP Warning:  Undefined array key "expired_date" in /home/mbeyazil/public_html/puantor/include/requires.php on line 13
+[04-Jun-2024 18:29:48 Europe/Minsk] PHP Warning:  Undefined array key "state" in /home/mbeyazil/public_html/puantor/include/requires.php on line 14

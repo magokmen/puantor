@@ -70,7 +70,7 @@ if ($_POST && $_POST['method'] == "Delete") {
                 <td>
                     <?php echo $row["param_type"]; ?>
                 </td>
-                <td class="text-center"> 
+                <td class="text-center">
                     <?php echo formatdDate($row["start_date"]); ?>
                 </td>
                 <td class="text-center">
@@ -81,7 +81,7 @@ if ($_POST && $_POST['method'] == "Delete") {
                 </td>
 
                 <td>
-                    <?php echo $row["calc_type"] == 1 ? "Günlük Ücret" : "Saatlik Ücret" ;?>
+                    <?php echo $row["calc_type"] == 1 ? "Günlük Ücret" : "Saatlik Ücret"; ?>
                 </td>
                 <td>
                     <?php echo $row["description"]; ?>
@@ -100,13 +100,15 @@ if ($_POST && $_POST['method'] == "Delete") {
 
                     <i class="fa-solid fa-ellipsis-vertical list-button" data-toggle="dropdown"></i>
                     <ul class="dropdown-menu">
-                        <li class="dropdown-item edit"><i class="fa-solid fa-edit dropdown-list-icon"></i>
-                            <a href="#" onclick="RoutePagewithParams('params/edit','id=<?php echo $row['id'] ?>')"
-                                data-title="Parametre Güncelleme">
-                                Güncelle
-                            </a>
-                        </li>
+                        <?php if (permtrue("tanımlamalarParametreGüncelle")): ?>
 
+                            <li class="dropdown-item edit"><i class="fa-solid fa-edit dropdown-list-icon"></i>
+                                <a href="#" onclick="RoutePagewithParams('params/edit','id=<?php echo $row['id'] ?>')"
+                                    data-title="Parametre Güncelleme">
+                                    Güncelle
+                                </a>
+                            </li>
+                        <?php endif; ?>
                         <!-- <?php
                         $params = array(
                             "id" => $row["id"],
@@ -114,11 +116,13 @@ if ($_POST && $_POST['method'] == "Delete") {
                         );
                         $params_json = $func->jsonEncode($params);
                         ?> -->
+                        <?php if (permtrue("tanımlamalarParametreSil")): ?>
+                            <li class="dropdown-item">
+                                <i class="fa-solid fa-trash-can dropdown-list-icon"></i>
+                                <a href="#" onclick="deleteRecordByAjax('params/main','<?php echo $params_json ?>')">Sil!</a>
+                            </li>
+                        <?php endif; ?>
 
-                        <li class="dropdown-item">
-                            <i class="fa-solid fa-trash-can dropdown-list-icon"></i>
-                            <a href="#" onclick="deleteRecordByAjax('params/main','<?php echo $params_json ?>')">Sil!</a>
-                        </li>
                     </ul>
                 </td>
             </tr>

@@ -37,7 +37,6 @@ if ($_POST && $_POST['method'] == "Delete") {
             <th>Email</th>
             <th>Açılış Tarihi</th>
             <th>Kapanış Tarihi</th>
-            <th>Varsayılan Yap</th>
             <th>Durum</th>
             <th>#</th>
 
@@ -77,19 +76,6 @@ if ($_POST && $_POST['method'] == "Delete") {
                 <td>
                     <?php echo $row["close_date"]; ?>
                 </td>
-                <td class="text-center">
-                    <?php
-                    if ($row["isDefault"] == 1) {
-                        $checked = "checked";
-                    } else {
-                        $checked = "";
-                    }
-                    echo "<input data-id=" . $row["id"] . " type='checkbox' " . $checked . " class='check'>";
-
-
-                    ?>
-
-                </td>
                 <td>
                     <?php echo ($row["close_date"] == '') ? "Aktif" : "Pasif"; ?>
                 </td>
@@ -97,22 +83,25 @@ if ($_POST && $_POST['method'] == "Delete") {
 
                     <i class="fa-solid fa-ellipsis-vertical list-button" data-toggle="dropdown"></i>
                     <ul class="dropdown-menu">
-                        <li class="dropdown-item edit"><i class="fa-solid fa-edit dropdown-list-icon"></i>
-                            <a href="#" onclick="RoutePagewithParams('company/edit','id=<?php echo $row['id'] ?>')"
-                                data-title="Şirket Güncelleme">
-                                Güncelle
-                            </a>
-                        </li>
+                        <?php if (permtrue("şirketlerimGüncelle")): ?>
+                            <li class="dropdown-item edit"><i class="fa-solid fa-edit dropdown-list-icon"></i>
+                                <a href="#" onclick="RoutePagewithParams('company/edit','id=<?php echo $row['id'] ?>')"
+                                    data-title="Şirket Güncelleme">
+                                    Güncelle
+                                </a>
+                            </li>
+                        <?php endif; ?>
 
                         <!-- <?php
                         $params = array("id" => $row["id"], "message" => $row["company_name"]);
                         $params_json = $func->jsonEncode($params);
                         ?> -->
-
-                        <li class="dropdown-item">
-                            <i class="fa-solid fa-trash-can dropdown-list-icon"></i>
-                            <a href="#" onclick="deleteRecordByAjax('company/main','<?php echo $params_json ?>')">Sil!</a>
-                        </li>
+                        <?php if (permtrue("şirketlerimSil")): ?>
+                            <li class="dropdown-item">
+                                <i class="fa-solid fa-trash-can dropdown-list-icon"></i>
+                                <a href="#" onclick="deleteRecordByAjax('company/main','<?php echo $params_json ?>')">Sil!</a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 </td>
             </tr>
@@ -129,7 +118,6 @@ if ($_POST && $_POST['method'] == "Delete") {
             <th>Email</th>
             <th>Açılış Tarihi</th>
             <th>Kapanış Tarihi</th>
-            <th>Varsayılan Yap</th>
             <th>Durum</th>
             <th>#</th>
 
@@ -140,12 +128,3 @@ if ($_POST && $_POST['method'] == "Delete") {
 <!-- /.content -->
 <?php
 include_once "../../plugins/datatables/datatablescripts.php" ?>
-
-<script>
-    $(".check").on("change", function () {
-        if ($(this).prop("checked")) {
-            $(".check").not(this).bootstrapToggle('off');
-        }
-    });
-
-</script>

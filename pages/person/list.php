@@ -1,6 +1,3 @@
-
-
-
 <?php
 require_once "../../plugins/datatables/datatable.php";
 
@@ -109,31 +106,38 @@ if ($_POST && $_POST['method'] == "Delete") {
 
                     <i class="fa-solid fa-ellipsis-vertical list-button" data-toggle="dropdown"></i>
                     <ul class="dropdown-menu">
-                        <li class="dropdown-item"><i class="fa-solid fa-edit dropdown-list-icon"></i>
-                            <a href="#" onclick="RoutePagewithParams('person/edit','id=<?php echo $value['id'] ?>')"
-                                data-title="Personel Güncelleme">
-                                Güncelle
-                            </a>
-                        </li>
+                        <?php if (permtrue("personelGüncelle")): ?>
+                            <li class="dropdown-item"><i class="fa-solid fa-edit dropdown-list-icon"></i>
+                                <a href="#" onclick="RoutePagewithParams('person/edit','id=<?php echo $value['id'] ?>')"
+                                    data-title="Personel Güncelleme">
+                                    Güncelle
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                        <?php if (permtrue("personelPuantajListesi")): ?>
+                            <li class="dropdown-item"><i class="fa-solid fa-calendar-days dropdown-list-icon"></i><a href="#"
+                                    onclick="RoutePage('offers/edit', this)" data-params="id=<?php echo $value["id"] ?>"
+                                    data-title="Puantaj Listesi">
+                                    Puantaj listesi
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                        <?php if (permtrue("personelKesintiEkle")): ?>
+                            <li class="dropdown-item"><i class="fa-regular fa-thumbs-down dropdown-list-icon"></i></i><a
+                                    href="#" onclick="RoutePage('persone/deduction', this)"
+                                    data-params="id=<?php echo $value["id"] ?>" data-title="Kesinti Ekle">
+                                    Kesinti Ekle
+                                </a>
+                            </li>
 
-                        <li class="dropdown-item"><i class="fa-solid fa-calendar-days dropdown-list-icon"></i><a href="#"
-                                onclick="RoutePage('offers/edit', this)" data-params="id=<?php echo $value["id"] ?>"
-                                data-title="Puantaj Listesi">
-                                Puantaj listesi
-                            </a>
-                        </li>
-                        <li class="dropdown-item"><i class="fa-regular fa-thumbs-down dropdown-list-icon"></i></i><a href="#"
-                                onclick="RoutePage('persone/deduction', this)" data-params="id=<?php echo $value["id"] ?>"
-                                data-title="Kesinti Ekle">
-                                Kesinti Ekle
-                            </a>
-                        </li>
+                        <?php endif; ?>
+                        <?php if (permtrue("personelHesapHareketleri")): ?>
 
+                            <li class="dropdown-item"><i class="fa-solid fa-file-pen dropdown-list-icon"></i><a href="#">Hesap
+                                    Hareketleri
+                                </a>
+                            </li><?php endif; ?>
 
-
-                        <li class="dropdown-item"><i class="fa-solid fa-file-pen dropdown-list-icon"></i><a href="#">Hesap
-                                Hareketleri
-                            </a></li>
                         <li class="dropdown-divider"></li>
 
                         <?php
@@ -143,12 +147,14 @@ if ($_POST && $_POST['method'] == "Delete") {
                         );
                         $params_json = $func->jsonEncode($params);
                         ?>
-
-                        <li class="dropdown-item"><i class="fa-solid fa-trash-can dropdown-list-icon"></i><a href="#"
-                                onclick="deleteRecordByAjax('person/main','<?php echo $params_json ?>')">Sil!</a></li>
+                        <?php if (permtrue("personelSil")): ?>
+                            <li class="dropdown-item"><i class="fa-solid fa-trash-can dropdown-list-icon"></i><a href="#"
+                                    onclick="deleteRecordByAjax('person/main','<?php echo $params_json ?>')">Sil!</a>
+                            </li>
+                            <?php endif; ?>
                     </ul>
 
-             
+
                 </td>
             </tr>
 
@@ -175,5 +181,3 @@ if ($_POST && $_POST['method'] == "Delete") {
 <!-- /.content -->
 <?php
 include_once "../../plugins/datatables/datatablescripts.php" ?>
-
-
