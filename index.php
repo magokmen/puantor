@@ -207,282 +207,263 @@ if ($expired_date < 3) {
                     </div>
                 </div>
 
-
                 <!-- SidebarSearch Form -->
                 <!-- <div class="form-inline">
-                    <div class="input-group" data-widget="sidebar-search">
-                        <input class="form-control form-control-sidebar" type="search" placeholder="Search"
-                            aria-label="Search">
-                        <div class="input-group-append">
-                            <button class="btn btn-sidebar">
-                                <i class="fas fa-search fa-fw"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div> -->
+            <div class="input-group" data-widget="sidebar-search">
+                <input class="form-control form-control-sidebar" type="search" placeholder="Search"
+                    aria-label="Search">
+                <div class="input-group-append">
+                    <button class="btn btn-sidebar">
+                        <i class="fas fa-search fa-fw"></i>
+                    </button>
+                </div>
+            </div>
+        </div> -->
 
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
+                with font-awesome or any other icon font library -->
+
                         <li class="nav-item">
                             <a class="nav-link nav-menu loadContent active" href="#" data-page="index"
                                 data-title="Ana Sayfa">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     Ana Sayfa
-
-                                </p>
-                            </a>
-
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-menu loadContent" href="#" data-page="puantaj/main"
-                                data-title="Puantaj Giriş">
-                                <i class="nav-icon fa-regular fa-calendar-days"></i>
-                                <p>
-                                    Puantaj
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-menu loadContent" href="#" data-page="bordro/main"
-                                data-title="Bordro">
-                                <i class="nav-icon fa-solid fa-money-bills"></i>
-                                <!-- <i class="nav-icon fa-solid fa-calculator"></i> -->
-
-                                <p>
-                                    Bordro
                                 </p>
                             </a>
                         </li>
 
+                        <?php if (permtrue("puantaj")): ?>
+                            <li class="nav-item">
+                                <a class="nav-link nav-menu loadContent" href="#" data-page="puantaj/main"
+                                    data-title="Puantaj Giriş">
+                                    <i class="nav-icon fa-regular fa-calendar-days"></i>
+                                    <p>
+                                        Puantaj
+                                    </p>
+                                </a>
+                            </li>
+                        <?php endif; ?>
 
-                        <!-- <li class="nav-item">
-                            <a href="pages/widgets.html" class="nav-link"> 
-                            <a class="nav-link nav-menu loadContent" href="#" data-page="offers" data-title="Teklifler">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Teklifler
-                                    <span class="right badge badge-danger">New</span>
-                                </p>
-                            </a>
-                        </li> -->
+                        <!-- <?php if (permtrue("bordro")): ?> -->
+                            <li class="nav-item">
+                                <a class="nav-link nav-menu loadContent" href="#" data-page="bordro/main"
+                                    data-title="Bordro">
+                                    <i class="nav-icon fa-solid fa-money-bills"></i>
+                                    <p>
+                                        Bordro
+                                    </p>
+                                </a>
+                            </li>
+                            <!-- <?php endif; ?> -->
 
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <!-- <a class="nav-link nav-menu loadContent" href="#" data-page="Customers" data-title="Müşteriler"> -->
-                                <i class="nav-icon fas fa-user"></i>
-                                <p>
-                                    Personeller
-                                    <i class="fas fa-angle-left right"></i>
-                                    <!-- <span class="badge badge-info right">6</span> -->
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" data-page="person/main" data-title="Yeni Personel"
-                                        class="nav-link nav-menu loadContent">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>
-                                            Yeni Personel
-                                            <span class="right badge badge-danger">Yeni</span>
-                                        </p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" data-page="person/main" data-title="Personel Listesi"
-                                        class="nav-link nav-menu loadContent">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Personel Listesi</p>
-                                    </a>
-                                </li>
+                        <?php if (permtrue("personel")): ?>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-user"></i>
+                                    <p>
+                                        Personeller
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <?php if (permtrue("personelYeni")): ?>
+                                        <li class="nav-item">
+                                            <a href="#" data-page="person/main" data-title="Yeni Personel"
+                                                class="nav-link nav-menu loadContent">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>
+                                                    Yeni Personel
+                                                    <span class="right badge badge-danger">Yeni</span>
+                                                </p>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+                                    <?php if (permtrue("personelListesi")): ?>
+                                        <li class="nav-item">
+                                            <a href="#" data-page="person/main" data-title="Personel Listesi"
+                                                class="nav-link nav-menu loadContent">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Personel Listesi</p>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </li>
+                        <?php endif; ?>
 
-                            </ul>
-                        </li>
+                        <?php if (permtrue("proje")): ?>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fa-regular fa-building"></i>
+                                    <p>
+                                        Proje Takip
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <?php if (permtrue("alinanProjeler")): ?>
+                                        <li class="nav-item">
+                                            <a href="#" data-page="projects/main" data-params="type=1"
+                                                data-title="Alınan Projeler" class="nav-link nav-menu loadContent">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>
+                                                    Alınan Projeler
+                                                    <span class="right badge badge-danger">Yeni</span>
+                                                </p>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+                                    <?php if (permtrue("verilenProjeler")): ?>
+                                        <li class="nav-item">
+                                            <a href="#" data-page="projects/main" data-params="type=2"
+                                                data-title="Verilen Projeler" class="nav-link nav-menu loadContent">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Verilen Projeler</p>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </li>
+                        <?php endif; ?>
 
+                        <?php if (permtrue("firmalar")): ?>
+                            <li class="nav-item">
+                                <a class="nav-link nav-menu loadContent" href="#" data-page="firms/main"
+                                    data-title="Firma Listesi">
+                                    <i class="nav-icon fa-regular fa-folder-open"></i>
+                                    <p>
+                                        Firmalar
+                                    </p>
+                                </a>
+                            </li>
+                        <?php endif; ?>
 
+                        <?php if (permtrue("kasa")): ?>
+                            <li class="nav-item">
+                                <a class="nav-link nav-menu loadContent" href="#" data-page="kasa/main" data-title="Kasa">
+                                    <i class="nav-icon fa-solid fa-building-columns"></i>
+                                    <p>
+                                        Kasa
+                                    </p>
+                                </a>
+                            </li>
+                        <?php endif; ?>
 
+                        <?php if (permtrue("tanimlamalar")): ?>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link" data-page="Tanımlamalar" data-title="Tanımlamalar">
+                                    <i class="nav-icon fa-solid fa-gears"></i>
+                                    <p>
+                                        Tanımlamalar
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <?php if (permtrue("tanımlamalarParametreEkle")): ?>
+                                        <li class="nav-item">
+                                            <a href="#" data-page="params/main" data-title="Parametre Listesi"
+                                                class="nav-link nav-menu loadContent">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Parametre Tanımla</p>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </li>
+                        <?php endif; ?>
 
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <!-- <a class="nav-link nav-menu loadContent" href="#" data-page="Customers" data-title="Müşteriler"> -->
-                                <i class="nav-icon fa-regular fa-building"></i>
-                                <p>
-                                    Proje Takip
-                                    <i class="fas fa-angle-left right"></i>
-                                    <!-- <span class="badge badge-info right">6</span> -->
-                                </p>
-                            </a>
+                        <?php if (permtrue("şirketlerim")): ?>
+                            <li class="nav-item">
+                                <a class="nav-link nav-menu loadContent" href="#" data-page="company/main"
+                                    data-title="Şirket Listesi">
+                                    <i class="nav-icon fa-solid fa-briefcase"></i>
+                                    <p>
+                                        Şirketlerim
+                                    </p>
+                                </a>
+                            </li>
+                        <?php endif; ?>
 
-                            <!-- fonksiyon ile yönlendirmek istenirse a'nın classındaki loadcontent classı çıkarılmalı, -->
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" data-page="projects/main" data-params="type=1"
-                                        data-title="Alınan Projeler" class="nav-link nav-menu loadContent">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>
-                                            Alınan Projeler</strong>
-                                            <span class="right badge badge-danger">Yeni</span>
-                                        </p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" data-page="projects/main" data-params="type=2"
-                                        data-title="Verilen Projeler" class="nav-link nav-menu loadContent">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Verilen Projeler</p>
-                                    </a>
-                                </li>
+                        <?php if (permtrue("kullanıcılar")): ?>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fa-solid fa-users"></i>
+                                    <p>
+                                        Kullanıcılar
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <?php if (permtrue("kullanıcılarYeni")): ?>
+                                        <li class="nav-item">
+                                            <a href="#" data-page="users/main" data-title="Yeni Kullanıcı"
+                                                class="nav-link nav-menu loadContent">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Yeni Kullanıcı</p>
+                                                <span class="right badge badge-danger">Yeni</span>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+                                    <?php if (permtrue("kullanıcıListele")): ?>
+                                        <li class="nav-item">
+                                            <a href="#" data-page="users/main" data-title="Kullanıcı Listesi"
+                                                class="nav-link nav-menu loadContent">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Kullanıcı Listesi</p>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </li>
+                        <?php endif; ?>
 
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-menu loadContent" href="#" data-page="firms/main"
-                                data-title="Firma Listesi">
-
-                                <i class="nav-icon fa-regular fa-folder-open"></i>
-                                <p>
-                                    Firmalar
-                                </p>
-                            </a>
-
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link nav-menu loadContent" href="#" data-page="kasa/main" data-title="Kasa">
-                                <i class="nav-icon fa-solid fa-building-columns"></i>
-
-                                <p>
-                                    Kasa
-
-                                </p>
-                            </a>
-
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="#" class="nav-link" data-page="Tanımlamalar" data-title="Tanımlamalar">
-                                <!-- <a class="nav-link nav-menu loadContent" href="#" data-page="Tanımlamalar" data-title="Müşteriler"> -->
-                                <i class="nav-icon fa-solid fa-gears"></i>
-                                <p>
-                                    Tanımlamalar
-                                    <i class="fas fa-angle-left right"></i>
-
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" data-page="params/main" data-title="Parametre Listesi"
-                                        class="nav-link nav-menu loadContent">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Parametre Tanımla</p>
-
-                                    </a>
-                                </li>
-
-
-                            </ul>
-
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link nav-menu loadContent" href="#" data-page="company/main"
-                                data-title="Şirket Listesi">
-                                <i class="nav-icon fa-solid fa-briefcase"></i>
-
-                                <p>
-                                    Şirketlerim
-                                </p>
-                            </a>
-
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <!-- <a class="nav-link nav-menu loadContent" href="#" data-page="Customers" data-title="Müşteriler"> -->
-                                <i class="nav-icon fa-solid fa-users"></i>
-                                <p>
-                                    Kullanıcılar
-                                    <i class="fas fa-angle-left right"></i>
-
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" data-page="users/main" data-title="Yeni Kullanıcı"
-                                        class="nav-link nav-menu loadContent">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Yeni Kullanıcı</p>
-                                        <span class="right badge badge-danger">Yeni</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" data-page="users/main" data-title="Kullanıcı Listesi"
-                                        class="nav-link nav-menu loadContent">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Kullanıcı Listesi</p>
-                                    </a>
-                                </li>
-
-                            </ul>
-                        </li>
-
-                        <?php
-                        if (permtrue("yetkiler")) { ?>
+                        <?php if (permtrue("yetkiler")): ?>
                             <li class="nav-item">
                                 <a class="nav-link nav-menu loadContent" href="#" data-page="roles/main"
                                     data-title="Yetki Grupları">
-
                                     <i class="nav-icon fa-solid fa-lock-open"></i>
                                     <p>
                                         Yetkiler
                                     </p>
                                 </a>
-
                             </li>
-                        <?php } ?>
+                        <?php endif; ?>
 
-                        <li class="nav-item">
-                            <a class="nav-link nav-menu loadContent" href="#" data-page="settings" data-title="Ayarlar">
-                                <i class="nav-icon fa-solid fa-gear"></i>
-                                <p>
-                                    Ayarlar
+                        <?php if (permtrue("ayarlar")): ?>
+                            <li class="nav-item">
+                                <a class="nav-link nav-menu loadContent" href="#" data-page="settings" data-title="Ayarlar">
+                                    <i class="nav-icon fa-solid fa-gear"></i>
+                                    <p>
+                                        Ayarlar
+                                    </p>
+                                </a>
+                            </li>
+                        <?php endif; ?>
 
-                                </p>
-                            </a>
-
-                        </li>
-
-                        <?php
-                        if ($_SESSION["accountType"] == 1) {
-                            ?>
-
+                        <?php if ($_SESSION["accountType"] == 1): ?>
                             <li class="nav-item">
                                 <a class="nav-link nav-menu loadContent" href="#" data-page="accounts/list"
                                     data-title="Hesaplar">
-
                                     <i class="nav-icon  fa-solid fa-user-gear"></i>
                                     <p>
                                         Hesaplar
-
                                     </p>
                                 </a>
-
                             </li>
-
-                        <?php } ?>
+                        <?php endif; ?>
 
                         <li class="nav-item">
-
                             <a class="nav-link nav-menu" href="logout.php" data-page="">
                                 <i class="nav-icon fa-solid fa-right-from-bracket"></i>
                                 <p>
                                     Çıkış yap
                                 </p>
                             </a>
-
                         </li>
                     </ul>
                 </nav>
@@ -490,6 +471,7 @@ if ($expired_date < 3) {
             </div>
             <!-- /.sidebar -->
         </aside>
+
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
@@ -547,17 +529,17 @@ if ($expired_date < 3) {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="plugins/toastr/toastr.min.js"></script>
     <script src="plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
-    
+
     <!-- Bootstrap Switch -->
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
-   
+
     <script src="plugins/moment/moment.min.js"></script>
     <script src="plugins/moment/locales.min.js"></script>
-    
+
     <!-- <script src="plugins/daterangepicker/daterangepicker.js"></script> -->
     <script src="plugins/inputmask/jquery.inputmask.min.js"></script>
-    
+
     <!-- Tempusdominus Bootstrap 4 -->
     <script src="plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
 

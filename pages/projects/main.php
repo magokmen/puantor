@@ -10,15 +10,31 @@ $pageTitle = ($type == 1) ? "Alınan Projeler" : "Verilen Projeler";
     <div class="card-header p-2">
         <div class="d-flex justify-content-between">
             <ul class="nav nav-pills">
-                <?php if (permtrue("alınanProjeler")): ?>
-                    <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list"
-                            data-title="<?php echo $pageTitle; ?>" data-toggle="tab"><?php echo $pageTitle; ?></a>
-                    </li>
+                <?php if ($pageTitle == "Alınan Projeler"): ?>
+                    <?php if (permtrue("alınanProjeler")): ?>
+                        <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list"
+                                data-title="<?php echo $pageTitle; ?>" data-toggle="tab"><?php echo $pageTitle; ?></a>
+                        </li>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <?php if (permtrue("verilenProjeler")): ?>
+                        <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list"
+                                data-title="<?php echo $pageTitle; ?>" data-toggle="tab"><?php echo $pageTitle; ?></a>
+                        </li>
+                    <?php endif; ?>
                 <?php endif; ?>
-                <?php if (permtrue("personelSil")): ?>
-                    <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add"
-                            data-title="<?php echo $pageTitle; ?>" data-toggle="tab">Yeni Proje</a>
-                    </li>
+                <?php if ($pageTitle == "Alınan Projeler"): ?>
+                    <?php if (permtrue("alınanProjelerYeni")): ?>
+                        <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add"
+                                data-title="<?php echo $pageTitle; ?>" data-toggle="tab">Yeni Proje</a>
+                        </li>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <?php if (permtrue("verilenProjelerYeni")): ?>
+                        <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add"
+                                data-title="<?php echo $pageTitle; ?>" data-toggle="tab">Yeni Proje</a>
+                        </li>
+                    <?php endif; ?>
                 <?php endif; ?>
             </ul>
 
