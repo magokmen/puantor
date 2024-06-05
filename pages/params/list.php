@@ -70,14 +70,14 @@ if ($_POST && $_POST['method'] == "Delete") {
                 <td>
                     <?php echo $row["param_type"]; ?>
                 </td>
-                <td>
-                    <?php echo $row["start_date"]; ?>
+                <td class="text-center"> 
+                    <?php echo formatdDate($row["start_date"]); ?>
                 </td>
-                <td>
-                    <?php echo $row["end_date"]; ?>
+                <td class="text-center">
+                    <?php echo formatdDate($row["end_date"]); ?>
                 </td>
-                <td>
-                    <?php echo $row["param_val"]; ?>
+                <td class="text-center">
+                    <?php echo tlFormat($row["param_val"]); ?>
                 </td>
 
                 <td>

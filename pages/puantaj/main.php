@@ -328,15 +328,18 @@ if ($project_id == null) {
                                 <div class="row">
                                     <div class="col-7">
                                         <h5 class="lead-job"><b>Nicole Pearson</b></h5>
-                                        <p class="text-muted text-sm"><b>About: </b> Web Designer / UX / Graphic
-                                            Artist / Coffee Lover </p>
+                                        <div class="row">
+                                            <h4 class="lead-daily-wages text-muted text-sm"></h4>
+                                        </div>
+
                                         <ul class="ml-4 mb-0 fa-ul text-muted">
-                                            <li class="small"><span class="fa-li"><i
-                                                        class="fas fa-lg fa-building"></i></span> Address: Demo
-                                                Street 123, Demo City 04312, NJ</li>
-                                            <li class="small"><span class="fa-li"><i
-                                                        class="fas fa-lg fa-phone"></i></span> Phone #: + 800 -
-                                                12 12 23 52</li>
+                                            <li class="small lead-email">
+                                                <i class="fas fa-lg fa-building"></i>
+                                            
+                                            </li>
+                                            <li class="small lead-phone"> <i class="fas fa-lg fa-phone"></i>
+                                                
+                                            </li>
                                         </ul>
                                     </div>
                                     <div class="col-5 text-center">

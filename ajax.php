@@ -1,7 +1,8 @@
 <?php
 
-require_once "config/connect.php";
-require_once "config/functions.php";
+require_once "include/requires.php";
+
+
 if ($_POST && $_POST["action"] == "kasa") {
     $vault_id = $_POST["vault_id"];
 
@@ -151,11 +152,11 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
     $end_date = date("Y-m-d", strtotime("last day of $yil-$ay"));
 
     //Döneme ait parametre var mı yok mu kontrol edilir
-    $prm = $con->prepare("SELECT * FROM parameters WHERE param_type = ? 
-                                                    AND start_date <= ? 
-                                                    AND end_date >=  ? 
+    $prm = $con->prepare("SELECT * FROM parameters WHERE account_id = ? and param_type = ? 
+                                                    AND STR_TO_DATE(start_date,'%Y-%m-%d') <= ? 
+                                                    AND STR_TO_DATE(end_date,'%Y-%m-%d') >=  ? 
                                                     ORDER by id DESC ");
-    $prm->execute(array(1, $start_date, $end_date));
+    $prm->execute(array($account_id, 1, $start_date, $end_date));
     //$result = $prm->fetchAll(PDO::FETCH_ASSOC);
 
     while ($row = $prm->fetch(PDO::FETCH_ASSOC)) {
@@ -166,7 +167,7 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
     if (empty($pnt)) {
         $res = array(
             "statu" => 400,
-            "message" => "Seçilen döneme ait parametre bulunamadı!",
+            "message" => $account_id . " - Seçilen döneme ait parametre bulunamadı!",
         );
         echo json_encode($res);
         return;
@@ -222,13 +223,13 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
                     try {
 
                         // Döngüye alına tarihlerin parametrelerini kontrol ederek ücreti alır
-                        $prm = $con->prepare("SELECT * FROM parameters WHERE param_type = ? 
+                        $prm = $con->prepare("SELECT * FROM parameters WHERE account_id = ? and param_type = ? 
                                       AND STR_TO_DATE(start_date,'%Y-%m-%d') <= ? 
                                       AND STR_TO_DATE(end_date,'%Y-%m-%d') >= ? 
                                       AND STR_TO_DATE(start_date,'%Y-%m-%d') <= ?
                                       AND STR_TO_DATE(end_date,'%Y-%m-%d') >= ? 
                                       ORDER by id DESC LIMIT 1 ");
-                        $prm->execute(array(1, $ctrl_date, $ctrl_date, $start_date, $end_date));
+                        $prm->execute(array($account_id, 1, $ctrl_date, $ctrl_date, $start_date, $end_date));
 
 
                         // // Eğer parametre varsa döngüye alınır
@@ -251,7 +252,7 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
                                 $ucret_statu = 400;
                                 $res = array(
                                     "statu" => 400,
-                                    "message" => "Seçilen döneme ait parametre bulunamadı!",
+                                    "message" => "Seçilen döneme ait parametre bulunamadı 2!",
                                 );
                                 echo json_encode($res);
                                 return;
@@ -346,7 +347,29 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
 }
 
 
+if ($_POST && $_POST["action"] == "user-info") {
+    $user_id = $_POST["id"];
+    try {
 
+        $sql = $con->prepare("SELECT * FROM person WHERE id = ?");
+        $sql->execute(array($user_id));
+        $result = $sql->fetch(PDO::FETCH_ASSOC);
+        $res = array(
+            "statu" => 200,
+            "data" => $result,
+        );
+        //code here
+    } catch (PDOException $ex) {
+        $res = array(
+            "statu" => 400,
+            "message" => $ex->getMessage()
+        );
+    }
+  
+
+    echo json_encode($res);
+    return;
+}
 
 function puantaj_val($id)
 {

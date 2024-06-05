@@ -54,7 +54,7 @@ $(document).keydown(function (event) {
   if (event.keyCode === 46) {
     // .clicked sınıfına sahip tüm td elemanlarını seç ve içeriğini temizle
     $("td.clicked").each(function () {
-      $(this).attr("data-id", '');
+      $(this).attr("data-id", "");
       $(this).empty();
       $(this).toggleClass("clicked");
       $(this).css("background-color", "white");
@@ -123,29 +123,48 @@ function Route() {
 //Personel Özet Bilgilerini gösternmek için
 $(".btn-user-modal").on("click", function () {
   // Butonun bulunduğu satırı bul
-  var $row = $(this).closest("tr");
+  var row = $(this).closest("tr");
+  var user_id = row.find("td:first").data("id");
 
-  // Satırdaki .user-job değerini al
-  var jobDescription = $row.find(".user-job").text();
+  $.ajax({
+    url: "ajax.php",
+    type: "POST",
+    data: {
+      action: "user-info",
+      id: user_id,
+    },
+    success: function (data) {
+      // alert(data);
+      var response = JSON.parse(data);
+      if (response.statu == 200) {
+        // Kullanıcı adının baş harflerini al
+        var initials = response.data.full_name
+          .split(" ")
+          .map(function (word) {
+            return word.charAt(0).toUpperCase();
+          })
+          .join("");
+        $(".avatar-user").text(initials);
+        $(".lead-name").text(response.data.full_name);
+        $(".lead-job").text(response.data.job);
+        $(".lead-daily-wages").html("<strong>Günlük Ücret:</strong> " + response.data.daily_wages);
+        $(".lead-phone").text(response.data.phone);
+        $(".lead-email").text(response.data.email);
+        $("#modal-summary").modal("show");
+      }
+    },
+  });
 
-  // Butonun text değerini al
-  var userName = $(this).text();
+  // // Butonun text değerini al
+  // var userName = $(this).text();
 
-  // Kullanıcı adının baş harflerini al
-  var initials = userName
-    .split(" ")
-    .map(function (word) {
-      return word.charAt(0).toUpperCase();
-    })
-    .join("");
+  // // Modal içindeki değerleri güncelle
+  // $(".lead-job").text(jobDescription);
+  // $(".lead-name").text(userName);
+  // // $(".avatar-user").text(initials);
 
-  // Modal içindeki değerleri güncelle
-  $(".lead-job").text(jobDescription);
-  $(".lead-name").text(userName);
-  // $(".avatar-user").text(initials);
-
-  // Modali göster
-  $("#modal-summary").modal("show");
+  // // Modali göster
+  // $("#modal-summary").modal("show");
 });
 
 function puantaj_olustur() {
@@ -167,7 +186,7 @@ function puantaj_olustur() {
         .text(); // İndeks + 2, 2. indeksten başlamasını sağlar
 
       var status = $(this).attr("data-id") ? $(this).attr("data-id") : ""; // Durum bilgisini al
-     // console.log(person_id + "--" + date + "--" + status); //
+      // console.log(person_id + "--" + date + "--" + status); //
 
       // Çalışanın adı, soyadı ve ünvanı ile birleştirilmiş anahtar oluştur
       var key = person_id + " : " + position;
