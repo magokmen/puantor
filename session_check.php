@@ -5,3 +5,5 @@ if (!isset($_SESSION['login']) || !isset($_SESSION["accountID"])) {
 } else {
     echo 'valid';
 }
+
+değiştirin:
