@@ -543,12 +543,32 @@ function authid($authName)
     return isset($data["id"]) ? $data["id"] : 0;
 }
 
+function userSet($vars)
+{
+    $sid = $_SESSION["id"];
+    global $con;
+
+    $setques = $con->prepare("SELECT * FROM users WHERE id = ?");
+    $setques->execute(array($sid));
+    $datas = $setques->fetch(PDO::FETCH_ASSOC);
+
+    return $datas[$vars];
+}
+function permcontrol($var)
+{
+    global $con;
+    $authid = authid($var);
+    $pcheck = $con->prepare("SELECT * FROM userauths WHERE roleID = ? AND JSON_CONTAINS_PATH(auths, 'one', '$.\"$authid\"')");
+    $pcheck->execute(array(userSet("groups")));
+    $auth = $pcheck->fetchAll(PDO::FETCH_ASSOC);
+    return isset($auth["id"]) ? true : false;
+}
 function permtrue($var)
 {
     global $con;
     $authid = authid($var);
     $pcheck = $con->prepare("SELECT * FROM userauths WHERE roleID = ? AND JSON_CONTAINS_PATH(auths, 'one', '$.\"$authid\"')");
-    $pcheck->execute(array(11));
+    $pcheck->execute(array(userSet("groups")));
     $auth = $pcheck->fetch(PDO::FETCH_ASSOC);
 
     return isset($auth["id"]) ? true : false;

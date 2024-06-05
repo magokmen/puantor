@@ -6,4 +6,4 @@ if (!isset($_SESSION['login']) || !isset($_SESSION["accountID"])) {
     echo 'valid';
 }
 
-değiştirdik
+ 
