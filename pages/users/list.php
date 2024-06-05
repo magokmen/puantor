@@ -1,4 +1,4 @@
-<?php 
+<?php
 require_once "../../plugins/datatables/datatable.php";
 require_once "../../include/requires.php";
 
@@ -29,7 +29,7 @@ if ($_POST && $_POST['method'] == "Delete") {
     <tbody>
 
         <?php
-        $sql =  $con->prepare("Select * from users where account_id = ? ORDER BY id desc");
+        $sql = $con->prepare("Select * from users where account_id = ? ORDER BY id desc");
         $sql->execute(array($account_id));
         $result = $sql->fetchAll();
 
@@ -53,22 +53,26 @@ if ($_POST && $_POST['method'] == "Delete") {
 
                 <td class="text-center text-nowrap col-md-1 pl-3 pr-3">
 
-                    
-                    <button class="btn btn-sm bg-gray" data-tooltip="Düzenle" onclick="RoutePage('users/edit', this)"
-                        data-title="Kullanıcı Düzenle" data-params="id=<?php echo $value["id"] ?>"><i
-                            class="fa fa-edit"></i></button>
+                    <?php if (permtrue("kullanıcıDüzenle")): ?>
+                        <button class="btn btn-sm bg-gray" data-tooltip="Düzenle" onclick="RoutePage('users/edit', this)"
+                            data-title="Kullanıcı Düzenle" data-params="id=<?php echo $value["id"] ?>"><i
+                                class="fa fa-edit"></i></button>
+                    <?php endif; ?>
 
                     <!-- Silme parametrelerini göndermek için oluşturulur -->
                     <?php
                     $params = array(
                         "id" => $value["id"],
-                        "message" => $value["full_name"] .' isimli kullanıcı silinecektir. Devam etmek istiyor musunuz?'
+                        "message" => $value["full_name"] . ' isimli kullanıcı silinecektir. Devam etmek istiyor musunuz?'
                     );
                     $params_json = $func->jsonEncode($params);
                     ?>
-                    <button type="button" data-tooltip="Sil" class="btn btn-sm bg-danger"
-                        onclick="deleteRecordByAjax('users/main','<?php echo $params_json; ?>')"><i
-                            class="fa fa-trash"></i></button>
+                    <?php if (permtrue("kullanıcıDüzenSil")): ?>
+                        <button type="button" data-tooltip="Sil" class="btn btn-sm bg-danger"
+                            onclick="deleteRecordByAjax('users/main','<?php echo $params_json; ?>')"><i
+                                class="fa fa-trash"></i></button>
+                    <?php endif; ?>
+
                 </td>
             </tr>
 
@@ -76,7 +80,7 @@ if ($_POST && $_POST['method'] == "Delete") {
     </tbody>
     <tfoot>
         <tr>
-        <th class="text-center">id</th>
+            <th class="text-center">id</th>
             <th>Adı Soyadı Adı</th>
             <th>Telefon</th>
             <th>Email Adresi</th>

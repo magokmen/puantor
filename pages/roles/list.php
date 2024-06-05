@@ -68,18 +68,22 @@ if ($_POST && isset($_POST["action"]) == "delete-roles") {
 
                     <i class="fa-solid fa-ellipsis-vertical list-button" data-toggle="dropdown"></i>
                     <ul class="dropdown-menu">
-                        <li class="dropdown-item"><i class="fa-solid fa-edit dropdown-list-icon"></i><a href="#"
-                                onclick="RoutePagewithParams('roles/edit','id=<?php echo $value['id'] ?>&type=<?php echo $type; ?>')"
-                                data-title="Yetki Grubu Düzenle">
-                                Güncelle
-                            </a>
-                        </li>
-                        <li class="dropdown-item"><i class="fa-solid fa-edit dropdown-list-icon"></i><a href="#"
-                                onclick="RoutePage('roles/auths/add',this)" data-params="id=<?php echo $value['id'] ?>"
-                                data-title="Yetki Grubu Düzenle">
-                                Yetkileri Düzenle
-                            </a>
-                        </li>
+                        <?php if (permtrue("yetkilerGüncelle")): ?>
+                            <li class="dropdown-item"><i class="fa-solid fa-edit dropdown-list-icon"></i><a href="#"
+                                    onclick="RoutePagewithParams('roles/edit','id=<?php echo $value['id'] ?>&type=<?php echo $type; ?>')"
+                                    data-title="Yetki Grubu Düzenle">
+                                    Güncelle
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                        <?php if (permtrue("yetkilerYetkiDüzenle")): ?>
+                            <li class="dropdown-item"><i class="fa-solid fa-edit dropdown-list-icon"></i><a href="#"
+                                    onclick="RoutePage('roles/auths/add',this)" data-params="id=<?php echo $value['id'] ?>"
+                                    data-title="Yetki Grubu Düzenle">
+                                    Yetkileri Düzenle
+                                </a>
+                            </li>
+                        <?php endif; ?>
 
                         <?php
                         $params = array(
@@ -89,9 +93,13 @@ if ($_POST && isset($_POST["action"]) == "delete-roles") {
                         );
                         $params_json = $func->jsonEncode($params);
                         ?>
+                        <?php if (permtrue("yetkilerSil")): ?>
 
-                        <li class="dropdown-item"><i class="fa-solid fa-trash-can dropdown-list-icon"></i><a href="#"
-                                onclick="deleteRecordByAjax('roles/main','<?php echo $params_json ?>')">Sil!</a></li>
+                            <li class="dropdown-item"><i class="fa-solid fa-trash-can dropdown-list-icon"></i><a href="#"
+                                    onclick="deleteRecordByAjax('roles/main','<?php echo $params_json ?>')">Sil!</a>
+                            </li>
+                        <?php endif; ?>
+
                     </ul>
                 </td>
             </tr>

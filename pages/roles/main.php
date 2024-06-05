@@ -1,19 +1,20 @@
 <?php
 require_once "../../include/requires.php";
-//  permtrue("personlist");
-
 ?>
 <div class="card card-outline card-info">
     <div class="card-header p-2">
         <div class="d-flex justify-content-between">
 
             <ul class="nav nav-pills">
-                <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Yetkiler"
-                        data-toggle="tab">Yetki Grupları</a>
-                </li>
-                <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Yetkiler"
-                        data-toggle="tab">Yeni Yetki</a></li>
-
+                <?php if (permtrue("yetkilerYetkiGrupları")): ?>
+                    <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Yetkiler"
+                            data-toggle="tab">Yetki Grupları</a>
+                    </li>
+                <?php endif; ?>
+                <?php if (permtrue("yetkilerYeniYetki")): ?>
+                    <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Yetkiler"
+                            data-toggle="tab">Yeni Yetki</a></li>
+                <?php endif; ?>
             </ul>
             <?php
 
