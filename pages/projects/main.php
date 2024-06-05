@@ -1,7 +1,7 @@
 <?php require_once "../../include/requires.php";
 
 $type = isset($_GET["type"]) ? $_GET["type"] : @$_POST["type"];
-echo "type : " . $type;
+//echo "type : " . $type;
 $pageTitle = ($type == 1) ? "Alınan Projeler" : "Verilen Projeler";
 ?>
 
@@ -10,7 +10,7 @@ $pageTitle = ($type == 1) ? "Alınan Projeler" : "Verilen Projeler";
     <div class="card-header p-2">
         <div class="d-flex justify-content-between">
             <ul class="nav nav-pills">
-                <?php if (permtrue("personelSil")): ?>
+                <?php if (permtrue("alınanProjeler")): ?>
                     <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list"
                             data-title="<?php echo $pageTitle; ?>" data-toggle="tab"><?php echo $pageTitle; ?></a>
                     </li>
