@@ -13,7 +13,6 @@ if ($_POST && $_POST['method'] == "Delete") {
 }
 ;
 
-
 ?>
 
 <div style="margin-bottom:10px" class="row">
