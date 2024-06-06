@@ -260,3 +260,20 @@
 .flex-grow{
   flex-grow: 1;
 }
+
+
+
+.list-button{
+  font-size: 1.5em;
+  color: #888;
+  transition: color 0.4s ease;
+  padding: 6px !important;
+ 
+}
+.list-button:hover{
+  cursor: pointer;
+  background-color: #ddd;
+  color: black;
+  border-radius: 8px;
+  transition: background-color 0.4s ease;
+}

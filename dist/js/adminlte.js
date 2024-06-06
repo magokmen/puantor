@@ -1852,7 +1852,7 @@
         var $preloader = $__default["default"](SELECTOR_PRELOADER);
 
         if ($preloader) {
-          $preloader.css('height', 0);
+          $preloader.css('opacity', 0.5).fadeOut(400);
           setTimeout(function () {
             $preloader.children().hide();
           }, 200);

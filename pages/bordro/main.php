@@ -50,16 +50,14 @@ $dates = generateDates($year, $month, $days);
                 <div class="form-group p-2">
                     <input type="checkbox" class="check" <?php echo $disabled; ?> id="donem-kapat">
                     <span class="ml-1">Puantajda İşlem Yapılmasın</span>
-                </div>
+                </div> 
             </div>
-
+          
 
             <div class="col-md-6">
-                <button type="button" id="hesapla" onclick="maas_hesapla()" class="btn btn-primary float-right"><i
-                        class="fas fa-save mr-2"></i>
+                <button type="button" id="hesapla" onclick="maas_hesapla()" class="btn btn-primary float-right"><i class="fas fa-save mr-2"></i>
                     Hesapla</button>
-                <button type="button" class="btn btn-default mr-2 float-right" data-toggle="dropdown">Rapor Al <i
-                        class="fa-solid fa-caret-down"></i> </button>
+                <button type="button" class="btn btn-default mr-2 float-right" data-toggle="dropdown">Rapor Al <i class="fa-solid fa-caret-down"></i> </button>
 
                 <div class="dropdown-menu" role="menu" id="excele_aktar">
                     <a class="dropdown-item" href="pages/bordro/toxls.php">Bordroyu Excele Aktar</a>
@@ -129,7 +127,7 @@ $dates = generateDates($year, $month, $days);
         }
         ?>
 
-        <table id="example1" class="table table-bordered table-striped table-responsive-sm table-hover">
+        <table id="example1" class="table table-bordered table-striped table-responsive table-hover">
             <thead>
 
                 <tr>
@@ -157,7 +155,7 @@ $dates = generateDates($year, $month, $days);
 
                 while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
 
-                    ?>
+                ?>
                     <tr>
                         <td>
                             <?php echo $row["id"]; ?>
@@ -212,31 +210,35 @@ $dates = generateDates($year, $month, $days);
                                 echo "<i class='fas fa-check text-green'></i>";
                             }
 
-                            //echo $row["isView"]; ?>
+                            //echo $row["isView"]; 
+                            ?>
                         </td>
                         <td>
                             <?php echo $row["hesaplama_tarihi"]; ?>
                         </td>
                         <td class="">
 
-                            <i class="fa-solid fa-ellipsis-vertical list-button" data-toggle="dropdown"></i>
+                        <i class="fa-solid fa-ellipsis list-button" data-toggle="dropdown"></i>
                             <ul class="dropdown-menu">
-                                <li class="dropdown-item edit"><i class="fa-solid fa-edit dropdown-list-icon"></i>
-                                    <a href="#" onclick="RoutePagewithParams('params/edit','id=<?php echo $row['id'] ?>')"
-                                        data-title="Parametre Güncelleme">
-                                        Güncelle
+                                <li class="dropdown-item edit"><i class="fa-regular fa-file-pdf dropdown-list-icon"></i></i>
+                                    <a href="#" onclick="RoutePagewithParams('params/edit','id=<?php echo $row['id'] ?>')" data-title="Parametre Güncelleme">
+                                        Bordroyu Göster
+                                    </a>
+                                </li>
+                                <li class="dropdown-item edit"><i class="fa-solid fa-scissors dropdown-list-icon"></i></i>
+                                    <a href="#" onclick="RoutePagewithParams('params/edit','id=<?php echo $row['id'] ?>')" data-title="Parametre Güncelleme">
+                                        Kesinti Ekle
                                     </a>
                                 </li>
 
                                 <!-- <?php
-                                $params = array("id" => $row["id"], "message" => $row["param_name"]);
-                                $params_json = $func->jsonEncode($params);
-                                ?> -->
+                                        $params = array("id" => $row["id"], "message" => $row["param_name"]);
+                                        $params_json = $func->jsonEncode($params);
+                                        ?> -->
 
                                 <li class="dropdown-item">
                                     <i class="fa-solid fa-trash-can dropdown-list-icon"></i>
-                                    <a href="#"
-                                        onclick="deleteRecordByAjax('params/main','<?php echo $params_json ?>')">Sil!</a>
+                                    <a href="#" onclick="deleteRecordByAjax('params/main','<?php echo $params_json ?>')">Dönemden Sil!</a>
                                 </li>
                             </ul>
                         </td>
@@ -278,9 +280,9 @@ include_once "../../plugins/datatables/datatablescripts.php" ?>
 <script src="pages/bordro/app.js"></script>
 
 <script>
-    $("#excele_aktar").click(function () {
+    $("#excele_aktar").click(function() {
         var company_id = $("#company").val();
-        if (company_id == "" ) {
+        if (company_id == "") {
             alert("Lütfen bir şirket seçiniz");
             return false;
         } else {
@@ -288,4 +290,5 @@ include_once "../../plugins/datatables/datatablescripts.php" ?>
             window.location.href = "pages/bordro/toxls.php";
         }
     });
+
 </script>

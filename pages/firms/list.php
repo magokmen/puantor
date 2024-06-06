@@ -81,7 +81,7 @@ if ($_POST && isset($_POST["action"]) == "delete-project") {
 
                 <td class="">
 
-                    <i class="fa-solid fa-ellipsis-vertical list-button" data-toggle="dropdown"></i>
+                <i class="fa-solid fa-ellipsis list-button" data-toggle="dropdown"></i>
                     <ul class="dropdown-menu">
                         <?php if (permtrue("firmaDüzenle")): ?>
                             <li class="dropdown-item"><i class="fa-solid fa-edit dropdown-list-icon"></i><a href="#"

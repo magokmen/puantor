@@ -103,7 +103,13 @@ function maas_hesapla() {
         success: function (data) {
           // console.log(data);
           var res = JSON.parse(data);
-          if (res.statu == 400) {
+          if (res.statu == 600) {
+            swal.fire({
+              icon: "error",
+              text: res.message,
+              title: "Uyarı!",
+            });
+          } else if (res.statu == 400) {
             swal.fire({
               icon: "error",
               text: res.message,

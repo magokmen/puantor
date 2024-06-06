@@ -6,7 +6,7 @@ if ($_POST && $_POST["method"] == "add") {
     $kimlik_no = @$_POST["kimlik_no"];
     $sigorta_no = @$_POST["sigorta_no"];
     $address = $_POST["address"];
-    $gunluk_ucret = $_POST["gunluk_ucret"];
+    $gunluk_ucret = isset($_POST["gunluk_ucret"]) && $_POST["gunluk_ucret"] != "" ? $_POST["gunluk_ucret"] : 0; 
     $email = $_POST["email"];
     $iban_number = $_POST["iban_number"];
     $job = $_POST["job"];
@@ -173,7 +173,7 @@ if ($_POST && $_POST["method"] == "add") {
                     <div class="form-group">
                         <label for="gunluk_ucret">Günlük Ücreti<span style="color:red">(*)</span><small>İlgili dönemdeki
                                 parametreden yüksek olması durumunda buradan hesaplanır.</small> </label>
-                        <input required type="text" id="gunluk_ucret" name="gunluk_ucret" class="form-control">
+                        <input type="text" id="gunluk_ucret" name="gunluk_ucret" class="form-control">
                     </div>
 
                     <div class="form-group">
