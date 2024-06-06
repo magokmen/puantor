@@ -4,7 +4,7 @@ $(document).ready(function () {
     var hrefValue = $(this).attr("href").replace("#", "");
     var tabText = $(this).text();
     var tabTitle = $(this).data("title")
-    console.log(tabTitle);
+    
 
     if (title == tabText || title == tabTitle) {
       $(hrefValue).tab("show");
@@ -80,3 +80,18 @@ $("#city").on("change", function () {
 
 
   
+
+    $("#companies").on("change", function () {
+      var company_id = $("#companies option:selected").val();
+      $.ajax({
+          url: "ajax.php",
+          type: "POST",
+          data: {
+              "company_id": company_id,
+              "action": "proje"
+          },
+          success: function (data) {
+              $('#projects').html(data);
+          }
+      })
+  })

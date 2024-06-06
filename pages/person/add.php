@@ -214,18 +214,5 @@ if ($_POST && $_POST["method"] == "add") {
 <script src="../../src/component.js"></script>
 <script type="text/javascript">
 
-    $("#companies").on("change", function () {
-        var company_id = $("#companies option:selected").val();
-        $.ajax({
-            url: "ajax.php",
-            type: "POST",
-            data: {
-                "company_id": company_id,
-                "action": "proje"
-            },
-            success: function (data) {
-                $('#projects').html(data);
-            }
-        })
-    })
+   
 </script>

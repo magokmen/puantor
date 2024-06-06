@@ -393,6 +393,23 @@ function gunAdi($gun){
     );
     return $gunler[$gun];
 }
+
+
+
+function getYearSelect($name = "years", $selectedYear=null) {
+    if($selectedYear == null) {
+        $selectedYear = date('Y');
+    }
+    $current_year = date('Y');
+    $output = '<select name="'.$name.'" id="'.$name.'" class="select2 " style="width:100%">';
+    for ($i = 2020; $i <= $current_year + 2; $i++) {
+        $selected = ($i == $selectedYear) ? ' selected' : ' ';
+        $output .= '<option ' . $selected . ' value="' . $i . '">' . $i . '</option>';
+    }
+    $output .= '</select>';
+    return $output;
+}
+
     function getMonthsSelect($name = 'months', $selected = null)
     {
         // Ayları tanımla

@@ -226,7 +226,7 @@ $dates = generateDates($year, $month, $days);
                                     </a>
                                 </li>
                                 <li class="dropdown-item edit"><i class="fa-solid fa-scissors dropdown-list-icon"></i></i>
-                                    <a href="#" onclick="RoutePagewithParams('params/edit','id=<?php echo $row['id'] ?>')" data-title="Parametre Güncelleme">
+                                    <a href="#" onclick="RoutePagewithParams('person/wagecut','id=<?php echo $row['id'] ?>')" data-title="Kesinti Ekle">
                                         Kesinti Ekle
                                     </a>
                                 </li>
