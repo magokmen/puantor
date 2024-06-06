@@ -81,7 +81,7 @@ if ($_POST && $_POST['method'] == "Delete") {
                 </td>
                 <td class="">
 
-                    <i class="fa-solid fa-ellipsis-vertical list-button" data-toggle="dropdown"></i>
+                <i class="fa-solid fa-ellipsis list-button" data-toggle="dropdown"></i>
                     <ul class="dropdown-menu">
                         <?php if (permtrue("şirketlerimGüncelle")): ?>
                             <li class="dropdown-item edit"><i class="fa-solid fa-edit dropdown-list-icon"></i>

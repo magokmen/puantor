@@ -103,12 +103,13 @@ if ($_POST && $_POST['method'] == "Delete") {
                 </td>
 
                 <td class="">
-
-                    <i class="fa-solid fa-ellipsis-vertical list-button" data-toggle="dropdown"></i>
+      
+                <i class="fa-solid fa-ellipsis list-button" data-toggle="dropdown"></i>
+                  
                     <ul class="dropdown-menu">
                         <?php if (permtrue("personelGüncelle")): ?>
                             <li class="dropdown-item"><i class="fa-solid fa-edit dropdown-list-icon"></i>
-                                <a href="#" onclick="RoutePagewithParams('person/edit','id=<?php echo $value['id'] ?>')"
+                                <a  href="#" onclick="RoutePagewithParams('person/edit','id=<?php echo $value['id'] ?>')"
                                     data-title="Personel Güncelleme">
                                     Güncelle
                                 </a>
@@ -122,8 +123,17 @@ if ($_POST && $_POST['method'] == "Delete") {
                                 </a>
                             </li>
                         <?php endif; ?>
+                        <?php if (permtrue("personelGelirEkle")): ?>
+                            <li class="dropdown-item"><i class="fa-solid fa-wallet dropdown-list-icon"></i><a
+                                    href="#" onclick="RoutePage('persone/income', this)"
+                                    data-params="id=<?php echo $value["id"] ?>" data-title="Gelir Ekle">
+                                    Gelir Ekle
+                                </a>
+                            </li>
+
+                        <?php endif; ?>
                         <?php if (permtrue("personelKesintiEkle")): ?>
-                            <li class="dropdown-item"><i class="fa-regular fa-thumbs-down dropdown-list-icon"></i></i><a
+                            <li class="dropdown-item"><i class="fa-regular fa-thumbs-down dropdown-list-icon"></i><a
                                     href="#" onclick="RoutePage('persone/deduction', this)"
                                     data-params="id=<?php echo $value["id"] ?>" data-title="Kesinti Ekle">
                                     Kesinti Ekle

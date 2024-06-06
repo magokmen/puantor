@@ -11,7 +11,7 @@ if ($_POST && $_POST["method"] == "add") {
     $kimlik_no = @$_POST["kimlik_no"];
     $sigorta_no = @$_POST["sigorta_no"];
     $address = @$_POST["address"];
-    $gunluk_ucret = @$_POST["daily_wages"];
+    $gunluk_ucret = isset($_POST["daily_wages"]) && $_POST["daily_wages"] != "" ? $_POST["daily_wages"] : 0; 
     $email = @$_POST["email"];
     $iban_number = @$_POST["iban_number"];
     $phone = @$_POST["phone_number"];
@@ -232,8 +232,8 @@ $person = $sql->fetch(PDO::FETCH_ASSOC);
 
                             </div>
                             <div class="form-group">
-                                <label for="daily_wages">Günlük Ücreti<span style="color:red">(*)</span><small>İlgili dönemdeki parametreden yüksek olması durumunda buradan hesaplanır.</small> </label>
-                                <input required type="text" id="daily_wages" name="daily_wages" class="form-control"
+                                <label for="daily_wages">Günlük Ücreti<span style="color:red">(*)</span> </label><small>İlgili dönemdeki parametreden yüksek olması durumunda buradan hesaplanır.</small>
+                                <input  type="text" id="daily_wages" name="daily_wages" class="form-control"
                                 value="<?php echo $person["daily_wages"]; ?>" >
                             </div>
 

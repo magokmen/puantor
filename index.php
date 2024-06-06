@@ -249,16 +249,17 @@ if ($expired_date < 3) {
                             </li>
                         <?php endif; ?>
 
-
-                        <li class="nav-item">
-                            <a class="nav-link nav-menu loadContent" href="#" data-page="bordro/main"
-                                data-title="Bordro">
-                                <i class="nav-icon fa-solid fa-money-bills"></i>
-                                <p>
-                                    Bordro
-                                </p>
-                            </a>
-                        </li>
+                        <!-- <?php if (permtrue("bordro")): ?> -->
+                            <li class="nav-item">
+                                <a class="nav-link nav-menu loadContent" href="#" data-page="bordro/main"
+                                    data-title="Bordro">
+                                    <i class="nav-icon fa-solid fa-money-bills"></i>
+                                    <p>
+                                        Bordro
+                                    </p>
+                                </a>
+                            </li>
+                            <!-- <?php endif; ?> -->
 
                         <?php if (permtrue("personel")): ?>
                             <li class="nav-item">
@@ -374,19 +375,23 @@ if ($expired_date < 3) {
                                     <?php endif; ?>
                                 </ul>
                             </li>
-                        <?php endif; ?>
-
-                        <?php if (permtrue("şirketlerim")): ?>
+                            <?php endif; ?>
+                          
+                          
+                           <?php if (permtrue("şirketlerim")): ?>
+                            
                             <li class="nav-item">
                                 <a class="nav-link nav-menu loadContent" href="#" data-page="company/main"
-                                    data-title="Şirket Listesi">
-                                    <i class="nav-icon fa-solid fa-briefcase"></i>
-                                    <p>
-                                        Şirketlerim
-                                    </p>
-                                </a>
-                            </li>
+                                data-title="Şirket Listesi">
+                                <i class="nav-icon fa-solid fa-briefcase"></i>
+                                <p>
+                                    Şirketlerim
+                                </p>
+                            </a>
+                        </li>
                         <?php endif; ?>
+                      
+
 
                         <?php if (permtrue("kullanıcılar")): ?>
                             <li class="nav-item">
@@ -420,6 +425,8 @@ if ($expired_date < 3) {
                                 </ul>
                             </li>
                         <?php endif; ?>
+                        
+                       
 
                         <?php if (permtrue("yetkiler")): ?>
                             <li class="nav-item">

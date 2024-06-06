@@ -98,9 +98,9 @@ if ($_POST && $_POST['method'] == "Delete") {
                 </td>
                 <td class="">
 
-                    <i class="fa-solid fa-ellipsis-vertical list-button" data-toggle="dropdown"></i>
+                <i class="fa-solid fa-ellipsis list-button" data-toggle="dropdown"></i>
                     <ul class="dropdown-menu">
-                        <?php if (permtrue("tanımlamalarParametreGüncelle")): ?>
+                        <!-- <?php if (permtrue("tanımlamalarParametreGüncelle")): ?> -->
 
                             <li class="dropdown-item edit"><i class="fa-solid fa-edit dropdown-list-icon"></i>
                                 <a href="#" onclick="RoutePagewithParams('params/edit','id=<?php echo $row['id'] ?>')"
@@ -108,7 +108,7 @@ if ($_POST && $_POST['method'] == "Delete") {
                                     Güncelle
                                 </a>
                             </li>
-                        <?php endif; ?>
+                        <!-- <?php endif; ?> -->
                         <!-- <?php
                         $params = array(
                             "id" => $row["id"],

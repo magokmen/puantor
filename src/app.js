@@ -280,7 +280,7 @@ function RoutePagewithParams(page, params = "", animate = true) {
   if (animate === true) {
     $(".preloader")
       .css("height", $(window).height() + "px")
-      .css("opacity", 0.8)
+      .css("opacity", 0.5)
       .fadeIn(400);
   }
 
@@ -288,9 +288,9 @@ function RoutePagewithParams(page, params = "", animate = true) {
   session_check();
   $("#content").animate({ opacity: 0 }, 300, function () {
     $(this).load("pages/" + page + ".php?" + params, function () {
-      $(".preloader").css("height", 0).fadeOut(400);
       // Yükleme tamamlandığında içeriği gösterme işlemi
       $(this).animate({ opacity: 1 }, 300);
+      $(".preloader").css("opacity", 0).fadeOut(400);
     });
   });
 }
@@ -364,7 +364,7 @@ function loadContent(pagelink) {
 
   $(".preloader")
     .css("height", $(window).height() + "px")
-    .css("opacity", 0.8)
+    .css("opacity", 0.5)
     .fadeIn(400);
     
   session_check();
@@ -374,7 +374,7 @@ function loadContent(pagelink) {
       // Yükleme tamamlandığında, içeriği göster
       $(this).fadeIn(50);
       // Hide preloader
-      $(".preloader").css("height", 0).fadeOut(400);
+      $(".preloader").css('opacity',0).fadeOut(400);
     });
   });
 }
