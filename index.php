@@ -249,17 +249,16 @@ if ($expired_date < 3) {
                             </li>
                         <?php endif; ?>
 
-                        <!-- <?php if (permtrue("bordro")): ?> -->
-                            <li class="nav-item">
-                                <a class="nav-link nav-menu loadContent" href="#" data-page="bordro/main"
-                                    data-title="Bordro">
-                                    <i class="nav-icon fa-solid fa-money-bills"></i>
-                                    <p>
-                                        Bordro
-                                    </p>
-                                </a>
-                            </li>
-                            <!-- <?php endif; ?> -->
+
+                        <li class="nav-item">
+                            <a class="nav-link nav-menu loadContent" href="#" data-page="bordro/main"
+                                data-title="Bordro">
+                                <i class="nav-icon fa-solid fa-money-bills"></i>
+                                <p>
+                                    Bordro
+                                </p>
+                            </a>
+                        </li>
 
                         <?php if (permtrue("personel")): ?>
                             <li class="nav-item">
