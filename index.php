@@ -249,7 +249,7 @@ if ($expired_date < 3) {
                             </li>
                         <?php endif; ?>
 
-                        <?php if (permtrue("bordro")): ?>
+                        <!-- <?php if (permtrue("bordro")): ?> -->
                             <li class="nav-item">
                                 <a class="nav-link nav-menu loadContent" href="#" data-page="bordro/main"
                                     data-title="Bordro">
@@ -259,7 +259,7 @@ if ($expired_date < 3) {
                                     </p>
                                 </a>
                             </li>
-                            <?php endif; ?>
+                            <!-- <?php endif; ?> -->
 
                         <?php if (permtrue("personel")): ?>
                             <li class="nav-item">
