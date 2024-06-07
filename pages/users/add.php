@@ -19,6 +19,9 @@ if ($_POST && $_POST['method'] == "add") {
     $email = $_POST['email'];
     $username = $_POST['username'];
     $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+    $userroles = $_POST['userroles'];
+    $companies = $_POST['companies'];
+
 
     //kullanıcı var mı kontrol et
     $query = "SELECT username FROM users WHERE username = ?";
@@ -28,18 +31,21 @@ if ($_POST && $_POST['method'] == "add") {
     $result = $statement->fetch(PDO::FETCH_ASSOC);
 
     //mail adresi var mı kontrol edilir
-    $mailVarmi = emailVarmi($email,"users");
+    $mailVarmi = emailVarmi($email, "users");
 
     if (!$mailVarmi) {
         // Veritabanına ekleme işlemini gerçekleştir
         if ($full_name != Null) {
             $up = $con->prepare("INSERT INTO users SET account_id = ?,
+                                                        company_id = ?,
                                                         full_name = ? , 
                                                         phone = ? ,
                                                         email = ? ,
-                                                        username = ? ,
-                                                        password = ? ");
-            $result = $up->execute(array($account_id, $full_name, $phone, $email, $username, $password));
+                                                        password = ? ,
+                                                        groups = ?,
+                                                        username = ? 
+                                                        ");
+            $result = $up->execute(array($account_id, $companies, $full_name, $phone, $email, $password, $userroles, $username));
 
         }
     } else {
@@ -50,8 +56,6 @@ if ($_POST && $_POST['method'] == "add") {
 
 
 ?>
-
-
 <form id="myForm">
     <div class="row">
         <div class="col-md-6 col-sm-12">
@@ -81,7 +85,6 @@ if ($_POST && $_POST['method'] == "add") {
             <label for="password">Şifre Adı <font color="red">*</font></label>
             <input type="text" required class="form-control" id="password" name="password" value="" placeholder="Şifre">
         </div>
-
     </div>
     <br>
     <div class="row">
@@ -94,10 +97,15 @@ if ($_POST && $_POST['method'] == "add") {
             <label for="companies">Firması <font color="red">*</font></label>
             <?php echo $func->companies("companies", $account_id) ?>
         </div>
-
     </div>
     <br>
-
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <label for="authority">Pozisyonu (Yetki) <font color="red">*</font></label>
+            <?php echo $func->authority("userroles", $account_id) ?>
+        </div>
+    </div>
+    <br>
 
     <button class="btn btn-secondary" id="returnlist" type="button">Listeye Dön</button>
 
@@ -122,6 +130,7 @@ if ($_POST && $_POST['method'] == "add") {
         $("#page-title").text("Kullanıcı Listesi");
     })
     $('.select2').select2()
+
     function usernamekontrol(params) {
         submitFormbyAjax('users/main', params)
     }
