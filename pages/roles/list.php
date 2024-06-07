@@ -16,7 +16,7 @@ if ($_POST && isset($_POST["action"]) == "delete-roles") {
 
 ?>
 
-<div style="margin-bottom:10px" class="row">
+<div style="margin-bottom:8px" class="row">
 
     <div class="btn-group">
         <button type="button" class="btn btn-default">Pdf</button>
@@ -33,8 +33,8 @@ if ($_POST && isset($_POST["action"]) == "delete-roles") {
             <th>id</th>
             <th>Yetki Adı</th>
             <th>Açıklama</th>
-            <th>Durunu</th>
-            <th>#</th>
+            <th class="text-center">Durunu</th>
+            <th class="text-center" style="max-width:10px">İşlemler</th>
         </tr>
     </thead>
     <tbody>
@@ -59,12 +59,18 @@ if ($_POST && isset($_POST["action"]) == "delete-roles") {
                 <td>
                     <?php echo $value["roleDescription"] ?>
                 </td>
-                <td>
-                    <?php echo $value["isActive"] == 1 ? "Aktif" : "Pasif"; ?>
+                <td class="text-center">
+                    <?php if($value["isActive"] == 1){
+                        $checked = "checked";
+                    } else{
+                        $checked = "";
+                    
+                    }?>
+                <input type="checkbox" class="check" <?php echo $checked ;?> data-on="Aktif" data-off="Pasif" data-offstyle="danger">
                 </td>
 
 
-                <td class="">
+                <td class="text-center">
 
                 <i class="fa-solid fa-ellipsis list-button" data-toggle="dropdown"></i>
                     <ul class="dropdown-menu">
@@ -112,8 +118,8 @@ if ($_POST && isset($_POST["action"]) == "delete-roles") {
             <th>id</th>
             <th>Yetki Adı</th>
             <th>Açıklama</th>
-            <th>Durunu</th>
-            <th>#</th>
+            <th class="text-center">Durunu</th>
+            <th class="text-center" style="max-width:8px">İşlemler</th>
         </tr>
     </tfoot>
 </table>

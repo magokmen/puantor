@@ -100,7 +100,7 @@ function submitFormReturnJson(page, params, messageType = "alert") {
       contentType: false,
       success: function (response) {
         var data = JSON.parse(response);
-        console.log(data);
+        // console.log(data);
         if (data.status == 200) {
           // Başarı mesajı ve sayfa içeriği güncelleme
           var successMessage = data.message;
