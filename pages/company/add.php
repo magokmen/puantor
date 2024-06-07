@@ -22,22 +22,13 @@ if ($_POST && $_POST["method"] == "add") {
                                                         address = ?,
                                                         open_date = ?,
                                                         description = ?");
-        // $sql = $con->prepare("INSERT INTO companies SET account_id = ?, 
-        //                                                 company_name = ?,
-        //                                                 company_official = ?,
-        //                                                 tax_number = ?,
-        //                                                 address = ?,
-        //                                                 open_date = ?,
-        //                                                 description = ?");
+
         $sql->execute(array($account_id, $company_name, $company_official, $tax_number, $address, $open_date, $description));
     } catch (PDOException $ex) {
         echo "Error: " . $ex->getMessage();
     }
 }
-
 ?>
-
-
 
 <form id="myForm">
     <div class="row">
@@ -113,9 +104,6 @@ if ($_POST && $_POST["method"] == "add") {
                         <label for="description">Açıklama</label>
                         <textarea type="text" name="description" class="form-control"></textarea>
                     </div>
-
-
-
                 </div>
                 <!-- /.card-body -->
             </div>
