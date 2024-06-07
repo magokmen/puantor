@@ -191,8 +191,8 @@ $dates = generateDates($year, $month, $days);
                             <?php echo tlFormat($row["toplam_maas"]); ?>
                         </td>
 
-                        <td>
-
+                        <td class="text-center">
+                        <?php echo tlFormat($row["kesinti"]); ?>
                         </td>
                         <td>
 

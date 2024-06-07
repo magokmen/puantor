@@ -128,11 +128,11 @@ class Functions
         echo $html;
     }
 
-    public function companies($name, $id)
+    public function companies($name, $id, $disabled = '',$readonly = '')
     {
         global $con;
         global $account_id;
-        $html = ' <select required id="' . $name . '" name="' . $name . '"  class="select2"
+        $html = ' <select '.$disabled.' '.$readonly.'" required id="' . $name . '" name="' . $name . '"  class="select2"
                             style="width: 100%;">
                             <option value="">Şirket Seçiniz</option>';
 
@@ -199,10 +199,10 @@ class Functions
         echo $html;
     }
 
-    public function projectsMultiple($name, $company_id, $ids)
+    public function projectsMultiple($name, $company_id, $ids,$disabled = '',$readonly = '')
     {
         global $con;
-        $html = '<select id="' . $name . '" name="' . $name . '[]" multiple class="select2" style="width: 100%;">
+        $html = '<select id="' . $name . '" name="' . $name . '[]" multiple class="select2" style="width: 100%;" '.$disabled.' '.$readonly.'>
                     <option disabled value="0">Proje Seçiniz</option>';
 
         $sql = $con->prepare("SELECT id, project_name FROM projects WHERE company_id = ?");

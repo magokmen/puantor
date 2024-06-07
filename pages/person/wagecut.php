@@ -4,10 +4,6 @@ $id = isset($_GET["id"]) ? $_GET["id"] : $_POST["id"];
 if ($_POST && $_POST['method'] === 'add') {
     try {
         //Get form data
-   
-        $company_id = $func->security($_POST['companies']);
-        $project_id = $func->security($_POST['projects']);
-        $person_id = $func->security($_POST['person_id']);
         $cutType = $func->security($_POST['cut_type']);
         $year = $func->security($_POST['year']);
         $month = $func->security($_POST['month']);
@@ -15,14 +11,14 @@ if ($_POST && $_POST['method'] === 'add') {
         $description = $func->security($_POST['description']);
 
         // Prepare and execute the SQL statement
-        $stmt = $con->prepare("INSERT INTO wagecuts (account_id, company_id , project_id, person_id, cut_type, year, month, cut_amount, description) 
-                                VALUES (?, ?, ?, ?,?, ?, ?, ?, ?)");
-        $stmt->execute([$account_id,$company_id, $project_id, $person_id, $cutType, $year, $month, $cutAmount, $description]);
+        $stmt = $con->prepare("INSERT INTO wagecuts ( person_id, cut_type, year, month, cut_amount, description) 
+                                VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->execute([ $id, $cutType, $year, $month, $cutAmount, $description]);
 
         // Return JSON response
         $res = array(
             'status' => 200,
-            'message' => 'Wage cut added successfully',
+            'message' => 'Kesinti başarıyla eklendi.',
             "page" =>"bordro/main",
             "pTitle" => "Bordro"
         );
@@ -33,7 +29,7 @@ if ($_POST && $_POST['method'] === 'add') {
         // Handle the exception
         echo json_encode(array(
             'success' => false,
-            'message' => 'An error occurred: ' . $e->getMessage()
+            'message' => 'Bir hata oluştu: ' . $e->getMessage()
         ));
         return ;
     }
@@ -75,16 +71,16 @@ $result = $sql->fetch(PDO::FETCH_OBJ);
 
             <div class="row">
                 <div class="form-group col-md-6">
-                    <label for="company">Firması <span style="color:red">(*)</span></label>
-                    <?php $func->companies("companies", $result->company_id); ?>
+                    <label for="company">Şirket <span style="color:red">(*)</span></label><small>İşlem yapılacak şirket</small>
+                    <?php $func->companies("companies", $result->company_id,"disabled","readonly"); ?>
                 </div>
 
 
                 <div class="form-group col-md-6">
-                    <label for="projects">Projesi <span style="color:red">(*)</span></label>
-                    <select class="select2" id="projects" name="projects" data-placeholder="Proje Seçiniz" data-dropdown-css-class="select2" style="width: 100%;">
+                    <label for="projects">Projesi <span style="color:red">(*)</span></label><small>Personelin çalıştığı proje veya şantiye</small>
 
-                    </select>
+                    <input type="text" disabled readonly class="form-control" value="<?php echo $func->getProjectNames($result->project_id) ;?>" /> 
+                   
 
                 </div>
             </div>
