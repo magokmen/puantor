@@ -283,7 +283,7 @@ function RoutePagewithParams(page, params = "", animate = true) {
       .css("opacity", 0.5)
       .fadeIn(400);
   }
-
+console.log(params);
   $("#content").empty(); // İçeriği temizle
   session_check();
   $("#content").animate({ opacity: 0 }, 300, function () {

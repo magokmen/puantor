@@ -22,8 +22,9 @@ try {
 } catch (PDOException $getexetion) {
     echo "Bağlantı başarısız!" . $exception->getMessage();
 };
-
 require '../../vendor/autoload.php';
+
+
 
 use PhpOffice\PhpSpreadsheet\Helper\Sample;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;

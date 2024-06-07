@@ -1,6 +1,8 @@
 <?php
 
-include "connect.php";
+// include "connect.php";
+
+
 
 class Functions
 {
@@ -397,13 +399,13 @@ class Functions
 
 
 
-    function getYearSelect($name = "years", $selectedYear = null)
+    function getYearSelect($name = "years", $selectedYear = null, $disabled = '',$readonly = '')
     {
         if ($selectedYear == null) {
             $selectedYear = date('Y');
         }
         $current_year = date('Y');
-        $output = '<select name="' . $name . '" id="' . $name . '" class="select2 " style="width:100%">';
+        $output = '<select name="' . $name . '" id="' . $name . '" class="select2 " '.$disabled.' '.$readonly.' style="width:100%">';
         for ($i = 2020; $i <= $current_year + 2; $i++) {
             $selected = ($i == $selectedYear) ? ' selected' : ' ';
             $output .= '<option ' . $selected . ' value="' . $i . '">' . $i . '</option>';
@@ -412,7 +414,7 @@ class Functions
         return $output;
     }
 
-    function getMonthsSelect($name = 'months', $selected = null)
+    function getMonthsSelect($name = 'months', $selected = null, $disabled = '',$readonly = '')
     {
         // Ayları tanımla
         $months = [
@@ -436,7 +438,7 @@ class Functions
         }
 
         // Select elemanını başlat
-        $select = "<select id=" . $name . " class='select2' style='width:100%' name=\"$name\">\n";
+        $select = "<select id=" . $name . " class='select2' style='width:100%' ".$disabled." ".$readonly." name=\"$name\">\n";
 
         // Ayları select elemanına ekle
         foreach ($months as $key => $value) {
@@ -751,4 +753,21 @@ function formatNumber($num)
 {
     $formatted = number_format($num, 2, ',', '.'); // Sayıyı formatla
     return str_replace('.', '#', str_replace(',', '.', str_replace('#', ',', $formatted))); // Nokta ve virgül yer değiştirme
+}
+define('CIPHER', 'AES-128-CBC');
+define('KEY', 'puantor.2048');
+define('IV_LENGTH', openssl_cipher_iv_length(CIPHER));
+
+function encrypt($data)
+{
+    $iv = openssl_random_pseudo_bytes(IV_LENGTH);
+    return base64_encode($iv . openssl_encrypt($data, CIPHER, KEY, 0, $iv));
+}
+
+function decrypt($data)
+{
+    $data = base64_decode($data);
+    $iv = substr($data, 0, IV_LENGTH);
+    $encryptedData = substr($data, IV_LENGTH);
+    return openssl_decrypt($encryptedData, CIPHER, KEY, 0, $iv);
 }

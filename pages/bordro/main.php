@@ -50,9 +50,9 @@ $dates = generateDates($year, $month, $days);
                 <div class="form-group p-2">
                     <input type="checkbox" class="check" <?php echo $disabled; ?> id="donem-kapat">
                     <span class="ml-1">Puantajda İşlem Yapılmasın</span>
-                </div> 
+                </div>
             </div>
-          
+
 
             <div class="col-md-6">
                 <button type="button" id="hesapla" onclick="maas_hesapla()" class="btn btn-primary float-right"><i class="fas fa-save mr-2"></i>
@@ -192,10 +192,12 @@ $dates = generateDates($year, $month, $days);
                         </td>
 
                         <td class="text-center">
-                        <?php echo tlFormat($row["kesinti"]); ?>
+                            <?php echo tlFormat($row["kesinti"]); ?>
                         </td>
                         <td>
-
+                            <?php
+                            $elegecen = $row["toplam_maas"] - $row["kesinti"];
+                            echo tlFormat($elegecen); ?>
                         </td>
                         <td class="text-center">
                             <?php
@@ -214,27 +216,33 @@ $dates = generateDates($year, $month, $days);
                             ?>
                         </td>
                         <td>
-                            <?php echo $row["hesaplama_tarihi"]; ?>
+                               <?php echo $row["hesaplama_tarihi"]; ?>
+                           
                         </td>
                         <td class="">
 
-                        <i class="fa-solid fa-ellipsis list-button" data-toggle="dropdown"></i>
+                            <i class="fa-solid fa-ellipsis list-button" data-toggle="dropdown"></i>
                             <ul class="dropdown-menu">
                                 <li class="dropdown-item edit"><i class="fa-regular fa-file-pdf dropdown-list-icon"></i></i>
-                                    <a href="#" onclick="RoutePagewithParams('params/edit','id=<?php echo $row['id'] ?>')" data-title="Parametre Güncelleme">
+                                    <a href="#" onclick="RoutePagewithParams('params/edit','id=<?php echo ($row['id']) ?>')" data-title="Parametre Güncelleme">
                                         Bordroyu Göster
                                     </a>
                                 </li>
+
                                 <li class="dropdown-item edit"><i class="fa-solid fa-scissors dropdown-list-icon"></i></i>
-                                    <a href="#" onclick="RoutePagewithParams('person/wagecut','id=<?php echo $row['id'] ?>')" data-title="Kesinti Ekle">
+                                    <a href="#" onclick="RoutePagewithParams('person/wagecut','id=<?php echo ($row['id']) ?>&year=<?php echo $year ?>&month=<?php echo $month ?>')" data-title="Kesinti Ekle">
                                         Kesinti Ekle
                                     </a>
                                 </li>
 
-                                <!-- <?php
-                                        $params = array("id" => $row["id"], "message" => $row["param_name"]);
-                                        $params_json = $func->jsonEncode($params);
-                                        ?> -->
+                                <?php
+                                $params = array(
+                                    "id" => $row["id"],
+                                    "message" => "Bu kaydı silmek istediğinize emin misiniz?"
+                                );
+                                $params_json = $func->jsonEncode($params);
+                                // 
+                                ?>
 
                                 <li class="dropdown-item">
                                     <i class="fa-solid fa-trash-can dropdown-list-icon"></i>
@@ -290,5 +298,4 @@ include_once "../../plugins/datatables/datatablescripts.php" ?>
             window.location.href = "pages/bordro/toxls.php";
         }
     });
-
 </script>
