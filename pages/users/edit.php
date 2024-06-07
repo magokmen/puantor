@@ -1,8 +1,8 @@
 <?php
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
-include_once "../../config/connect.php";
-require_once "../../config/functions.php";
+// include_once "../../config/connect.php";
+require_once "../../include/requires.php";
 
 $func = new Functions();
 //use config\Functions;
@@ -16,36 +16,39 @@ if ($_POST) {
     $fullname = $_POST['fullname'];
     $phone = $_POST['phone'];
     $email = $_POST['email'];
-    $username = $_POST['username'];
-    $password = $_POST['password'] ? password_hash($_POST['password'],PASSWORD_BCRYPT) : $password;
-
+    // $username = $_POST['username'];
+    $password = $_POST['password'] ? password_hash($_POST['password'], PASSWORD_BCRYPT) : $password;
+    $userroles = $_POST['userroles'];
+    $companies = $_POST['companies'];
     // Veritabanına güncelleme işlemini gerçekleştir
-   
+
     if ($fullname != Null) {
-        $up = $con->prepare("UPDATE users SET fullname = ? , 
+        $up = $con->prepare("UPDATE users SET      company_id = ?,
+                                                   full_name = ? , 
                                                    phone = ? ,
                                                    email = ? ,
-                                                   username = ? ,
-                                                   password = ? 
+                                                   password = ? ,
+                                                   groups = ?
+                                                   
                                                    WHERE id = ? ");
-        $result = $up->execute(array($fullname, $phone, $email, $username, $password,$id));
+        $result = $up->execute(array($companies, $fullname, $phone, $email, $password, $userroles, $id));
 
     }
 }
 ;
 try {
     // seçme sorgusunu hazırla 
-    global $kayit;
-    $sorgu = "Select * from users where id = ?";
-    $stmt = $con->prepare($sorgu);
-    $stmt->execute(array($id));
-    $kayit = $stmt->fetch(PDO::FETCH_ASSOC);
-    //data adında bir fonksiyon oluşturuldu (htmlspecialchars($kayit['name'], ENT_QUOTES);) bu şekilde yazmak yerine
-    $fullname = $func->data('fullname');
-    $phone = $func->data('phone');
-    $email = $func->data('email');
-    $username = $func->data('username');
-    $password = $func->data('password');
+    $sql = $con->prepare("SELECT * FROM users WHERE id = ?");
+    $sql->execute(array($id));
+    $kayit = $sql->fetch(PDO::FETCH_ASSOC);
+    // //data adında bir fonksiyon oluşturuldu (htmlspecialchars($kayit['name'], ENT_QUOTES);) bu şekilde yazmak yerine
+    // $fullname = $func->data('full_name');
+    // $phone = $func->data('phone');
+    // $email = $func->data('email');
+    // $username = $func->data('username');
+    // $password = $func->data('password');
+    // $accountType = $func->data('account_type');
+    // $accountid = $func->data('account_id');
 
 } catch (PDOException $exception) {
     die('HATA: ' . $exception->getMessage());
@@ -60,13 +63,15 @@ try {
                 <div class="col-md-6 col-sm-12">
                     <label for="fullname">Adı Soyadı <font color="red">*</font></label>
                     <input type="text" required class="form-control" id="fullname" name="fullname"
-                        value="<?php echo $fullname ?>" placeholder="Adı soyadını yazınız">
+                        value="<?php echo $kayit["full_name"]; ?>" placeholder="Adı soyadını yazınız">
                 </div>
 
                 <div class="col-md-6 col-sm-12">
-                    <label for="username">Kullanıcı Adı <font color="red">*</font></label>
-                    <input type="text" required class="form-control" id="username" name="username"
-                        value="<?php echo $username ?>" placeholder="Kullanıcı Adı">
+
+
+                    <label for="email">Email Adresi<font color="red">*</font></label>
+                    <input type="text" required class="form-control" id="email" name="email"
+                        value="<?php echo $kayit["email"]; ?>" placeholder="Email Adresi">
                 </div>
 
             </div>
@@ -76,7 +81,7 @@ try {
                 <div class="col-md-6 col-sm-12">
                     <label for="phone">Telefon Numarası <font color="red">*</font></label>
                     <input type="text" required class="form-control" id="phone" name="phone"
-                        value="<?php echo $phone ?>" placeholder="Telefon numarası ">
+                        value="<?php echo $kayit["phone"]; ?>" placeholder="Telefon numarası ">
                 </div>
                 <div class="col-md-6 col-sm-12">
                     <label for="password">Şifre </label>
@@ -88,15 +93,17 @@ try {
             <br>
             <div class="row">
                 <div class="col-md-6 col-sm-12">
-                    <label for="email">Email Adresi<font color="red">*</font></label>
-                    <input type="text" required class="form-control" id="email" name="email"
-                        value="<?php echo $email ?>" placeholder="Email Adresi">
+                    <label for="authority">Pozisyonu (Yetki) <font color="red">*</font></label>
+                    <?php echo $func->authority("userroles", $kayit["groups"]) ?>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <label for="companies">Firması <font color="red">*</font></label>
+                    <?php echo $func->companies("companies", $kayit["company_id"]) ?>
                 </div>
 
-
             </div>
-            <br>
 
+            <br>
 
             <button class="btn btn-secondary" type="button" onclick="RoutePage('users/main',this)"
                 data-title="Kullanıcı Listesi">Listeye Dön</button>
@@ -120,8 +127,8 @@ try {
 
 
 </div>
+<script src="../../src/component.js"></script>
 <script>
-
 
     function usernamekontrol(params) {
         // e.preventDefault(); // Bu satırı silebilirsiniz, çünkü e parametresine ihtiyaç yok

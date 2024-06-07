@@ -33,7 +33,7 @@ if ($_POST && isset($_POST["action"]) == "delete-roles") {
             <th>id</th>
             <th>Yetki Adı</th>
             <th>Açıklama</th>
-            <th class="text-center">Durunu</th>
+            <th class="text-center">Durumu</th>
             <th class="text-center" style="max-width:10px">İşlemler</th>
         </tr>
     </thead>
@@ -60,19 +60,20 @@ if ($_POST && isset($_POST["action"]) == "delete-roles") {
                     <?php echo $value["roleDescription"] ?>
                 </td>
                 <td class="text-center">
-                    <?php if($value["isActive"] == 1){
+                    <?php if ($value["isActive"] == 1) {
                         $checked = "checked";
-                    } else{
+                    } else {
                         $checked = "";
-                    
-                    }?>
-                <input type="checkbox" class="check" <?php echo $checked ;?> data-on="Aktif" data-off="Pasif" data-offstyle="danger">
+
+                    } ?>
+                    <input type="checkbox" class="check" <?php echo $checked; ?> data-on="Aktif" data-off="Pasif"
+                        data-offstyle="danger">
                 </td>
 
 
                 <td class="text-center">
 
-                <i class="fa-solid fa-ellipsis list-button" data-toggle="dropdown"></i>
+                    <i class="fa-solid fa-ellipsis list-button" data-toggle="dropdown"></i>
                     <ul class="dropdown-menu">
                         <?php if (permtrue("yetkilerGüncelle")): ?>
                             <li class="dropdown-item"><i class="fa-solid fa-edit dropdown-list-icon"></i><a href="#"
@@ -118,7 +119,7 @@ if ($_POST && isset($_POST["action"]) == "delete-roles") {
             <th>id</th>
             <th>Yetki Adı</th>
             <th>Açıklama</th>
-            <th class="text-center">Durunu</th>
+            <th class="text-center">Durumu</th>
             <th class="text-center" style="max-width:8px">İşlemler</th>
         </tr>
     </tfoot>

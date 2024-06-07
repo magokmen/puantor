@@ -142,17 +142,17 @@ class Functions
 
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
             $company_name = $row['company_name'];
-            if($id == $row["id"] ){
+            if ($id == $row["id"]) {
                 $selected = " selected";
-            } else{
+            } else {
                 $selected = '';
             }
-            $html .= '<option ' . $selected. ' value=' . $row["id"] . '>' . $company_name .  '</option>';
+            $html .= '<option ' . $selected . ' value=' . $row["id"] . '>' . $company_name . '</option>';
         }
         ;
 
         $html .= ' </select>';
-        
+
         echo $html;
     }
 
@@ -305,15 +305,15 @@ class Functions
     public function paramsTur($name, $id)
     {
         global $con;
-        $html = '<select id="'.$name.'" name="'.$name.'" required multiple class="form-control select2" style="width: 100%;">
+        $html = '<select id="' . $name . '" name="' . $name . '" required multiple class="form-control select2" style="width: 100%;">
                     <option value="0" disabled>Tur Seçiniz</option>';
-    
+
         // Veritabanından tüm puantaj türlerini gruplarına göre al
         $sql = $con->prepare("SELECT * FROM puantajturu ORDER BY Turu");
         $sql->execute();
-    
+
         $currentGroup = null;
-      
+
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
             // Yeni bir grup başlıyorsa, önceki grubu kapat ve yeni grubu aç
             if ($currentGroup !== $row["Turu"]) {
@@ -321,21 +321,21 @@ class Functions
                     $html .= '</optgroup>';
                 }
                 $currentGroup = $row["Turu"];
-                $html .= '<optgroup label="'.$currentGroup.'">';
+                $html .= '<optgroup label="' . $currentGroup . '">';
             }
-    
+
             $html .= '<option ' . ($id == $row["id"] ? " selected" : "") . ' value=' . $row['id'] . '>' . $row['PuantajAdi'] . '</option>';
         }
-    
+
         // Son grup optgroup'u kapat
         if ($currentGroup !== null) {
             $html .= '</optgroup>';
         }
-    
+
         $html .= ' </select>';
         echo $html;
     }
-    
+
 
     function getPuantajTuruList($turu)
     {
@@ -352,7 +352,7 @@ class Functions
             $output .= '
             <li class="nav-item">
                 <div class="user-block" >
-                    <span class="avatar" data-tooltip="Saati : '.$result["PuantajSaati"] .' Saat"  data-id="' . $result["id"] . '" style="background-color:' . htmlspecialchars($result["ArkaPlanRengi"])
+                    <span class="avatar" data-tooltip="Saati : ' . $result["PuantajSaati"] . ' Saat"  data-id="' . $result["id"] . '" style="background-color:' . htmlspecialchars($result["ArkaPlanRengi"])
                 . ';color:' . $result["FontRengi"] . '">' . htmlspecialchars($result["PuantajKod"]) . '</span>
                     <span class="username">' . htmlspecialchars($result["PuantajAdi"]) . '</span>
                     <span class="description">' . htmlspecialchars($result["Turu"]) . '</span>
@@ -366,7 +366,7 @@ class Functions
         return $output;
     }
 
-    
+
     function puantajClass($turu)
     {
         global $con;
@@ -380,35 +380,37 @@ class Functions
             echo "<td class='gun noselect'></td>";
         }
     }
-function gunAdi($gun){
-    $gun = date("D",strtotime($gun));
-    $gunler = array(
-        "Mon" => "Pzt",
-        "Tue" => "Sal",
-        "Wed" => "Çar",
-        "Thu" => "Per",
-        "Fri" => "Cum",
-        "Sat" => "Cmt",
-        "Sun" => "Paz"
-    );
-    return $gunler[$gun];
-}
-
-
-
-function getYearSelect($name = "years", $selectedYear=null) {
-    if($selectedYear == null) {
-        $selectedYear = date('Y');
+    function gunAdi($gun)
+    {
+        $gun = date("D", strtotime($gun));
+        $gunler = array(
+            "Mon" => "Pzt",
+            "Tue" => "Sal",
+            "Wed" => "Çar",
+            "Thu" => "Per",
+            "Fri" => "Cum",
+            "Sat" => "Cmt",
+            "Sun" => "Paz"
+        );
+        return $gunler[$gun];
     }
-    $current_year = date('Y');
-    $output = '<select name="'.$name.'" id="'.$name.'" class="select2 " style="width:100%">';
-    for ($i = 2020; $i <= $current_year + 2; $i++) {
-        $selected = ($i == $selectedYear) ? ' selected' : ' ';
-        $output .= '<option ' . $selected . ' value="' . $i . '">' . $i . '</option>';
+
+
+
+    function getYearSelect($name = "years", $selectedYear = null)
+    {
+        if ($selectedYear == null) {
+            $selectedYear = date('Y');
+        }
+        $current_year = date('Y');
+        $output = '<select name="' . $name . '" id="' . $name . '" class="select2 " style="width:100%">';
+        for ($i = 2020; $i <= $current_year + 2; $i++) {
+            $selected = ($i == $selectedYear) ? ' selected' : ' ';
+            $output .= '<option ' . $selected . ' value="' . $i . '">' . $i . '</option>';
+        }
+        $output .= '</select>';
+        return $output;
     }
-    $output .= '</select>';
-    return $output;
-}
 
     function getMonthsSelect($name = 'months', $selected = null)
     {
@@ -541,8 +543,29 @@ function getYearSelect($name = "years", $selectedYear=null) {
         $params_json = htmlspecialchars(json_encode($params, JSON_UNESCAPED_UNICODE), ENT_QUOTES, 'UTF-8');
         return $params_json;
     }
+    public function authority($name, $id)
+    {
+        global $con;
+        global $account_id;
+        $html = ' <select required id="' . $name . '" name="' . $name . '"  class="select2"
+                            style="width: 100%;">
+                            <option value="">Yetki Seçiniz</option>';
+
+        $sql = $con->prepare("Select id,roleName from userroles WHERE account_id = ?");
+        $sql->execute(array($account_id));
+
+        while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
+            $roleName = $row['roleName'];
+            $html .= '<option ' . ($id == $row["id"] ? " selected" : '') . ' value=' . $row["id"] . '>' . $roleName . '</option>';
+        }
+        ;
+
+        $html .= ' </select>';
+        echo $html;
+    }
 
 }
+
 
 function sesset($field)
 {
@@ -598,17 +621,17 @@ function permtrue($var)
 //     if (!isset($_SESSION['id'])) {
 //       return false;
 //     }
-  
+
 //     // Yetki kontrolü
 //     $userId = $_SESSION['id'];
 //     if (!checkUserRole($requiredRole)) {
 //       return false;
 //     }
-  
+
 //     return true;
 //   }
-  
-  
+
+
 
 function emailVarmi($mail_address, $table = "accounts")
 {
@@ -679,19 +702,20 @@ function formatdDate($date)
     return date("d.m.Y", $timestamp);
 }
 
-function validate_password($password) {
+function validate_password($password)
+{
     $errors = [];
-    
+
     // Büyük harf kontrolü
     if (!preg_match('/[A-Z]/', $password)) {
         $errors[] = "Şifre en az bir büyük harf içermelidir.";
     }
-    
+
     // Küçük harf kontrolü
     if (!preg_match('/[a-z]/', $password)) {
         $errors[] = "Şifre en az bir küçük harf içermelidir.";
     }
-    
+
     // Özel karakter kontrolü
     if (!preg_match('/[\W_]/', $password)) { // \W harf ve rakam olmayan karakterler için kullanılır
         $errors[] = "Şifre en az bir özel karakter içermelidir.";
@@ -701,7 +725,7 @@ function validate_password($password) {
     if (strlen($password) < 8) {
         $errors[] = "Şifre en az 8 karakter uzunluğunda olmalıdır.";
     }
-    
+
     return $errors;
 }
 
@@ -719,12 +743,12 @@ function generateDates($year, $month, $days)
 
 function tlFormat($val)
 {
-	$tlFormat = number_format($val, 2, ',', '.');
-	return $tlFormat;
+    $tlFormat = number_format($val, 2, ',', '.');
+    return $tlFormat;
 }
 
 function formatNumber($num)
 {
-	$formatted = number_format($num, 2, ',', '.'); // Sayıyı formatla
-	return str_replace('.', '#', str_replace(',', '.', str_replace('#', ',', $formatted))); // Nokta ve virgül yer değiştirme
+    $formatted = number_format($num, 2, ',', '.'); // Sayıyı formatla
+    return str_replace('.', '#', str_replace(',', '.', str_replace('#', ',', $formatted))); // Nokta ve virgül yer değiştirme
 }
