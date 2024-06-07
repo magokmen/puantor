@@ -83,8 +83,8 @@ $func = new Functions();
                     $lastid = $con->lastInsertId();
 
 
-                    $userquery = $con->prepare("INSERT INTO users SET account_id= ? , full_name= ?, email= ? , password = ? ");
-                    $userquery->execute(array($lastid, $full_name, $email, $password_hashed));
+                    $userquery = $con->prepare("INSERT INTO users SET account_id= ? , full_name= ?, email= ? , password = ?, groups = ? ");
+                    $userquery->execute(array($lastid, $full_name, $email, $password_hashed, 1));
 
 
                     $compquery = $con->prepare("INSERT INTO companies SET account_id= ? , company_name= ?, email= ? ");

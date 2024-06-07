@@ -23,32 +23,32 @@ if ($_POST) {
     // Veritabanına güncelleme işlemini gerçekleştir
 
     if ($fullname != Null) {
-        $up = $con->prepare("UPDATE users SET      company_id = ?,
-                                                   full_name = ? , 
-                                                   phone = ? ,
-                                                   email = ? ,
-                                                   password = ? ,
-                                                   groups = ?
-                                                   
-                                                   WHERE id = ? ");
-        $result = $up->execute(array($companies, $fullname, $phone, $email, $password, $userroles, $id));
-
+        if ($password != null) {
+            $up = $con->prepare("UPDATE users SET      company_id = ?,
+                                                       full_name = ? , 
+                                                       phone = ? ,
+                                                       email = ? ,
+                                                       password = ? ,
+                                                       groups = ?
+                                                       WHERE id = ? ");
+            $result = $up->execute(array($companies, $fullname, $phone, $email, $password, $userroles, $id));
+        } else {
+            $up = $con->prepare("UPDATE users SET      company_id = ?,
+                                                       full_name = ? , 
+                                                       phone = ? ,
+                                                       email = ? ,
+                                                       groups = ?
+                                                       WHERE id = ? ");
+            $result = $up->execute(array($companies, $fullname, $phone, $email, $userroles, $id));
+        }
     }
 }
-;
 try {
     // seçme sorgusunu hazırla 
     $sql = $con->prepare("SELECT * FROM users WHERE id = ?");
     $sql->execute(array($id));
     $kayit = $sql->fetch(PDO::FETCH_ASSOC);
-    // //data adında bir fonksiyon oluşturuldu (htmlspecialchars($kayit['name'], ENT_QUOTES);) bu şekilde yazmak yerine
-    // $fullname = $func->data('full_name');
-    // $phone = $func->data('phone');
-    // $email = $func->data('email');
-    // $username = $func->data('username');
-    // $password = $func->data('password');
-    // $accountType = $func->data('account_type');
-    // $accountid = $func->data('account_id');
+
 
 } catch (PDOException $exception) {
     die('HATA: ' . $exception->getMessage());
