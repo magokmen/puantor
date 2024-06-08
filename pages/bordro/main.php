@@ -187,7 +187,7 @@ $dates = generateDates($year, $month, $days);
                             <?php echo $row["ay"]; ?>
                         </td>
 
-                        <td class="text-center">
+                        <td class="text-center text-bold">
                             <?php echo tlFormat($row["toplam_maas"]); ?>
                         </td>
 
@@ -224,7 +224,7 @@ $dates = generateDates($year, $month, $days);
                             <i class="fa-solid fa-ellipsis list-button" data-toggle="dropdown"></i>
                             <ul class="dropdown-menu">
                                 <li class="dropdown-item edit"><i class="fa-regular fa-file-pdf dropdown-list-icon"></i></i>
-                                    <a href="#" onclick="RoutePagewithParams('params/edit','id=<?php echo ($row['id']) ?>')" data-title="Parametre Güncelleme">
+                                    <a href="../pages/reports/payroll.php" target="_blank" data-title="Parametre Güncelleme">
                                         Bordroyu Göster
                                     </a>
                                 </li>

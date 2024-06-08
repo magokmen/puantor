@@ -771,3 +771,9 @@ function decrypt($data)
     $encryptedData = substr($data, IV_LENGTH);
     return openssl_decrypt($encryptedData, CIPHER, KEY, 0, $iv);
 }
+
+function logAction($action, $tableName, $oldData, $newData) {
+    global $con;
+    $stmt = $con->prepare("INSERT INTO logs (action, table_name, old_data, new_data) VALUES (?, ?, ?, ?)");
+    $stmt->execute([$action, $tableName, json_encode($oldData), json_encode($newData)]);
+}
