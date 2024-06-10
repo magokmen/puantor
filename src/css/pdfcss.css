@@ -1,0 +1,182 @@
+body {
+    font-family: Dejavu sans;
+    margin: 0;
+    padding: auto;
+    font-size: 10px; ;
+    box-sizing: border-box !;
+    -webkit-box-pack: center;
+}
+
+@page {
+    margin: 25px;
+    padding: auto;
+    font-size: 8px !important;
+}
+
+/* @page {
+    size: landscape !important;
+} */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    max-width: 790px;
+
+}
+
+td {
+    white-space: wrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+table,
+th,
+td {
+    border: 0.5px solid #837f7f;
+}
+
+
+
+.form-head {
+    font-size: 13px !important;
+    text-align: center;
+    background: #ddd;
+  
+}
+
+.border {
+    border: 1px solid #837f7f !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.text-white {
+    color: #fff;
+}
+
+.text-left {
+    text-align: left !important;
+}
+.text-right {
+    text-align: right !important;
+}
+
+.text-nowrap {
+    white-space: nowrap;
+}
+
+
+.text-bold {
+    font-weight: bold;
+}
+.bg-gray {
+    background-color: #808080;
+}
+
+
+
+.bg-light-gray {
+    background-color: #eee;
+}
+
+.bg-light-red {
+    background-color: #F5E8C7;
+}
+
+.m-0 {
+    margin: 0 auto;
+}
+.w-50{
+    width: 50%;
+    background-color: #a1853e;
+
+}
+.border-none{
+    border: none !important;
+
+}
+
+.border-right{
+    border-right: 1px solid #837f7f !important;
+
+}
+
+table.table,
+table.table th,
+table.table td {
+    border: none ;
+}
+.col-1 {
+   
+    width: 8.33% !important;
+    max-width: 8.33% !important;
+    min-width: 8.33% !important;
+    padding: 3px;
+}
+
+.col-2 {
+   
+    width: 16.67% !important;
+    max-width: 16.67% !important;
+    min-width: 16.67% !important;
+    padding: 3px;
+}
+
+.col-3 {
+    
+    max-width: 25% !important;
+    min-width: 25% !important;
+    padding: 3px;
+}
+
+.col-4 {
+    width: 33.33% !important;
+    padding: 3px;
+}
+
+.col-5 {
+    width: 41.67% !important;
+    padding: 3px;
+}
+
+.col-6 {
+    width: 50% !important;
+    padding: 3px !important;
+ 
+}
+
+.col-7 {
+
+    width: 58.33% !important;
+    max-width: 58.33% !important;
+    min-width: 58.33% !important;
+    padding: 3px;
+}
+
+.col-8 {
+    width: 66.67% !important;
+    padding: 3px;
+}
+
+.col-9 {
+    width: 75% !important;
+    padding: 3px;
+}
+
+.col-10 {
+    width: 83.33% !important;
+    padding: 3px;
+}
+
+.col-11 {
+    width: 91.67% !important;
+    padding: 3px;
+}
+
+.col-12 {
+    width: 100% !important;
+    padding: 3px;
+}
