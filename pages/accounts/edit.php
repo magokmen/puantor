@@ -1,7 +1,5 @@
 <?php
-require_once "../../include/requires.php";
-// $id = isset($_GET["id"]) ?  $_GET["id"] : 0;
-// echo "id : " . $id;
+require_once $_SERVER["DOCUMENT_ROOT"] ."/include/requires.php";
 
 
 ?>

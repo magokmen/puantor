@@ -1,5 +1,5 @@
 <?php
-require_once "../../include/requires.php";
+require_once $_SERVER["DOCUMENT_ROOT"] ."/include/requires.php";
 // echo "Kullanıcı id :" . $account_id ;
 if ($account_id == '') {
     go("logout.php", "");
@@ -7,7 +7,6 @@ if ($account_id == '') {
 
 $id = isset($_GET["id"]) ? $_GET["id"] : @$_POST["id"];
 
-echo "hesap no :" . $id;
 
 if ($_POST && $_POST['method']== "update") {
 
@@ -54,7 +53,7 @@ $result = $sql->fetch(PDO::FETCH_OBJ);
 
             <ul class="nav nav-pills">
                 <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Personel Listesi"
-                        data-toggle="tab">Tüm Firmalar</a>
+                        data-toggle="tab">Firma Listesi</a>
                 </li>
            </ul>
             <?php

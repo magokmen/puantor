@@ -5,10 +5,15 @@ require_once "include/requires.php";
 
 if ($_POST && $_POST["action"] == "kasa") {
     $vault_id = $_POST["vault_id"];
+    $_SESSION["vault_id"] = $vault_id;
 
-    $sql = $con->prepare("SELECT * FROM transactions WHERE vault_id = ?");
+    $sql = $con->prepare("SELECT ct.*,c.case_name 
+                          FROM cases_transactions ct
+                          LEFT JOIN cases c ON c.id = ct.vault_id 
+                          WHERE vault_id = ?");
     $sql->execute(array($vault_id));
     $result = $sql->fetchAll(PDO::FETCH_ASSOC);
+
 
     $res = array(
         "message" => $vault_id,
@@ -20,7 +25,140 @@ if ($_POST && $_POST["action"] == "kasa") {
     return false;
 }
 
+if ($_POST && $_POST["action"] == "kasa-ozeti") {
+    $vault_id = $_POST["vault_id"];
 
+    try {
+        //GELİRLER
+        $sql = $con->prepare("SELECT SUM(amount) as total_income FROM cases_transactions WHERE sub_type = ? and vault_id = ? ");
+        $sql->execute(array(2, $vault_id));
+        $result = $sql->fetch(PDO::FETCH_ASSOC);
+        $total_income = $result["total_income"] ? $result["total_income"] : 0;
+
+        //GİDERLER
+        $sql = $con->prepare("SELECT SUM(amount) as total_expense FROM cases_transactions WHERE sub_type = ? and vault_id = ? ");
+        $sql->execute(array(1, $vault_id));
+        $result = $sql->fetch(PDO::FETCH_ASSOC);
+        $total_expense = $result["total_expense"] ? $result["total_expense"] : 0;
+
+        $res = array(
+            "status" => 200,
+            "total_income" => tlFormat($total_income),
+            "total_expense" => tlFormat($total_expense),
+            "total_balance" => tlFormat($total_income - $total_expense),
+            "total_profit" => $total_income != 0 ? number_format(($total_income - $total_expense) / $total_income * 100, 2) : 0,
+        );
+    } catch (PDOException $ex) {
+        $res = array(
+            "status" => 400,
+            "message" => $ex->getMessage()
+        );
+    }
+
+    // header('Content-Type: application/json');
+    echo json_encode($res);
+    return;
+}
+
+
+
+if ($_POST && $_POST["action"] == "todos") {
+
+    $account_id = isset($_SESSION["accountID"]) ? $_SESSION["accountID"] : 0;
+    $company_id = isset($_POST["company_id"]) ? $_POST["company_id"] : 0;
+    $project_id = isset($_POST["project_id"]) ? $_POST["project_id"] : 0;
+    $todo_name = isset($_POST["todo_name"]) ? $_POST["todo_name"] : "";
+    $state = 1;
+    $action_type = isset($_POST["action_type"]) ? $_POST["action_type"] : "";
+    $page = isset($_POST["page"]) ? $_POST["page"] : 1;
+    $firstRec = ($page - 1) * 5;
+    $pageLimit = $page * 5;
+    $todo_id = isset($_POST["todo_id"]) ? $_POST["todo_id"] : 0;
+
+    try {
+
+        if ($action_type == "add-todo") {
+            $sql = $con->prepare("INSERT INTO todos (account_id, company_id, project_id, todo_name, state) VALUES (?,?, ?, ?, ?)");
+            $sql->execute(array($account_id, $company_id, $project_id, $todo_name, $state));
+        }
+
+        if ($action_type == "delete-todo") {
+            $sql = $con->prepare("DELETE FROM todos WHERE id = ?");
+            $sql->execute(array($todo_id));
+        }
+
+
+
+        $html = '';
+        $sql = $con->prepare("SELECT * FROM todos WHERE company_id = ? order by id desc LIMIT {$firstRec}, {$pageLimit}");
+        $sql->execute(array($company_id));
+        $todos = $sql->fetchAll(PDO::FETCH_OBJ);
+        $i = 0;
+        foreach ($todos as $todo) {
+            $html .= '
+           <li>
+              <div class="widget-content">
+
+                <div class="widget-content-wrapper">
+
+                  <!-- drag handle -->
+                  <span class="handle">
+                    <i class="fas fa-ellipsis-v"></i>
+                    <i class="fas fa-ellipsis-v"></i>
+                  </span>
+                  <!-- checkbox -->
+                  <div class="icheck-primary d-inline ml-2">
+                    <input type="checkbox" value="" name="todo' . $i . '" id="todoCheck' . $i . '">
+                    <label for="todoCheck' . $i . '"></label>
+                  </div>
+
+
+                  <div class="widget-content-left ml-2">
+                    <div class="widget-heading">' . $todo->todo_name . '</div>
+                    <div class="widget-subheading">
+                      <div>' . $func->getProjectName($todo->project_id) . '<div class="badge badge-pill badge-info ml-2">Yeni</div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- todo text -->';
+
+
+            // Calculate the time elapsed since the registration date
+            $registrationDate = strtotime($todo->created_at);
+            $currentDate = time();
+            $timeElapsed = $currentDate - $registrationDate;
+
+            // Convert the time elapsed to minutes
+            $minutesElapsed = round($timeElapsed / 60);
+
+            $html .= '<small class="badge badge-danger"><i class="far fa-clock"></i> ' . $minutesElapsed . ' mins</small>
+                  <!-- General tools such as edit or delete-->
+                  <div class="tools widget-content-right">
+                    <i class="fas fa-edit info edit-todo" data-id="' . $todo->id . '"></i>
+                    <i class="fas fa-trash danger del-todo" data-id="' . $todo->id . '"></i>
+                  </div>
+                </div>
+              </div>
+            </li>
+';
+            $i++;
+        }
+
+        $res = array(
+            "statu" => 200,
+            "data" =>  $html,
+        );
+    } catch (PDOException $ex) {
+        $res = array(
+            "statu" => 200,
+            "data" =>   $ex->getMessage()
+        );
+    }
+
+    // header('Content-Type: application/json');
+    echo json_encode($res);
+    return false;
+}
 
 //header('Content-Type: application/json');
 if ($_POST && $_POST["action"] == "puantaj") {
@@ -127,6 +265,7 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
 
         // POST verilerini al
         $company_id = $_POST["company_id"];
+
         $yil = $_POST["yil"];
         $ay = $_POST["ay"];
 
@@ -141,11 +280,11 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
         $end_date = date("Y-m-d", strtotime("last day of $yil-$ay"));
 
         //Döneme ait parametre var mı yok mu kontrol edilir
-        $prm = $con->prepare("SELECT * FROM parameters WHERE account_id = ? and param_type = ? 
+        $prm = $con->prepare("SELECT * FROM parameters WHERE company_id = ? and param_type = ? 
                                                     AND STR_TO_DATE(start_date,'%Y-%m-%d') <= ? 
                                                     AND STR_TO_DATE(end_date,'%Y-%m-%d') >=  ? 
                                                     ORDER by id DESC ");
-        $prm->execute(array($account_id, 1, $start_date, $end_date));
+        $prm->execute(array($company_id, 1, $start_date, $end_date));
         //$result = $prm->fetchAll(PDO::FETCH_ASSOC);
 
         while ($row = $prm->fetch(PDO::FETCH_ASSOC)) {
@@ -156,7 +295,7 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
         if (empty($pnt)) {
             $res = array(
                 "statu" => 400,
-                "message" => $account_id . " - Seçilen döneme ait parametre bulunamadı!",
+                "message" => "Bu firmanın seçilen döneme ait parametresi bulunamadı!",
             );
             echo json_encode($res);
             return;
@@ -227,7 +366,7 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
 
 
 
-                                // //Döneme ait paramaetre varsa günlük ücreti alır yoksa geri mesaj döner
+                                // //Döneme ait parametre varsa günlük ücreti alır yoksa geri mesaj döner
                                 if (isset($paramVal["param_val"])) {
                                     $ucret = $paramVal["param_val"];
                                     if (isset($person->daily_wages)) {
@@ -240,7 +379,7 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
                                     $ucret_statu = 400;
                                     $res = array(
                                         "statu" => 400,
-                                        "message" => "Seçilen döneme ait parametre bulunamadı 2!",
+                                        "message" => "Seçilen döneme ait parametre bulunamadı!",
                                     );
                                     echo json_encode($res);
                                     return;
@@ -311,8 +450,8 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
 
                     $ins_maas_query = $con->prepare("INSERT INTO maas_gelir SET company_id = ? ,
                                                                         person_id = ?, yil = ? , ay = ?, 
-                                                                        datas= ? , toplam_maas = ?");
-                    $ins_maas_query->execute(array($company_id, $row["person"], $yil, $ay, $maas_data, $toplam_ucret));
+                                                                        datas= ? , toplam_maas = ?, puantaj_id = ?");
+                    $ins_maas_query->execute(array($company_id, $row["person"], $yil, $ay, $maas_data, $toplam_ucret, $row["id"]));
                     $statu = 200;
                     $message = "İşlem Başarılı!";
                 }
@@ -335,6 +474,39 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
     }
 }
 
+
+if ($_POST && $_POST["action"] == "add_person_toperiod") {
+
+    $puantaj_ids = $_POST["puantaj_ids"];
+    if (empty($puantaj_ids)) {
+        $res = array(
+            "statu" => 400,
+            "message" => "Eklenecek personel bulunamadı!"
+        );
+    } else {
+
+        try {
+
+            foreach ($puantaj_ids as $puantaj_id) {
+                $up_query = $con->prepare("UPDATE puantaj SET viewonPayroll = ? WHERE id = ?");
+                $up_query->execute(array(1, $puantaj_id));
+            }
+            $res = array(
+                "statu" => 200,
+                "message" => "Başarılı"
+            );
+        } catch (PDOException $ex) {
+            $res = array(
+                "statu" => 400,
+                "message" => $ex->getMessage()
+            );
+        }
+    }
+
+
+    echo json_encode($res);
+    return;
+}
 
 if ($_POST && $_POST["action"] == "user-info") {
     $user_id = $_POST["id"];

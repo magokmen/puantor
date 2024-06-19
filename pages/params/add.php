@@ -1,5 +1,5 @@
 <?php
-require_once "../../include/requires.php";
+require_once $_SERVER["DOCUMENT_ROOT"] ."/include/requires.php";
 
 //  echo "Kullanıcı id :" . $account_id ;
 if ($account_id == '') {
@@ -14,7 +14,7 @@ if ($_POST && $_POST["method"] = "add") {
     $param_name = $_POST["param_name"];
     $param_type = $_POST["param_type"];
     $start_date = date("Y-m-d", strtotime($_POST["start_date"]));
-    $end_date = date("Y-m-d", strtotime($_POST["start_date"]));
+    $end_date = date("Y-m-d", strtotime($_POST["end_date"]));
     $param_val = $_POST["param_val"];
     $calc_type = $_POST["calc_type"];
     $state ="on";

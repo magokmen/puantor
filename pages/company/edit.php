@@ -1,6 +1,6 @@
 <?php
 
-require_once "../../include/requires.php";
+require_once $_SERVER["DOCUMENT_ROOT"] ."/include/requires.php";
 
 //  echo "Kullanıcı id :" . $account_id ;
 if ($account_id == '') {

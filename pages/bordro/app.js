@@ -41,7 +41,7 @@ function update_state(state_val, action = "puantaj-kapat") {
 
 //Firma Değiştiği zaman sayfayı yeniden yükle
 $("#company").on("change", function () {
-  Route();
+   Route();
 });
 
 $("#project").on("change", function () {

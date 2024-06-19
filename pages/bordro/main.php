@@ -1,13 +1,38 @@
 <?php
-require_once "../../plugins/datatables/datatable.php";
-require_once "../../include/requires.php";
 
 
+if ($_POST && $_POST['method'] == "Delete") {
+
+    require_once $_SERVER["DOCUMENT_ROOT"] . "/include/requires.php";
+     try {
+        $id = $_POST['id'];
+
+        $up = $con->prepare("UPDATE puantaj SET viewonPayroll = ? WHERE id = ?");
+        $up->execute([0, $id]);
+        $res = array(
+            "status" => 200,
+            "message" => "Kayıt başarıyla silindi",
+            "page" => "bordro/main",
+            "pTitle" => "Bordro"
+        );
+    } catch (PDOException $ex) {
+        $res = array(
+            "status" => 400,
+            "message" => "Error: " . $ex->getMessage()
+        );
+    }
+    echo json_encode($res);
+    return;
+}
+
+require_once $_SERVER["DOCUMENT_ROOT"] . "/plugins/datatables/datatable.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/include/requires.php";
 
 if (isset($_GET["company_id"])) {
     $company_id = $_GET["company_id"];
+} else  if (isset($_SESSION["companyID"])) {
+    $company_id = $_SESSION["companyID"];
 } else {
-
     $sql = $con->prepare("SELECT * FROM companies WHERE account_id = ? AND isDefault = ?");
     $sql->execute(array($account_id, 1));
     $result = $sql->fetch(PDO::FETCH_OBJ);
@@ -34,9 +59,58 @@ $dates = generateDates($year, $month, $days);
         word-wrap: normal;
     }
 </style>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Döneme Personel Ekle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <?php
+                $sql = $con->prepare("SELECT p.id as person,p.full_name, pt.id as pt_id FROM puantaj pt
+                                        LEFT JOIN person p ON p.id = pt.person
+                                        WHERE pt.company_id = ? AND pt.project_id = ? AND pt.yil = ? AND pt.ay = ? AND pt.viewonPayroll = ?");
+                $sql->execute(array($company_id, $project_id, $year, $month, 0));
+                $i = 1;
+                $disabled = "disabled";
+
+                while ($row = $sql->fetch(PDO::FETCH_OBJ)) {
+                    $disabled = ""
+                ?>
+                    <table>
+                        <tr>
+                            <td>
+                                <div class="icheck-primary d-inline ml-2">
+                                    <input type="checkbox" value="" data-id="<?php echo $row->pt_id; ?>" name="namecheck<?php echo $i ?>" id="namecheck<?php echo $i ?>">
+                                    <label for="namecheck<?php echo $i ?>"></label>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="ml-1"><?php echo $row->full_name; ?></span>
+                            </td>
+                        </tr>
+                    </table>
+                <?php
+                    $i++;
+                }; ?>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                <button type="button" <?php echo $disabled; ?> id="add_person_toperiod" class="btn btn-primary">Personelleri Ekle</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="card card-outline card-info">
     <div class="card-header p-2">
-
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group p-2">
@@ -57,10 +131,14 @@ $dates = generateDates($year, $month, $days);
             <div class="col-md-6">
                 <button type="button" id="hesapla" onclick="maas_hesapla()" class="btn btn-primary float-right"><i class="fas fa-save mr-2"></i>
                     Hesapla</button>
-                <button type="button" class="btn btn-default mr-2 float-right" data-toggle="dropdown">Rapor Al <i class="fa-solid fa-caret-down"></i> </button>
+                <button type="button" class="btn btn-default mr-2 float-right" data-toggle="dropdown">İşlemler <i class="fa-solid fa-caret-down"></i> </button>
 
-                <div class="dropdown-menu" role="menu" id="excele_aktar">
-                    <a class="dropdown-item" href="pages/bordro/toxls.php">Bordroyu Excele Aktar</a>
+                <div class="dropdown-menu" role="menu">
+                    <a class="dropdown-item" id="excele_aktar" href="pages/bordro/toxls.php"><i class="fas fa-file-excel mr-1"></i> Bordroyu Excele Aktar</a>
+                    <!-- <div class="dropdown-divider"></div> -->
+
+
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-add mr-1"> </i> Dönemde olmayan personel ekle</a>
                     <!-- <div class="dropdown-divider"></div> -->
 
                 </div>
@@ -188,7 +266,8 @@ $dates = generateDates($year, $month, $days);
                         </td>
 
                         <td class="text-center text-bold">
-                            <?php echo tlFormat($row["toplam_maas"]); ?>
+                            <?php
+                            echo tlFormat($row["toplam_maas"]); ?>
                         </td>
 
                         <td class="text-center">
@@ -216,8 +295,8 @@ $dates = generateDates($year, $month, $days);
                             ?>
                         </td>
                         <td>
-                               <?php echo $row["hesaplama_tarihi"]; ?>
-                           
+                            <?php echo $row["hesaplama_tarihi"]; ?>
+
                         </td>
                         <td class="">
 
@@ -237,16 +316,16 @@ $dates = generateDates($year, $month, $days);
 
                                 <?php
                                 $params = array(
-                                    "id" => $row["id"],
+                                    "id" => $row["puantaj_id"],
                                     "message" => "Bu kaydı silmek istediğinize emin misiniz?"
                                 );
                                 $params_json = $func->jsonEncode($params);
-                                // 
+
                                 ?>
 
                                 <li class="dropdown-item">
                                     <i class="fa-solid fa-trash-can dropdown-list-icon"></i>
-                                    <a href="#" onclick="deleteRecordByAjax('params/main','<?php echo $params_json ?>')">Dönemden Sil!</a>
+                                    <a href="#" onclick="deleteRecordByAjax('bordro/main','<?php echo $params_json ?>')">Dönemden Sil!</a>
                                 </li>
                             </ul>
                         </td>
@@ -281,11 +360,9 @@ $dates = generateDates($year, $month, $days);
 </div>
 <!-- /.card -->
 <?php
-include_once "../../plugins/datatables/datatablescripts.php" ?>
+include_once $_SERVER["DOCUMENT_ROOT"] . "/plugins/datatables/datatablescripts.php" ?>
 
 
-<script src="../../src/component.js"></script>
-<script src="pages/bordro/app.js"></script>
 
 <script>
     $("#excele_aktar").click(function() {
@@ -298,4 +375,69 @@ include_once "../../plugins/datatables/datatablescripts.php" ?>
             window.location.href = "pages/bordro/toxls.php";
         }
     });
+
+    $("#add_person_toperiod").click(function() {
+        var puantaj_ids = [];
+        var i = 0;
+
+
+
+        $("input[type=checkbox]").each(function() {
+            if (!($(this).is(":checkbox"))) {
+                Swal.fire({
+                    title: "Hata",
+                    text: "Eklenecek personel yok",
+                    icon: "error",
+                    confirmButtonText: "Tamam"
+                });
+                return;
+            }
+            if ($(this).is(":checked")) {
+                puantaj_ids[i] = $(this).attr("data-id");
+                i++;
+            }
+
+        });
+
+        if (puantaj_ids.length == 0) {
+            swal.fire({
+                title: "Hata",
+                text: "Lütfen en az bir personel seçiniz",
+                icon: "error",
+                confirmButtonText: "Tamam"
+            });
+            return false;
+        }
+        $("#exampleModal").modal("hide");
+        // $(".modal-backdrop").remove();
+        $.ajax({
+            type: "POST",
+            url: "ajax.php",
+            data: {
+                puantaj_ids: puantaj_ids,
+                action: "add_person_toperiod"
+            },
+            success: function(data) {
+
+                swal.fire({
+                    title: "Başarılı",
+                    text: "Personeller başarıyla eklendi",
+                    icon: "success",
+                    confirmButtonText: "Tamam"
+                }).then(function() {
+                    RoutePage("bordro/main");
+
+
+
+                });
+            },
+            error: function(xhr, status, error) {
+                console.log(xhr.responseText);
+            }
+        });
+    });
 </script>
+
+
+<script src="../../src/component.js"></script>
+<script src="pages/bordro/app.js"></script>

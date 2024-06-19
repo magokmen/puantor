@@ -1,6 +1,6 @@
 <?php
-require_once "../../plugins/datatables/datatable.php";
-require_once "../../include/requires.php";
+require_once $_SERVER["DOCUMENT_ROOT"] ."/plugins/datatables/datatable.php";
+require_once $_SERVER["DOCUMENT_ROOT"] ."/include/requires.php";
 
 
 
@@ -87,7 +87,7 @@ if ($_POST && isset($_POST["action"]) == "delete-project") {
                             <li class="dropdown-item"><i class="fa-solid fa-edit dropdown-list-icon"></i><a href="#"
                                     onclick="RoutePagewithParams('firms/edit', 'id=<?php echo $value['id'] ?>')"
                                     data-title="Firma Düzenle">
-                                    Düzenle
+                                    Güncelle
                                 </a>
                             </li>
                         <?php endif; ?>
@@ -134,4 +134,4 @@ if ($_POST && isset($_POST["action"]) == "delete-project") {
 
 <!-- /.content -->
 <?php
-include_once "../../plugins/datatables/datatablescripts.php" ?>
+include_once $_SERVER["DOCUMENT_ROOT"] ."/plugins/datatables/datatablescripts.php" ?>

@@ -1,30 +1,82 @@
 <?php
-require_once "../../include/requires.php";
 
-if ($_POST) {
-    $type = 2;
+
+require_once $_SERVER["DOCUMENT_ROOT"] . "/include/requires.php";
+
+if ($_POST && $_POST['action'] == "add-transaction") {
+   
+
+    $type = $_POST["type"];
     $vault_id = $_POST["vault_id"];
     $vault_date = $_POST["vault_date"];
     $amount = $_POST["amount"];
     $transaction_description = $_POST["transaction_description"];
 
     try {
-        $sql = $con->prepare("INSERT INTO transactions SET sub_type = ?, 
+        $sql = $con->prepare("INSERT INTO cases_transactions SET type_id = ? , sub_type = ?, 
                                                            vault_id= ?, date = ?, 
                                                            amount = ?, description =  ?");
-        $sql->execute(array($type, $vault_id, $vault_date, $amount, $transaction_description));
-    } catch (PDOException $ex) {
-        echo "Hata : " . $ex->getMessage();
-    }
-    $res = array(
-        "status" => 200,
-        "message" => "Başarılı",
+                                                
+        $sql->execute(array($type, 2, $vault_id, $vault_date, $amount, $transaction_description));
 
-    );
+        $res = array(
+            "status" => 200,
+            "message" => "Başarılı",
+    
+        );
+    } catch (PDOException $ex) {
+        $res = array(
+            "status" => 400,
+            "message" => "Hata : " . $ex->getMessage()
+        );
+    }
+    
     echo json_encode($res);
     return false;
 }
 
+
+if ($_POST && $_POST['action'] == "delete-transaction") {
+    $transaction_id = $_POST["id"];
+
+    try {
+        $sql = $con->prepare("DELETE FROM cases_transactions WHERE id = ?");
+        $sql->execute(array($transaction_id));
+        $res = array(
+            "status" => 200,
+            "message" => "Başarılı",
+        );
+    } catch (PDOException $ex) {
+        $res = array(
+            "status" => 400,
+            "message" => "Hata : " . $ex->getMessage(),
+        );
+    }
+
+    echo json_encode($res);
+    return false;
+}
+
+
+if ($_POST && $_POST['action'] == "delete-case") {
+     $case_id = $_POST["id"];
+    try {
+        $sql = $con->prepare("DELETE FROM cases WHERE id = ?");
+        $sql->execute(array($case_id));
+        $res = array(
+            "status" => 200,
+            "message" => "Başarılı",
+        );
+    } catch (PDOException $ex) {
+        $res = array(
+            "status" => 400,
+            "message" => "Hata : " . $ex->getMessage(),
+        );
+    }
+
+    echo json_encode($res);
+    return false;
+}
 ?>
 
 
@@ -42,34 +94,26 @@ if ($_POST) {
                 <form id="myForm" class="form-horizontal">
                     <div class="card-body">
                         <div class="form-group row">
-                            <label for="vault_date" class="col-sm-3 col-form-label">Tarih : <span
-                                    style="color:red">(*)</span></label>
+                            <label for="vault_date" class="col-sm-3 col-form-label">Tarih : <span style="color:red">(*)</span></label>
                             <div class="col-sm-9">
                                 <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                    <input required type="text" id="vault_date" name="vault_date"
-                                        class="form-control datetimepicker-input" data-target="#reservationdate"
-                                        data-inputmask-alias="datetime" data-inputmask-inputformat="dd.mm.yyyy"
-                                        data-mask />
-                                    <div class="input-group-append" data-target="#reservationdate"
-                                        data-toggle="datetimepicker">
+                                    <input required type="text" id="vault_date" name="vault_date" class="form-control datetimepicker-input" data-target="#reservationdate" data-inputmask-alias="datetime" data-inputmask-inputformat="dd.mm.yyyy" data-mask />
+                                    <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="amount" class="col-sm-3 form-label">Tutar : <span
-                                    style="color:red">(*)</span></label>
+                            <label for="amount" class="col-sm-3 form-label">Tutar : <span style="color:red">(*)</span></label>
                             <div class="col-sm-9">
-                                <input required type="number" class="form-control" id="amount" name="amount" value=""
-                                    placeholder="Tutar">
+                                <input required type="number" class="form-control" id="amount" name="amount" value="" placeholder="Tutar">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputPassword3" class="col-sm-3 col-form-label">Açıklama</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="transaction_description"
-                                    name="transaction_description" value="" placeholder="Açıklama">
+                                <input type="text" class="form-control" id="transaction_description" name="transaction_description" value="" placeholder="Açıklama">
                             </div>
                         </div>
 
@@ -98,10 +142,10 @@ if ($_POST) {
 </div>
 <!-- /.modal -->
 <style>
-    .hover-menu ul li {
-        padding: 10px 0;
-        margin: 5px;
-    }
+    /* .hover-menu ul li {
+        padding: 10px 0; 
+         margin: 5px;
+    } */
 
     .hover-menu ul li:hover {
         background-color: #eee;
@@ -128,11 +172,11 @@ if ($_POST) {
     }
 
     .kasa ul li.clicked {
-        background: #24C6DC;
+        background: #B7B7B7;
         /* fallback for old browsers */
-        background: -webkit-linear-gradient(to bottom, #46C6DC, #24C6DC);
+        /* background: -webkit-linear-gradient(to bottom, #46C6DC, #24C6DC);
         /* Chrome 10-25, Safari 5.1-6 */
-        background: linear-gradient(to bottom, #46C6DC, #24C6DC);
+        /* background: linear-gradient(to bottom, #46C6DC, #24C6DC); */
         /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
         color: white;
@@ -175,7 +219,7 @@ if ($_POST) {
 
                 <div class="card card-outline card-danger">
                     <div class="card-header">
-                        <h3 class="card-title">Hareket Ekle</h3>
+                        <h3 class="card-title">Kasalar</h3>
 
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -185,41 +229,58 @@ if ($_POST) {
                         <!-- /.card-tools -->
                     </div>
                     <!-- /.card-header -->
-                    <div class="card-body hover-menu kasa">
+                    <div class="card-body hover-menu kasa scroll-smooth" style="max-height: 300px; overflow-y: scroll;">
+                        <!-- <div class="card-body hover-menu kasa scroll-smooth"> -->
                         <ul class="nav flex-column">
                             <?php
 
-                            $sql = $con->prepare("SELECT k.*,a.company_name FROM `kasalar` k  
-                                                  LEFT JOIN accounts a ON a.id = k.account_id 
-                                                  WHERE k.account_id= ?");
+                            $sql = $con->prepare("SELECT c.*,a.company_name FROM `cases` c  
+                                                  LEFT JOIN accounts a ON a.id = c.account_id 
+                                                  WHERE c.account_id= ?");
                             $sql->execute(array($account_id));
 
                             while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
-                                ?>
+                            ?>
                                 <li class="nav-item" data-params="<?php echo $row["id"]; ?>">
-                                    <div class="user-block">
-                                        <span class="avatar" style="background-color: #055bcc;">ZK</span>
+                                    <div class="user-block kasa-item" data-params="<?php echo $row["id"]; ?>">
+                                        <span class="avatar" style="background-color: #055bcc;"><?php echo getInitials($row["case_name"]); ?></span>
                                         <span class="username">
-                                            <?php echo $row["account_name"] ?>
+                                            <?php echo $row["case_name"] ?>
                                         </span>
                                         <span class="description"><?php echo $row["company_name"]; ?></span>
+
                                     </div>
+                                    <i class="fa-solid fa-ellipsis-vertical list-button float-right" data-toggle="dropdown"></i>
+                                    <ul class="dropdown-menu">
+                                        <li class="dropdown-item edit-case"><i class="fa-solid fa-edit dropdown-list-icon"></i>
+                                            <a href="#" onclick="RoutePagewithParams('kasa/edit', '')" data-title="Kasa Güncelleme">Güncelle</a>
+                                        </li>
+                                        <li class="dropdown-item delete-case" data-id="<?php echo $row["id"]; ?>"><i class="fa-solid fa-trash dropdown-list-icon"></i>
+                                            <a href="#" >Sil</a>
+                                        </li>
+                                    </ul>
                                 </li>
 
-                                <?php
+                            <?php
 
                             }
 
                             ?>
-                            <?php if (permtrue("kasaEkle")): ?>
+                        </ul>
+
+
+
+                    </div>
+                    <div class="card-footer">
+                        <?php if (permtrue("kasaEkle")) : ?>
+                            <ul class="nav flex-column">
                                 <li class="nav-item">
                                     <a href="#" onclick="RoutePage('kasa/add', this)" class="nav-link">
                                         Kasa Ekle <span class="float-right badge bg-danger">Yeni</span>
                                     </a>
                                 </li>
                             <?php endif; ?>
-
-                        </ul>
+                            </ul>
                     </div>
                     <!-- /.card-body -->
                 </div>
@@ -241,8 +302,8 @@ if ($_POST) {
                     <!-- /.card-header -->
                     <div class="card-body hover-menu">
                         <ul class="nav flex-column">
-                            <?php if (permtrue("kasaGelirEkle")): ?>
-                                <li class="nav-item" data-toggle="modal" data-target="#modal-default">
+                            <?php if (permtrue("kasaGelirEkle")) : ?>
+                                <li class="nav-item glr" data-toggle="modal" data-target="#modal-default">
                                     <div class="user-block">
                                         <span class="avatar" style="background-color: #055bcc;">Glr</span>
                                         <span class="username">
@@ -252,7 +313,7 @@ if ($_POST) {
                                     </div>
                                 </li>
                             <?php endif; ?>
-                            <?php if (permtrue("kasaGiderEkle")): ?>
+                            <?php if (permtrue("kasaGiderEkle")) : ?>
                                 <li class="nav-item">
                                     <div class="user-block">
                                         <span class="avatar" style="background-color: #FE7A36;">Gdr</span>
@@ -264,7 +325,7 @@ if ($_POST) {
                                     </div>
                                 </li>
                             <?php endif; ?>
-                            <?php if (permtrue("kasaProjeÖdemeAl")): ?>
+                            <?php if (permtrue("kasaProjeÖdemeAl")) : ?>
                                 <li class="nav-item">
                                     <div class="user-block">
                                         <span class="avatar" style="background-color: #81689D;">Pr</span>
@@ -275,7 +336,7 @@ if ($_POST) {
                                     </div>
                                 </li>
                             <?php endif; ?>
-                            <?php if (permtrue("kasaPersonelÖdeme")): ?>
+                            <?php if (permtrue("kasaPersonelÖdeme")) : ?>
                                 <li class="nav-item">
                                     <div class="user-block">
                                         <span class="avatar" style="background-color: #3887BE;">Pö</span>
@@ -301,16 +362,14 @@ if ($_POST) {
                 <div class="card card-outline card-info">
                     <div class="card-header p-2">
                         <ul class="nav nav-pills">
-                            <?php if (permtrue("kasaHareketleri")): ?>
+                            <?php if (permtrue("kasaHareketleri")) : ?>
 
-                                <li class="nav-item"><a class="tabMenu active nav-link" id="liste" href="#list"
-                                        data-title="Kasa" data-toggle="tab">Kasa Hareketleri</a>
+                                <li class="nav-item"><a class="tabMenu active nav-link" id="liste" href="#list" data-title="Kasa" data-toggle="tab">Kasa Hareketleri</a>
                                 </li>
                             <?php endif; ?>
-                            <?php if (permtrue("kasaÖzeti")): ?>
+                            <?php if (permtrue("kasaÖzeti")) : ?>
 
-                                <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Kasa"
-                                        data-toggle="tab">Özet</a>
+                                <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Kasa" data-toggle="tab">Özet</a>
                                 </li>
                             <?php endif; ?>
 
@@ -345,147 +404,4 @@ if ($_POST) {
     </div>
 
 </div>
-
-<script>
-    $(function () {
-
-        var pagetitle = $("#page-title").text();
-        if (pagetitle == "Kasa") {
-            $("#liste").tab("show");
-        }
-
-        if (pagetitle == "Özet") {
-            alert("")
-            $("#kasaozet").tab("show");
-        }
-    })
-
-    $(function () {
-        $(".tabMenu").click(function () {
-            var navLinkText = $(this).data("title");
-            $("#page-title").text(navLinkText);
-            setActiveMenu(this);
-        });
-    });
-
-    $('[data-mask]').inputmask('dd.mm.yyyy')
-    $('#reservationdate').datetimepicker({
-        format: 'DD.MM.YYYY',
-        locale: 'tr'
-
-    });
-
-    $(".closeModal").click(function () {
-        submitFormByModal();
-
-    })
-    function submitFormByModal() {
-        var vault_id = $("#vault_id").val();
-        //         var form = document.getElementById("myForm");
-        //   var formData = new FormData(form);
-
-
-        var formData = $("#myForm").serialize();
-        // formData.append('type', "2");
-        formData += '&vault_id=' + vault_id;
-
-        if (validateForm('toast')) {
-
-            $.ajax({
-                url: 'pages/kasa/main.php',
-                type: 'post',
-                data: formData,
-                dataType: 'json',
-                success: function (res) {
-                    if (res.status == 200) {
-                        vault_actions();
-                        toastr.success(
-                            'Başarılı',
-                            "İşlem Durumu",
-                            "success",
-                        )
-                    }
-
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log('Error: ' + textStatus + ' - ' + errorThrown);
-                }
-
-            })
-
-            //$(".modal-backdrop").remove();
-
-        }
-
-    }
-
-</script>
-<script>
-
-    $(document).ready(function () {
-        const listItems = $(".kasa ul li");
-
-        listItems.on("click", function () {
-            listItems.removeClass('clicked');
-            // Tıklanan elemana 'clicked' sınıfını ekle
-            $(this).addClass('clicked');
-
-        })
-
-
-
-    });
-
-    $(".kasa .nav-item ").click(function () {
-        var vault_id = $(this).data("params");
-        var date = new Date();
-
-        $("#vault_id").val(vault_id)
-
-        $("#vault_date").val(formatDate(date));
-        vault_actions(vault_id);
-    })
-
-
-    function vault_actions() {
-        var vault_id = $("#vault_id").val();
-        $.ajax({
-            url: "ajax.php",
-            method: "POST",
-            data: {
-                'vault_id': vault_id,
-                'action': 'kasa'
-            },
-            success: function (data) {
-
-
-                new DataTable('#example1', {
-                    destroy: true,
-                    data: data.columns,
-                    columns: [
-                        { data: 'id' }, // Sütun adı veritabanı kolon adı ile eşleşmelidir
-                        { data: 'account_name' },
-                        { data: 'amount' },
-                        { data: 'company_id' },
-                        { data: 'date' },
-                        { data: 'description' },
-                        { data: 'sub_type' },
-                        { data: 'vault_id' },
-
-                    ],
-                    responsive: true,
-                    autoWidth: true,
-
-                });
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log("Error: " + textStatus + " - " + errorThrown);
-            }
-        });
-    }
-
-
-
-
-
-</script>
+<script src="pages/kasa/app.js"></script>

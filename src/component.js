@@ -4,11 +4,10 @@ $(document).ready(function () {
     var hrefValue = $(this).attr("href").replace("#", "");
     var tabText = $(this).text();
     var tabTitle = $(this).data("title")
-    
+
 
     if (title == tabText || title == tabTitle) {
       $(hrefValue).tab("show");
-      $("#liste").tab("show");
     }
   });
 });
@@ -29,24 +28,21 @@ $("#yeni").on("click", function () {
 
 $(function () {
   $(".tabMenu").click(function () {
-    var navLinkText = $(this).text();
+    var navLinkText = $(this).attr("data-title");
     $("#page-title").text(navLinkText);
-    setActiveMenu(this);
+    setActiveMenubyTabMenu(this);
   });
 });
 
 $(document).ready(function () {
   $(".select2").select2();
-  //Initialize Select2 Elements
-  $(".select2bs4").select2({
-    theme: "bootstrap4",
-  });
-  
+
+
   moment().locale('tr');
   $("[data-mask]").inputmask("dd.mm.yyyy");
   $("#startdate,#enddate").datetimepicker({
     format: "DD.MM.YYYY",
-    locale : moment.locale('tr'),
+    locale: moment.locale('tr'),
   });
 });
 
@@ -69,29 +65,29 @@ $("#city").on("change", function () {
 
 
 
-    $(function () {
-        $('.check').bootstrapToggle({
-            onstyle: "primary",
-            size: "xs",
-            toogle: "toogle",
+$(function () {
+  $('.check').bootstrapToggle({
+    onstyle: "primary",
+    size: "xs",
+    toogle: "toogle",
 
-        });
-    })
+  });
+})
 
 
-  
 
-    $("#companies").on("change", function () {
-      var company_id = $("#companies option:selected").val();
-      $.ajax({
-          url: "ajax.php",
-          type: "POST",
-          data: {
-              "company_id": company_id,
-              "action": "proje"
-          },
-          success: function (data) {
-              $('#projects').html(data);
-          }
-      })
+
+$("#companies").on("change", function () {
+  var company_id = $("#companies option:selected").val();
+  $.ajax({
+    url: "ajax.php",
+    type: "POST",
+    data: {
+      "company_id": company_id,
+      "action": "proje"
+    },
+    success: function (data) {
+      $('#projects').html(data);
+    }
   })
+})

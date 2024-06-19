@@ -1,18 +1,8 @@
 <?php
-require_once "../../plugins/datatables/datatable.php";
-require_once "../../include/requires.php";
-// echo "acoount_id :" . $account_id ;
-if ($_POST && $_POST['method'] == "Delete") {
-
-    $id = $_POST['id'];
-    if ($id > 0) {
-
-        $up = $con->prepare("DELETE FROM parameters where id = ? ");
-        $result = $up->execute(array($id));
-    }
-}
-;
-
+require_once $_SERVER["DOCUMENT_ROOT"] ."/plugins/datatables/datatable.php";
+// require_once "../../include/requires.php";
+//  echo "acoount_id :" . $account_id ;
+$company_id = getCompanyId($account_id);
 
 ?>
 
@@ -50,19 +40,19 @@ if ($_POST && $_POST['method'] == "Delete") {
 
         <?php
 
-        $sql = $con->prepare("Select * from parameters WHERE account_id = ? ORDER BY id desc;");
-        $sql->execute(array($account_id));
+        $sql = $con->prepare("Select * from parameters WHERE company_id = ? ORDER BY id desc;");
+        $sql->execute(array($company_id));
 
 
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
 
-            ?>
+        ?>
             <tr>
                 <td>
                     <?php echo $row["id"]; ?>
                 </td>
                 <td>
-                    <?php echo $row["company_id"]; ?>
+                    <?php echo $func->getCompanyName($row["company_id"]); ?>
                 </td>
                 <td>
                     <?php echo $row["param_name"]; ?>
@@ -98,25 +88,24 @@ if ($_POST && $_POST['method'] == "Delete") {
                 </td>
                 <td class="">
 
-                <i class="fa-solid fa-ellipsis list-button" data-toggle="dropdown"></i>
+                    <i class="fa-solid fa-ellipsis list-button" data-toggle="dropdown"></i>
                     <ul class="dropdown-menu">
-                        <!-- <?php if (permtrue("tanımlamalarParametreGüncelle")): ?> -->
+                        <?php if (permtrue("tanımlamalarParametreGüncelle")) : ?>
 
                             <li class="dropdown-item edit"><i class="fa-solid fa-edit dropdown-list-icon"></i>
-                                <a href="#" onclick="RoutePagewithParams('params/edit','id=<?php echo $row['id'] ?>')"
-                                    data-title="Parametre Güncelleme">
+                                <a href="#" onclick="RoutePagewithParams('params/edit','id=<?php echo $row['id'] ?>')" data-title="Parametre Güncelleme">
                                     Güncelle
                                 </a>
                             </li>
-                        <!-- <?php endif; ?> -->
-                        <!-- <?php
+                        <?php endif; ?>
+                        <?php
                         $params = array(
                             "id" => $row["id"],
-                            "method" => "Delete"
+                            "message" => $row["param_name"] . ' isimli parametre silinecektir.Devam etmek istiyor musunuz?'
                         );
                         $params_json = $func->jsonEncode($params);
-                        ?> -->
-                        <?php if (permtrue("tanımlamalarParametreSil")): ?>
+                        ?>
+                        <?php if (permtrue("tanımlamalarParametreSil")) : ?>
                             <li class="dropdown-item">
                                 <i class="fa-solid fa-trash-can dropdown-list-icon"></i>
                                 <a href="#" onclick="deleteRecordByAjax('params/main','<?php echo $params_json ?>')">Sil!</a>
@@ -151,4 +140,4 @@ if ($_POST && $_POST['method'] == "Delete") {
 
 <!-- /.content -->
 <?php
-include_once "../../plugins/datatables/datatablescripts.php" ?>
+include_once $_SERVER["DOCUMENT_ROOT"] ."/plugins/datatables/datatablescripts.php" ?>

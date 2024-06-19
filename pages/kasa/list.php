@@ -1,6 +1,6 @@
 <?php
-require_once "../../plugins/datatables/datatable.php";
-require_once "../../include/requires.php";
+require_once $_SERVER["DOCUMENT_ROOT"] ."/plugins/datatables/datatable.php";
+require_once $_SERVER["DOCUMENT_ROOT"] ."/include/requires.php";
 
 
 if ($_POST && $_POST['method'] == "Delete") {
@@ -27,7 +27,7 @@ if ($_POST && $_POST['method'] == "Delete") {
 </div>
 <!-- Main content -->
 
-<table id="example1" class="data-table table table-bordered table-striped table-sm table-hover">
+<table id="example1" class="table table-bordered table-striped table-sm table-hover">
     <thead>
 
         <tr>
@@ -39,11 +39,13 @@ if ($_POST && $_POST['method'] == "Delete") {
             <th>Kategori</th>
             <th>Tutar</th>
             <th>Açıklama</th>
+            <th class="text-center">İşlem</th>
            
 
         </tr>
     </thead>
     <tbody>
+       
     </tbody>
     <tfoot>
 
@@ -56,6 +58,7 @@ if ($_POST && $_POST['method'] == "Delete") {
             <th>Kategori</th>
             <th>Tutar</th>
             <th>Açıklama</th>
+            <th class="text-center">İşlem</th>
           
 
 
@@ -65,4 +68,4 @@ if ($_POST && $_POST['method'] == "Delete") {
 
 <!-- /.content -->
 <?php
-require_once "../../plugins/datatables/datatablescripts.php";
+require_once $_SERVER["DOCUMENT_ROOT"] ."/plugins/datatables/datatablescripts.php";

@@ -15,7 +15,12 @@ if ($_POST && isset($_POST["action"]) == "delete-roles") {
 ;
 
 ?>
-
+<style>
+    .card {
+        word-wrap: normal;
+        
+    }
+</style>
 <div style="margin-bottom:8px" class="row">
 
     <div class="btn-group">

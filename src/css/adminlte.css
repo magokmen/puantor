@@ -28977,7 +28977,7 @@ html.maximized-card {
 }
 
 .todo-list > li .tools {
-  color: #dc3545;
+  /* color: #dc3545; */
   display: none;
   float: right;
 }

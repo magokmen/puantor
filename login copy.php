@@ -4,73 +4,6 @@ session_start();
 require_once "config/connect.php";
 require_once "config/functions.php";
 
-// Eğer aktif bir oturum yok ise.
-if ( !isset($_SESSION['Oturum']) || $_SESSION['Oturum'] != 'active' ) {
- 
-// Eğer beni hatırla çerezi var ise.
-  if ( isset($_COOKIE['RMB']) and $_COOKIE['RMB'] != 'false' ) {
- 
-$CookieToken = $_COOKIE['RMB']; // Çerez kodu.
-$Browser     = md5($_SERVER['HTTP_USER_AGENT']); // Tarayıcı bilgisi.
-$time        = time(); // Unix zaman.
- 
-$query = $con->query("SELECT * FROM remember_me WHERE remember_token = '{$CookieToken}' and user_browser = '$Browser' and expired_time > $time ")->fetch(PDO::FETCH_ASSOC);
- 
-// Eğer çerez kodu geçerli ise ve max oturum süresi 7 gün aşılmamış ise.
-if ( $query ) {
- 
-$CookieUser = $query['user_id']; // Çereze ait kullanıcı id'si.
- 
-// Çerezdeki kullanıcı id'sini veri tabanımızda sorguluyoruz.
-$CheckUser = $con->query("SELECT * FROM users WHERE id = '{$CookieUser}' ")->fetch(PDO::FETCH_ASSOC); 
- 
-if ( $CheckUser ) {
- 
-// Kullanıcı geçerli. $CheckUser kullanıcısı için oturum başlatılabilir.
- 
-// Burada standart login sayfanızda hangi işlemleri yapıyorsanız onları yapın ve oturumu başlatın. 
-// Bu şekilde kullanıcının oturumu otomatik olarak başlamış olacak.
- 
-  $_SESSION['Oturum'] = 'active';
-  $_SESSION['UserID'] = $CheckUser['id'];
- 
-} else {
- 
-// Çerez geçersiz, çerezi sıfırla ve giriş sayfasına yönlendir.
-  setcookie("RMB", 'false', time() -3600,'/');
-  header("Location:/Login");
-  exit;
- 
-}
- 
-} else {
- 
-// Çerez geçersiz, çerezi sıfırla ve giriş sayfasına yönlendir.
-  setcookie("RMB", 'false', time() -3600,'/');
-  header("Location:/Login");
-  exit;
- 
-}
- 
-}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -82,13 +15,11 @@ if ( $CheckUser ) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
-
     <!-- icheck bootstrap -->
     <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-
-
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="icon" type="image/png" sizes="32x32" href="src/img/favicon-32x32.png">
 </head>
 
@@ -105,7 +36,7 @@ if ( $CheckUser ) {
         $email = "";
         $message = "";
         // Kullanıcı adı ve parola boş değilse
-
+        
         if ($_POST) {
 
             $email = $_POST["email"];
@@ -113,12 +44,9 @@ if ( $CheckUser ) {
 
             if ($email == null) {
                 showAlert("Mail adresini boş bırakmayınız!!!");
-            } else if ($password == null) {
+            } else if($password == null ) {
                 showAlert("Şifreyi boş bırakmayınız!!!");
-            } else {
-
-
-
+            }else{
 
                 $query = $con->prepare("SELECT * FROM users WHERE email = ?");
                 $query->execute([$email]);
@@ -138,40 +66,11 @@ if ( $CheckUser ) {
 
                 // Farkı gün olarak al
                 $farkGun = 14 - $fark->days;
-                $user_state =  $result->state != null ? 1 : 0;
-
+                $user_state =  $result->state != null ? 1 : 0 ;
+ 
                 if ($user_state == 0 && $farkGun < 1) {
                     echo '<div class="alert alert-warning" role="alert">Deneme süreniz dolmuştur. Lütfen satın alın</div>';
                 } else if ($account && password_verify($password, $account["password"])) {
-
-                    if (isset($_POST['remember-me'])) {
-
-                        $UserID = $account['id']; // Kullanıcının id'si.
-                        $delete = $con->exec("DELETE FROM remember_me WHERE user_id = '$UserID' "); // Önceki anahtarları siliyoruz.
-
-                        $NewToken = bin2hex(openssl_random_pseudo_bytes(32)); // Rastgele kod üretiyoruz.
-
-                        // Ürettiğimiz kodu kullanıcı id'si ve tarayıcı bilgisi ile birlikte veritabanımıza kaydediyoruz.
-                        $Insert2 = $con->prepare("INSERT INTO remember_me SET
-                                user_id = :bir,
-                                remember_token = :iki,
-                                expired_time = :uc,
-                                user_browser = :dort");
-                        $insert = $Insert2->execute(array(
-                            "bir" => $UserID,
-                            "iki" => $NewToken,
-                            "uc" => time() + 604800,
-                            'dort' => md5($_SERVER['HTTP_USER_AGENT'])
-
-                        ));
-
-                        // Kullanıcının tarayıcısına bu kodu çerez olarak kaydediyoruz.
-                        setcookie("RMB", $NewToken, time() + 604801, '/');
-                    }
-
-
-
-
                     session_regenerate_id();
                     $_SESSION['login'] = true;
                     $_SESSION['email'] = $_POST['email'];
@@ -181,12 +80,12 @@ if ( $CheckUser ) {
                     $_SESSION['companyID'] = $account["company_id"];
                     $_SESSION['UserFullName'] = $account["full_name"];
                     $_SESSION['accountType'] = $account["account_type"];
-                    $_SESSION['expired_date'] = $farkGun;
-                    $_SESSION['state'] = $user_state;
+                    $_SESSION['expired_date'] =$farkGun;
+                    $_SESSION['state'] =$user_state;
                     $_SESSION['accountID'] = $account["account_id"];
                     $_SESSION['id'] = $account["id"];
 
-
+        
                     // Giriş başarılı mesajını göster
                     echo '<div class="alert alert-info" role="alert">Giriş başarılı! Ana Sayfaya yönlendiriliyorsunuz.</div>';
 
@@ -197,13 +96,18 @@ if ( $CheckUser ) {
                 } else {
                     echo '<div class="alert alert-danger" role="alert">Hatalı parola veya şifre!</div>';
                 }
+
             }
+
+
+
+
         }
         ?>
         <script>
-            $(document).ready(function() {
+            $(document).ready(function () {
                 // show the alert
-                setTimeout(function() {
+                setTimeout(function () {
                     $(".alert-info,.alert-danger").fadeOut("slow");
                 }, 3000);
             });
@@ -222,7 +126,8 @@ if ( $CheckUser ) {
                         <img src="src/img/preload.png" alt="" style="width:64px;height:64px">
                     </div>
                     <div class="input-group mb-3">
-                        <input type="email" class="form-control" value="<?php echo $email ?>" name="email" placeholder="Email adresini giriniz">
+                        <input type="email" class="form-control" value="<?php echo $email ?>" name="email"
+                            placeholder="Email adresini giriniz">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>
@@ -245,29 +150,29 @@ if ( $CheckUser ) {
                         </div>
                         <!-- /.col -->
                     </div>
-
-                    <div class="row mt-4">
-
-                        <div class="d-flex justify-content-between">
-                            <p class="mb-1">
-                                <a href="forgot-password.php">Şifremi Unuttum</a>
-                            </p>
-                            <p class="mb-1">
-                                <a href="register.php">Hesap Oluştur</a>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="icheck-primary">
-                                <input type="checkbox" id="remember" name="remember-me">
-                                <label for="remember">
-                                    Beni Hatırla
-                                </label>
-                            </div>
-                        </div>
-                    </div>
                 </form>
+                <div class="row mt-4">
+
+                    <div class="d-flex justify-content-between">
+                        <p class="mb-1">
+                            <a href="forgot-password.php">Şifremi Unuttum</a>
+                        </p>
+                        <p class="mb-1">
+                            <a href="register.php">Hesap Oluştur</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-8">
+                        <div class="icheck-primary">
+                            <input type="checkbox" id="remember">
+                            <label for="remember">
+                                Beni Hatırla
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <!-- /.login-card-body -->
         </div>
@@ -278,6 +183,3 @@ if ( $CheckUser ) {
     <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="dist/js/adminlte.min.js"></script>
-</body>
-
-</html>

@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
-require_once "../../include/requires.php";
+require_once $_SERVER["DOCUMENT_ROOT"] ."/include/requires.php";
 
 // $id = isset($_GET['id']) ? $_GET['id'] : die('HATA: Kayıt bulunamadı.');
 // aktif kayıt bilgilerini oku 

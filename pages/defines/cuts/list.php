@@ -1,5 +1,20 @@
+
+
 <?php
 require_once $_SERVER["DOCUMENT_ROOT"] ."/plugins/datatables/datatable.php";
+require_once $_SERVER["DOCUMENT_ROOT"] ."/include/requires.php";
+// echo "acoount_id :" . $account_id ;
+if ($_POST && $_POST['method'] == "Delete") {
+
+    $id = $_POST['id'];
+    if ($id > 0) {
+
+        $up = $con->prepare("DELETE FROM cut_types where id = ? ");
+        $result = $up->execute(array($id));
+    }
+}
+;
+
 
 ?>
 
@@ -19,12 +34,8 @@ require_once $_SERVER["DOCUMENT_ROOT"] ."/plugins/datatables/datatable.php";
         <tr>
             <th>id</th>
             <th>Firma Adı</th>
-            <th>Yetkili</th>
-            <th>Telefon</th>
-            <th>Email</th>
-            <th>Açılış Tarihi</th>
-            <th>Kapanış Tarihi</th>
-            <th>Durum</th>
+            <th>Kesinti Adı</th>
+             <th>Oluşturulma Tarihi</th>
             <th>#</th>
 
         </tr>
@@ -34,7 +45,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] ."/plugins/datatables/datatable.php";
 
         <?php
 
-        $sql = $con->prepare("Select * from companies WHERE account_id = ? ORDER BY id desc;");
+        $sql = $con->prepare("Select * from cut_types WHERE account_id = ? ORDER BY id desc;");
         $sql->execute(array($account_id));
 
 
@@ -46,49 +57,42 @@ require_once $_SERVER["DOCUMENT_ROOT"] ."/plugins/datatables/datatable.php";
                     <?php echo $row["id"]; ?>
                 </td>
                 <td>
-                    <?php echo $row["company_name"]; ?>
+                    <?php echo $func->getCompanyName($row["company_id"]); ?>
                 </td>
                 <td>
-                    <?php echo $row["company_official"]; ?>
+                    <?php echo $row["type_name"]; ?>
                 </td>
+                
                 <td>
-                    <?php echo $row["phone"]; ?>
+                    <?php echo $row["created_at"]; ?>
                 </td>
-                <td>
-                    <?php echo $row["email"]; ?>
-                </td>
-                <td>
-                    <?php echo $row["open_date"]; ?>
-                </td>
-                <td>
-                    <?php echo $row["close_date"]; ?>
-                </td>
-                <td>
-                    <?php echo ($row["close_date"] == '') ? "Aktif" : "Pasif"; ?>
-                </td>
-                <td class="">
+                <td class="text-nowrap">
 
                 <i class="fa-solid fa-ellipsis list-button" data-toggle="dropdown"></i>
                     <ul class="dropdown-menu">
-                        <?php if (permtrue("şirketlerimGüncelle")): ?>
+                        <!-- <?php if (permtrue("tanımlamalarKesintiGuncelle")): ?> -->
+
                             <li class="dropdown-item edit"><i class="fa-solid fa-edit dropdown-list-icon"></i>
-                                <a href="#" onclick="RoutePagewithParams('company/edit','id=<?php echo $row['id'] ?>')"
-                                    data-title="Şirket Güncelleme">
+                                <a href="#" onclick="RoutePagewithParams('defines/cuts/edit','id=<?php echo $row['id'] ?>')"
+                                    data-title="Kesinti Türü Güncelleme">
                                     Güncelle
                                 </a>
                             </li>
-                        <?php endif; ?>
-
+                        <!-- <?php endif; ?> -->
                         <!-- <?php
-                        $params = array("id" => $row["id"], "message" => $row["company_name"]);
+                        $params = array(
+                            "id" => $row["id"],
+                            "method" => "Delete"
+                        );
                         $params_json = $func->jsonEncode($params);
                         ?> -->
-                        <?php if (permtrue("şirketlerimSil")): ?>
+                        <?php if (permtrue("tanımlamalarKesintiTuruSil")): ?>
                             <li class="dropdown-item">
                                 <i class="fa-solid fa-trash-can dropdown-list-icon"></i>
-                                <a href="#" onclick="deleteRecordByAjax('company/main','<?php echo $params_json ?>')">Sil!</a>
+                                <a href="#" onclick="deleteRecordByAjax('defines/cuts/main','<?php echo $params_json ?>')">Sil!</a>
                             </li>
                         <?php endif; ?>
+
                     </ul>
                 </td>
             </tr>
@@ -98,14 +102,10 @@ require_once $_SERVER["DOCUMENT_ROOT"] ."/plugins/datatables/datatable.php";
     <tfoot>
 
         <tr>
-            <th>id</th>
+        <th>id</th>
             <th>Firma Adı</th>
-            <th>Yetkili</th>
-            <th>Telefon</th>
-            <th>Email</th>
-            <th>Açılış Tarihi</th>
-            <th>Kapanış Tarihi</th>
-            <th>Durum</th>
+            <th>Kesinti Adı</th>
+             <th>Oluşturulma Tarihi</th>
             <th>#</th>
 
         </tr>

@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 // include_once "../../config/connect.php";
-require_once "../../include/requires.php";
+require_once $_SERVER["DOCUMENT_ROOT"] ."/include/requires.php";
 
 $func = new Functions();
 //use config\Functions;

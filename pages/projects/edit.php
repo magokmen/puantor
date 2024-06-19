@@ -86,8 +86,8 @@ $result = $sql->fetch(PDO::FETCH_OBJ);
 
 
             <ul class="nav nav-pills">
-                <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Personel Listesi"
-                        data-toggle="tab">Tüm Projeler</a>
+                <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Proje Listesi"
+                        data-toggle="tab"></a>
                 </li>
             </ul>
             <?php

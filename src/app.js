@@ -215,12 +215,14 @@ function deleteRecordByAjax(page, params) {
   var parsedParams = JSON.parse(params);
   for (var key in parsedParams) {
     formData.append(key, parsedParams[key]);
+
     if (key == "message") {
       delMessage = parsedParams[key];
     } else {
       delMessage = "Geçerli kaydı silmek istiyor musunuz?";
     }
   }
+
   Swal.fire({
     title: "Emin misiniz?",
     text: delMessage,
@@ -240,21 +242,35 @@ function deleteRecordByAjax(page, params) {
       //   console.log(key + ": " + value);
       // });
 
+
+
       fetch(deleteUrl, {
         method: "POST",
         body: formData,
       })
         .then((response) => response.text())
         .then((data) => {
-          Swal.fire({
-            title: "Başarılı!",
-            text: "Kayıt başarı ile silindi!",
-            icon: "success",
-          }).then(() => {
-            updatePageContent(data);
-          });
-        })
-        .catch((error) => {
+          var data = JSON.parse(data);
+          console.log(data);
+          if (data.status == 200) {
+
+            Swal.fire({
+              title: "Başarılı!",
+              text: data.message,
+              icon: "success",
+            }).then(() => {
+              //console.log("sayfa :" + page, "sayfa başlığı :" + data.pTitle);
+              RoutePage(page, "", data.pTitle);
+            });
+          } else {
+            Swal.fire({
+              title: "Hata!",
+              text: data.message,
+              icon: "error",
+            });
+          }
+
+        }).catch((error) => {
           // Handle error if deletion fails (optional)
           console.error(error);
           Swal.fire({
@@ -280,10 +296,10 @@ function RoutePagewithParams(page, params = "", animate = true) {
   if (animate === true) {
     $(".preloader")
       .css("height", $(window).height() + "px")
-      .css("opacity", 0.5)
+      .css("opacity", 1)
       .fadeIn(400);
   }
-console.log(params);
+
   $("#content").empty(); // İçeriği temizle
   session_check();
   $("#content").animate({ opacity: 0 }, 300, function () {
@@ -291,9 +307,13 @@ console.log(params);
       // Yükleme tamamlandığında içeriği gösterme işlemi
       $(this).animate({ opacity: 1 }, 300);
       $(".preloader").css("opacity", 0).fadeOut(400);
+
     });
   });
 }
+
+
+
 
 function RoutePage(page, element = "", pTitle = "") {
   var pageTitleElement = $("#page-title");
@@ -301,8 +321,8 @@ function RoutePage(page, element = "", pTitle = "") {
   if (pTitle != "") {
     pageTitleElement.text(pTitle);
   } else {
-    var title = element ? $(element).data("title") : "";
-    pageTitleElement.text(title);
+    var pTitle = element ? $(element).data("title") : "";
+    pageTitleElement.text(pTitle);
   }
 
   $("#content").empty(); // İçeriği temizle
@@ -311,7 +331,11 @@ function RoutePage(page, element = "", pTitle = "") {
     $("#content").animate({ opacity: 0 }, 300, function () {
       $(this).load("pages/" + page + ".php?" + params, function () {
         // Yükleme tamamlandığında içeriği gösterme işlemi
+        //console.log(page,"pTitle : " + pTitle);
+        set_session_page("pages/" + page + ".php", pTitle);
         $(this).animate({ opacity: 1 }, 300);
+
+
       });
     });
   }
@@ -352,8 +376,8 @@ function loadPage(e) {
     },
     success: function () {
       // Sayfa varsa
-
       pagelink = "pages/" + page + ".php?" + params;
+      set_session_page("pages/" + page + ".php", title);
       loadContent(pagelink);
     },
   });
@@ -364,9 +388,9 @@ function loadContent(pagelink) {
 
   $(".preloader")
     .css("height", $(window).height() + "px")
-    .css("opacity", 0.5)
+    .css("opacity", 1)
     .fadeIn(400);
-    
+
   session_check();
   $("#content").fadeOut(50, function () {
     $("#content").empty(); // İçeriği temizle
@@ -374,7 +398,8 @@ function loadContent(pagelink) {
       // Yükleme tamamlandığında, içeriği göster
       $(this).fadeIn(50);
       // Hide preloader
-      $(".preloader").css('opacity',0).fadeOut(400);
+      $(".preloader").css('opacity', 0).fadeOut(400);
+
     });
   });
 }
@@ -387,19 +412,26 @@ function updateBreadcrumb(pageName) {
 }
 
 $(function () {
-  $(".nav-link").on("click", function () {
+  $(".nav-link:not('.tabMenu')").on("click", function () {
     setActiveMenu(this);
   });
 });
 
-function setActiveMenu(clickedLink) {
+function setActiveMenu(clickedLink, attribute = "title") {
   $(".nav-link").removeClass("active"); // Tüm bağlantılardan active sınıfını kaldır
   $(".nav-link").removeClass("menu-open");
-  // $(".nav-item").removeClass("menu-is-opening");
-  // $(".nav-item > ul").css("display", "none"); // Tüm .nav-item'ların içindeki ul'leri gizle
+  page = $(clickedLink).data("page");
 
-  // Tüm bağlantılardan active sınıfını kaldır
-  var pageTitle = $(clickedLink).data("title"); // clickedLink parametresini kullan
+  var pageTitle = $(clickedLink).data(attribute); // clickedLink parametresini kullan
+  $(".nav-menu[data-title='" + pageTitle + "']").addClass("active");
+  // set_session_page()
+}
+
+function setActiveMenubyTabMenu(e) {
+  $(".nav-link").removeClass("active"); // Tüm bağlantılardan active sınıfını kaldır
+  $(".nav-link").removeClass("menu-open");
+  var pageTitle = $(e).data("link") ?? $(e).data("title");
+  // console.log(pageTitle);
   $(".nav-menu[data-title='" + pageTitle + "']").addClass("active");
 }
 
@@ -414,36 +446,22 @@ function session_check() {
     },
   });
 }
-// $(function () {
-//   $(".tabMenu").click(function () {
-//     var navLinkText = $(this).text();
-//     $("#page-title").text(navLinkText);
-//     setActiveMenu(this);
-//   });
-// });
-// $(document).ready(function(){
-//   $(".nav-item").click(function(){
-//       // Tıklanan nav-item'ın altındaki ul'yi toggle et (gizle veya göster)
-//       var ulElement = $(this).children("ul");
-//       ulElement.toggle();
 
-//       // Diğer nav-item'ların altındaki ul'leri gizle
-//       $(".nav-item").not(this).children("ul").hide();
-
-//   });
-// });
-
-//     $(document).ready(function() {
-//     // Sayfa yüklendiğinde çalışacak kod
-//     var currentUrl = window.location.href;
-
-//     // Eğer URL index.php ile bitiyorsa, index.php kısmını kaldır
-//     if (currentUrl.endsWith("index.php")) {
-//         var newUrl = currentUrl.replace("index.php", "/puantor");
-//         window.location.href = newUrl;
-//     }
-// });
-//Datemask dd/mm/yyyy
+function set_session_page(page, pageTitle) {
+  $.ajax({
+    url: "set_session_page.php",
+    type: "POST",
+    data: {
+      page: page,
+      pageTitle: pageTitle
+    },
+    success: function (response) {
+      if (response == "invalid") {
+        window.location.href = "index.php";
+      }
+    },
+  });
+}
 
 function SubmitForm() {
   setTimeout(function () {
@@ -473,14 +491,14 @@ function showMessage(message, type) {
   if (alertClass && message) {
     var alertMessage = $(
       '<div class="message alert ' +
-        alertClass +
-        ' alert-dismissible fade show">' +
-        "<strong>" +
-        firstLetter +
-        "</strong> " +
-        message +
-        '<button type="button" class="close" data-dismiss="alert">&times;</button>' +
-        "</div>"
+      alertClass +
+      ' alert-dismissible fade show">' +
+      "<strong>" +
+      firstLetter +
+      "</strong> " +
+      message +
+      '<button type="button" class="close" data-dismiss="alert">&times;</button>' +
+      "</div>"
     );
 
     $("#content").before(alertMessage);
@@ -683,4 +701,39 @@ $(function () {
       body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
     });
   });
+});
+
+
+$(document).ready(function () {
+  $(".select2").select2();
+  //Initialize Select2 Elements
+
+  //Ay değiştiği zaman sayfayı yeniden yükle
+  $("#companyindex").on("change", function () {
+    Route();
+  });
+
+  function Route() {
+    var company_id = $("#companyindex option:selected").val();
+    window.location.href = "index.php?company_id=" + company_id;
+
+  }
+
+
+  moment().locale('tr');
+  $("[data-mask]").inputmask("dd.mm.yyyy");
+  $("#startdate,#enddate").datetimepicker({
+    format: "DD.MM.YYYY",
+    locale: moment.locale('tr'),
+  });
+
+
+  // jQuery UI sortable for the todo list
+  $('.todo-list').sortable({
+    placeholder: 'sort-highlight',
+    handle: '.handle',
+    forcePlaceholderSize: true,
+    zIndex: 999999
+  })
+
 });

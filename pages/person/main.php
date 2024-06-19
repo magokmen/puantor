@@ -1,22 +1,51 @@
 <?php
-require_once "../../include/requires.php"; ?>
+require_once $_SERVER["DOCUMENT_ROOT"] ."/include/requires.php";
+if ($_POST && $_POST['method'] == "Delete") {
+
+    $id = $_POST['id'];
+    deleteRecordbyPhp($id, "person", "person/main", "Personel Listesi");
+    return;
+};
+
+
+
+?>
 
 <div class="card card-outline card-info">
     <div class="card-header p-2">
         <div class="d-flex justify-content-between">
+       
 
 
             <ul class="nav nav-pills">
-                <?php if (permtrue("personelYeni")): ?>
-                    <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Personel Listesi"
-                            data-toggle="tab">Tüm Personeller</a>
+                    <?php 
+                      
+                        $list = "Personel Listesi";
+                        $add = "Yeni Personel"
+                    ;?>
+                <?php if (permtrue("personelYeni")) : ?>
+                   
+                    <li class="nav-item">
+                        <a  class="tabMenu nav-link <?php echo getActiveStatus($list); ?>" 
+                            id="liste" href="#list" 
+                            data-title="<?php echo $list; ?>" 
+                            data-link="<?php echo $list; ?>" 
+                            data-toggle="tab">Liste
+                        </a>
                     </li>
                 <?php endif; ?>
-                <?php if (permtrue("personelListesi")): ?>
-                    <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Yeni Personel"
-                            data-toggle="tab">Yeni Personel</a>
+                <?php if (permtrue("personelListesi")) : ?>
+                    <li class="nav-item">
+                        <a 
+                            class="tabMenu nav-link <?php echo getActiveStatus($add); ?>" 
+                            id="yeni" href="#add" 
+                            data-title="<?php echo $add; ?>" 
+                            data-link="<?php echo $add; ?>" 
+                            data-toggle="tab">Yeni Ekle
+                        </a>
                     </li>
                 <?php endif; ?>
+
 
             </ul>
             <?php
@@ -24,23 +53,22 @@ require_once "../../include/requires.php"; ?>
             $params_json = $func->jsonEncode($params);
             ?>
 
-            <button type="button" id="save" data-title="Yeni Personel"
-                onclick="submitFormbyAjax('person/main','<?php echo $params_json ?>')" class="btn btn-info d-none">
+            <button type="button" id="save" data-title="Yeni Personel" onclick="submitFormbyAjax('person/main','<?php echo $params_json ?>')" class="btn btn-info d-none">
                 <i class="fas fa-save mr-2"></i>Kaydet</button>
         </div>
 
 
     </div><!-- /.card-header -->
     <div class="card-body">
-        <div class="tab-content">
+        <div class="tab-content"> 
 
             <!-- /.tab-pane -->
-            <div class="tab-pane fade" id="add">
+            <div class="tab-pane fade <?php echo getActiveStatus($add) . ' show' ;?> " id="add">
 
                 <?php include "add.php" ?>
 
             </div>
-            <div class="tab-pane fade" id="list">
+            <div class="tab-pane fade <?php echo getActiveStatus($list) . ' show' ;?> " id="list">
 
                 <?php include "list.php" ?>
             </div>
@@ -50,37 +78,4 @@ require_once "../../include/requires.php"; ?>
 </div>
 <!-- /.card -->
 
-<script>
-    $(function () {
-
-        var pagetitle = $("#page-title").text();
-        if (pagetitle == "Personel Listesi") {
-            $("#liste").tab("show");
-        }
-
-        if (pagetitle == "Yeni Personel") {
-            $("#yeni").tab("show");
-            $("#save").removeClass("d-none");
-        }
-    })
-    $("#liste").on("click", function () {
-        $("#save").addClass("d-none");
-    })
-
-    $("#yeni").on("click", function () {
-        $("#save").removeClass("d-none");
-    })
-
-    $(function () {
-        $(".tabMenu").click(function () {
-            var navLinkText = $(this).data("title");
-            $("#page-title").text(navLinkText);
-            setActiveMenu(this);
-        });
-    });
-    // $("#edit").click(function() {
-    //     var title = $(this).text();
-    //     $("#page-title").text(title);
-    //     // $("#duzenle").tab("show");
-    // })
-</script>
+<script src="../../src/component.js"></script>

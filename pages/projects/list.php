@@ -1,6 +1,5 @@
 <?php
-require_once "../../plugins/datatables/datatable.php";
-
+require_once $_SERVER["DOCUMENT_ROOT"] ."/plugins/datatables/datatable.php";
 
 
 
@@ -193,4 +192,4 @@ if ($_POST && isset($_POST["action"]) == "delete-project") {
 
 <!-- /.content -->
 <?php
-include_once "../../plugins/datatables/datatablescripts.php" ?>
+include_once $_SERVER["DOCUMENT_ROOT"] ."/plugins/datatables/datatablescripts.php" ?>

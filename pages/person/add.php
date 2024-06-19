@@ -212,7 +212,3 @@ if ($_POST && $_POST["method"] == "add") {
 </form>
 
 <script src="../../src/component.js"></script>
-<script type="text/javascript">
-
-   
-</script>

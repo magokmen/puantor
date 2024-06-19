@@ -1,17 +1,16 @@
 <?php
-require_once "../../plugins/datatables/datatable.php";
+require_once $_SERVER["DOCUMENT_ROOT"] ."/plugins/datatables/datatable.php";
 
-
-if ($_POST && $_POST['method'] == "Delete") {
-
-    $id = $_POST['id'];
-    if ($id > 0) {
-
-        $up = $con->prepare("DELETE FROM person where id = ? ");
-        $result = $up->execute(array($id));
-    }
+if (isset($_GET["company_id"])) {
+    $company_id = $_GET["company_id"];
+} else  if (isset($_SESSION["companyID"])) {
+    $company_id = $_SESSION["companyID"];
+} else {
+    $sql = $con->prepare("SELECT * FROM companies WHERE account_id = ? AND isDefault = ?");
+    $sql->execute(array($account_id, 1));
+    $result = $sql->fetch(PDO::FETCH_OBJ);
+    $company_id = $result->id ?? 0;
 }
-;
 
 ?>
 
@@ -49,9 +48,9 @@ if ($_POST && $_POST['method'] == "Delete") {
         <?php
         $sql = $con->prepare("SELECT p.*,c.account_id,c.company_name FROM `person` p
                                 LEFT JOIN companies c on c.id = p.company_id
-                                WHERE c.account_id = ?
+                                WHERE c.id = ?
                                 ORDER BY p.id desc");
-        $sql->execute(array($account_id));
+        $sql->execute(array($company_id));
         $result = $sql->fetchAll();
 
 
@@ -190,4 +189,4 @@ if ($_POST && $_POST['method'] == "Delete") {
 
 <!-- /.content -->
 <?php
-include_once "../../plugins/datatables/datatablescripts.php" ?>
+include_once $_SERVER["DOCUMENT_ROOT"] ."/plugins/datatables/datatablescripts.php" ?>

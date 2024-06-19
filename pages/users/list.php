@@ -1,6 +1,6 @@
 <?php
-require_once "../../plugins/datatables/datatable.php";
-require_once "../../include/requires.php";
+require_once $_SERVER["DOCUMENT_ROOT"] ."/plugins/datatables/datatable.php";
+require_once $_SERVER["DOCUMENT_ROOT"] ."/include/requires.php";
 
 // echo "hesap id :" . $account_id;
 if ($_POST && $_POST['method'] == "Delete") {
@@ -91,4 +91,4 @@ if ($_POST && $_POST['method'] == "Delete") {
 <!-- /.content -->
 
 <?php
-include_once "../../plugins/datatables/datatablescripts.php" ?>
+include_once $_SERVER["DOCUMENT_ROOT"] ."/plugins/datatables/datatablescripts.php" ?>

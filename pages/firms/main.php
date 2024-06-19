@@ -1,19 +1,36 @@
-<?php require_once "../../include/requires.php"; ?>
+<?php require_once $_SERVER["DOCUMENT_ROOT"] ."/include/requires.php"; ?>
 
 <div class="card card-outline card-info">
     <div class="card-header p-2">
         <div class="d-flex justify-content-between">
             <ul class="nav nav-pills">
+                    <?php 
+                        $link="Firmalar";
+                        $list = "Firma Listesi";
+                        $add = "Yeni Firma"
+                    ;?>
                 <?php if (permtrue("firmaListesi")): ?>
-                    <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Firma Listesi"
-                            data-toggle="tab">Firma Listesi</a>
+                    <li class="nav-item">
+                        <a  class="tabMenu nav-link <?php echo getActiveStatus($link); ?>" 
+                            id="liste" href="#list" 
+                            data-title="<?php echo $list; ?>" 
+                            data-toggle="tab">Liste
+                        </a>
                     </li>
                 <?php endif; ?>
                 <?php if (permtrue("firmaEkle")): ?>
-                    <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Firma Listesi"
-                            data-toggle="tab">Yeni Firma</a></li>
+                    <li class="nav-item">
+                        <a 
+                            class="tabMenu nav-link <?php echo getActiveStatus($add); ?>" 
+                            id="yeni" href="#add" 
+                            data-title="<?php echo $add; ?>" 
+                            data-link="<?php echo $list; ?>" 
+                            data-toggle="tab">Yeni Ekle
+                        </a>
+                    </li>
                 <?php endif; ?>
             </ul>
+
             <?php
             $params = array("method" => "add");
             $params_json = $func->jsonEncode($params);
@@ -28,12 +45,12 @@
         <div class="tab-content">
 
             <!-- /.tab-pane -->
-            <div class="tab-pane fade" id="add">
+            <div class="tab-pane fade <?php echo getActiveStatus($add) . ' show' ;?> " id="add">
 
                 <?php include "add.php" ?>
 
             </div>
-            <div class="tab-pane fade" id="list">
+            <div class="tab-pane fade <?php echo getActiveStatus($link) . ' show' ;?> " id="list">
 
                 <?php include "list.php" ?>
             </div>

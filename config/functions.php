@@ -44,7 +44,6 @@ class Functions
         $sql->execute([$id]);
         $user = $sql->fetch(PDO::FETCH_ASSOC);
         return $user[$field];
-
     }
 
     public function getFirmName($id)
@@ -55,11 +54,9 @@ class Functions
         $result = $sql->fetch(PDO::FETCH_ASSOC);
         if ($result) {
             return $result['firm_name'];
-
         } else {
             return '';
         }
-
     }
 
     public function getCityName($id)
@@ -70,11 +67,9 @@ class Functions
         $result = $sql->fetch(PDO::FETCH_ASSOC);
         if ($result) {
             return $result['il_adi'];
-
         } else {
             return '';
         }
-
     }
     public function getTownName($id)
     {
@@ -84,11 +79,9 @@ class Functions
         $result = $sql->fetch(PDO::FETCH_ASSOC);
         if ($result) {
             return $result['ilce_adi'];
-
         } else {
             return '';
         }
-
     }
     public function cities($name, $id)
     {
@@ -103,8 +96,7 @@ class Functions
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
             $il_adi = $row['il_adi'];
             $html .= '<option ' . ($id == $row["id"] ? " selected" : '') . ' value=' . $row["id"] . '>' . $il_adi . '</option>';
-        }
-        ;
+        };
 
         $html .= ' </select>';
         echo $html;
@@ -123,19 +115,18 @@ class Functions
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
             $ilce_adi = $row['ilce_adi'];
             $html .= '<option ' . ($id == $row["id"] ? " selected" : '') . ' value=' . $row["id"] . '>' . $ilce_adi . '</option>';
-        }
-        ;
+        };
 
         $html .= ' </select>';
         echo $html;
     }
 
-    public function companies($name, $id, $disabled = '',$readonly = '')
+    public function companies($name, $id, $disabled = '', $readonly = '', $minwidth = '100%')
     {
         global $con;
         global $account_id;
-        $html = ' <select '.$disabled.' '.$readonly.'" required id="' . $name . '" name="' . $name . '"  class="select2"
-                            style="width: 100%;">
+        $html = ' <select ' . $disabled . ' ' . $readonly . 'required id="' . $name . '" name="' . $name . '"  class="form-control select2"
+                            style="width:' . $minwidth . ' !important;">
                             <option value="">Şirket Seçiniz</option>';
 
         $sql = $con->prepare("Select id,company_name,isDefault from companies WHERE account_id = ?");
@@ -146,12 +137,14 @@ class Functions
             $company_name = $row['company_name'];
             if ($id == $row["id"]) {
                 $selected = " selected";
+            } else if ($row["isDefault"] == 1) {
+
+                $selected = " selected";
             } else {
                 $selected = '';
             }
             $html .= '<option ' . $selected . ' value=' . $row["id"] . '>' . $company_name . '</option>';
-        }
-        ;
+        };
 
         $html .= ' </select>';
 
@@ -173,8 +166,7 @@ class Functions
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
             $firm_name = $row['firm_name'];
             $html .= '<option ' . ($id == $row["id"] ? " selected" : '') . ' value=' . $row["id"] . '>' . $firm_name . '</option>';
-        }
-        ;
+        };
 
         $html .= ' </select>';
         echo $html;
@@ -194,17 +186,16 @@ class Functions
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
             $project_name = $row['project_name'];
             $html .= '<option ' . ($id == $row["id"] ? " selected" : '') . ' value=' . $row["id"] . '>' . $project_name . '</option>';
-        }
-        ;
+        };
 
         $html .= ' </select>';
         echo $html;
     }
 
-    public function projectsMultiple($name, $company_id, $ids,$disabled = '',$readonly = '')
+    public function projectsMultiple($name, $company_id, $ids, $disabled = '', $readonly = '')
     {
         global $con;
-        $html = '<select id="' . $name . '" name="' . $name . '[]" multiple class="select2" style="width: 100%;" '.$disabled.' '.$readonly.'>
+        $html = '<select id="' . $name . '" name="' . $name . '[]" multiple class="select2" style="width: 100%;" ' . $disabled . ' ' . $readonly . '>
                     <option disabled value="0">Proje Seçiniz</option>';
 
         $sql = $con->prepare("SELECT id, project_name FROM projects WHERE company_id = ?");
@@ -279,8 +270,7 @@ class Functions
             $salonid = $row['id'];
 
             $places .= '<option ' . ($id == $row["id"] ? " selected" : "") . ' value=' . $salonid . '>' . $salonAdi . '</option>';
-        }
-        ;
+        };
 
         $places .= ' </select>';
         echo $places;
@@ -343,7 +333,7 @@ class Functions
     {
         global $con;
         // SQL sorgusu ve verilerin alınması
-        $sql = $con->prepare("SELECT * FROM puantajturu WHERE Turu = ?");
+        $sql = $con->prepare("SELECT * FROM puantajturu WHERE Turu = ? ORDER BY PuantajSaati ");
         $sql->execute(array($turu));
 
         // Başlangıç HTML
@@ -399,13 +389,13 @@ class Functions
 
 
 
-    function getYearSelect($name = "years", $selectedYear = null, $disabled = '',$readonly = '')
+    function getYearSelect($name = "years", $selectedYear = null, $disabled = '', $readonly = '')
     {
         if ($selectedYear == null) {
             $selectedYear = date('Y');
         }
         $current_year = date('Y');
-        $output = '<select name="' . $name . '" id="' . $name . '" class="select2 " '.$disabled.' '.$readonly.' style="width:100%">';
+        $output = '<select name="' . $name . '" id="' . $name . '" class="select2 " ' . $disabled . ' ' . $readonly . ' style="width:100%">';
         for ($i = 2020; $i <= $current_year + 2; $i++) {
             $selected = ($i == $selectedYear) ? ' selected' : ' ';
             $output .= '<option ' . $selected . ' value="' . $i . '">' . $i . '</option>';
@@ -414,7 +404,7 @@ class Functions
         return $output;
     }
 
-    function getMonthsSelect($name = 'months', $selected = null, $disabled = '',$readonly = '')
+    function getMonthsSelect($name = 'months', $selected = null, $disabled = '', $readonly = '')
     {
         // Ayları tanımla
         $months = [
@@ -438,7 +428,7 @@ class Functions
         }
 
         // Select elemanını başlat
-        $select = "<select id=" . $name . " class='select2' style='width:100%' ".$disabled." ".$readonly." name=\"$name\">\n";
+        $select = "<select id=" . $name . " class='select2' style='width:100%' " . $disabled . " " . $readonly . " name=\"$name\">\n";
 
         // Ayları select elemanına ekle
         foreach ($months as $key => $value) {
@@ -464,11 +454,9 @@ class Functions
         $result = $sql->fetch(PDO::FETCH_ASSOC);
         if ($result) {
             return $result['company_name'];
-
         } else {
             return '';
         }
-
     }
 
     public static function getProjectName($id)
@@ -479,11 +467,9 @@ class Functions
         $result = $sql->fetch(PDO::FETCH_ASSOC);
         if ($result) {
             return $result['project_name'];
-
         } else {
             return '';
         }
-
     }
 
     public static function paket_adi($id)
@@ -495,11 +481,9 @@ class Functions
         $result = $sql->fetch(PDO::FETCH_ASSOC);
         if ($result) {
             return $result['PaketAdi'];
-
         } else {
             return $id;
         }
-
     }
 
     public static function KdvOranları($name, $val)
@@ -559,13 +543,11 @@ class Functions
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
             $roleName = $row['roleName'];
             $html .= '<option ' . ($id == $row["id"] ? " selected" : '') . ' value=' . $row["id"] . '>' . $roleName . '</option>';
-        }
-        ;
+        };
 
         $html .= ' </select>';
         echo $html;
     }
-
 }
 
 
@@ -649,7 +631,6 @@ function emailVarmi($mail_address, $table = "accounts")
 function showAlert($message, $type = "danger")
 {
     echo '<div class="alert alert-' . $type . '" role="alert">' . $message . '</div>';
-
 }
 function showMessage($message, $type = "danger")
 {
@@ -772,8 +753,86 @@ function decrypt($data)
     return openssl_decrypt($encryptedData, CIPHER, KEY, 0, $iv);
 }
 
-function logAction($action, $tableName, $oldData, $newData) {
+function logAction($action, $tableName, $oldData, $newData)
+{
     global $con;
     $stmt = $con->prepare("INSERT INTO logs (action, table_name, old_data, new_data) VALUES (?, ?, ?, ?)");
     $stmt->execute([$action, $tableName, json_encode($oldData), json_encode($newData)]);
+}
+
+
+
+function getInitials($name)
+{
+    $words = explode(" ", $name);
+    $initials = array();
+    $count = 0;
+    foreach ($words as $word) {
+        if ($count >= 3) {
+            break;
+        }
+        array_push($initials, mb_strtoupper(mb_substr($word, 0, 1, 'UTF-8'), 'UTF-8'));
+        $count++;
+    }
+    return implode('', $initials);
+}
+
+function convertTurkishCharacters($input)
+{
+    $turkishCharacters = ['ç', 'Ç', 'ğ', 'Ğ', 'ı', 'İ', 'ö', 'Ö', 'ş', 'Ş', 'ü', 'Ü'];
+    $englishCharacters = ['c', 'C', 'g', 'G', 'i', 'I', 'o', 'O', 's', 'S', 'u', 'U'];
+    $noSpaces = str_replace(' ', '', $input);
+    return str_replace($turkishCharacters, $englishCharacters, $noSpaces);
+}
+
+
+
+function deleteRecordbyPhp($id, $tablename, $page, $pTitle)
+{
+    global $con;
+
+    if ($id > 0) {
+
+        try {
+            $up = $con->prepare("DELETE FROM " . $tablename . " where id = ? ");
+            $up->execute(array($id));
+            $res = array(
+                "status" => 200,
+                "message" => "Kayıt başarı ile silindi.",
+                "page" => $page,
+                "pTitle" => $pTitle
+            );
+        } catch (PDOException $ex) {
+            $res = array(
+                "status" => 400,
+                "message" => "Error: " . $ex->getMessage()
+            );
+        }
+    }
+
+    echo json_encode($res);
+    
+}
+
+
+function getCompanyId($account_id) {
+    global $con;
+    if (isset($_GET["company_id"])) {
+        return $_GET["company_id"];
+    } else if (isset($_SESSION["companyID"])) {
+        return $_SESSION["companyID"];
+    } else {
+        $sql = $con->prepare("SELECT * FROM companies WHERE account_id = ? AND isDefault = ?");
+        $sql->execute(array($account_id, 1));
+        $result = $sql->fetch(PDO::FETCH_OBJ);
+        return $result->id ?? 0;
+    }
+}
+
+function getActiveStatus($page){
+    if (isset($_SESSION["pageTitle"]) && $_SESSION["pageTitle"] === $page) {
+        return "active";
+    } else {
+        return "";
+    }
 }

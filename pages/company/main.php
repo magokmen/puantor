@@ -1,18 +1,43 @@
-<?php require_once "../../include/requires.php"; ?>
+<?php
+require_once $_SERVER["DOCUMENT_ROOT"] ."/include/requires.php";
+if ($_POST && $_POST['method'] == "Delete") {
 
+    $id = $_POST['id'];
+    deleteRecordbyPhp($id, "companies", "company/main", "Şirket Listesi");
+    return;
+};
+?>
 <div class="card card-outline card-info">
     <div class="card-header p-2">
 
         <div class="d-flex justify-content-between">
             <ul class="nav nav-pills">
+                    <?php 
+                        //Menüdeki linki aktif etmek için
+                        $link="Şirketlerim";
+                        //Liste ve ekleme sayfalarının Sayfa Başlığı için 
+                        $list = "Şirket Listesi";
+                        $add = "Yeni Şirket"
+                    ;?>
                 <?php if (permtrue("şirketlerimListesi")): ?>
-                    <li class="nav-item"><a class="tabMenu nav-link" id="liste" href="#list" data-title="Şirket Listesi"
-                            data-toggle="tab">Şirket Listesi</a>
+                    <li class="nav-item">
+                        <a class="tabMenu nav-link <?php echo getActiveStatus($list); ?>" 
+                            id="liste" href="#list" 
+                            data-title="<?php echo $list; ?>" 
+                            data-link="<?php echo $list; ?>" 
+                            data-toggle="tab">Liste
+                        </a>
                     </li>
                 <?php endif; ?>
                 <?php if (permtrue("şirketlerimEkle")): ?>
-                    <li class="nav-item"><a class="tabMenu nav-link" id="yeni" href="#add" data-title="Şirket Listesi"
-                            data-toggle="tab">Yeni Şirket</a>
+                    <li class="nav-item">
+                        <a 
+                            class="tabMenu nav-link <?php echo getActiveStatus($add); ?>" 
+                            id="yeni" href="#add" 
+                            data-title="<?php echo $add; ?>"
+                            data-link="<?php echo $list; ?>"
+                            data-toggle="tab">Yeni Ekle
+                        </a>
                     </li>
                 <?php endif; ?>
             </ul>
@@ -39,7 +64,7 @@
                 <?php include "add.php" ?>
 
             </div>
-            <div class="tab-pane fade" id="list">
+            <div class="tab-pane fade active show" id="list">
 
                 <?php include "list.php" ?>
             </div>

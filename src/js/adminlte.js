@@ -1854,7 +1854,7 @@
         if ($preloader) {
         
           setTimeout(function () {
-            $preloader.children().hide();
+            // $preloader.children().hide();
           }, 200);
         }
       }, this._config.preloadDuration);

@@ -1,5 +1,5 @@
 <?php
-require_once "../../../include/requires.php";
+require_once $_SERVER["DOCUMENT_ROOT"]."/include/requires.php";
 //permtrue("personlist");
 $roleId = isset($_GET['id']) ? $_GET['id'] : $_POST['id'];
 
@@ -96,7 +96,7 @@ if ($result) {
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        The body of the card
+                        <?php echo $row["description"] ;?>
                     </div>
                     <!-- /.card-body -->
                 </div>

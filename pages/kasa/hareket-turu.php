@@ -1,5 +1,5 @@
 <?php
-require_once "../../include/requires.php";
+require_once $_SERVER["DOCUMENT_ROOT"] ."/include/requires.php";
 
 if ($_POST) {
 

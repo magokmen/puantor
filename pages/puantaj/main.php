@@ -1,6 +1,6 @@
 <?php
 
-require_once "../../include/requires.php";
+require_once $_SERVER["DOCUMENT_ROOT"] ."/include/requires.php";
 
 function isWeekend($date)
 {
@@ -15,18 +15,19 @@ function isWeekend($date)
 }
 
 
+$company_id = getCompanyId($account_id);
+// if (isset($_GET["company_id"])) {
+//     $company_id = $_GET["company_id"];
+// } else  if (isset($_SESSION["companyID"])) {
+//     $company_id = $_SESSION["companyID"];
+// } else {
+//     $sql = $con->prepare("SELECT * FROM companies WHERE account_id = ? AND isDefault = ?");
+//     $sql->execute(array($account_id, 1));
+//     $result = $sql->fetch(PDO::FETCH_OBJ);
+//     $company_id = $result->id ?? 0;
+// }
 
-if (isset($_GET["company_id"])) {
-    $company_id = $_GET["company_id"];
-} else {
 
-    $sql = $con->prepare("SELECT * FROM companies WHERE account_id = ? AND isDefault = ?");
-    $sql->execute(array($account_id, 1));
-    $result = $sql->fetch(PDO::FETCH_OBJ);
-    $company_id = $result->id ?? 0;
-}
-
-// $company_id = isset($_GET["company_id"]) ? $_GET["company_id"] : 0;
 $project_id = isset($_GET["project_id"]) ? $_GET["project_id"] : 0;
 $year = isset($_GET["year"]) ? $_GET["year"] : date('Y');
 $month = isset($_GET["months"]) ? $_GET["months"] : date('m');
@@ -222,7 +223,6 @@ if ($project_id == null) {
 
 
 <div class="card card-outline card-info p-3">
-
     <div class="modal fade" id="modal-default">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
@@ -238,52 +238,37 @@ if ($project_id == null) {
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-6 col-sm-5">
-                            <div class="nav flex-column nav-tabs h-100" id="vert-tabs-tab" role="tablist"
-                                aria-orientation="vertical">
-                                <a class="nav-link active" id="vert-tabs-home-tab" data-toggle="pill"
-                                    href="#vert-tabs-home" role="tab" aria-controls="vert-tabs-home"
-                                    aria-selected="true">Normal Çalışma</a>
+                            <div class="nav flex-column nav-tabs h-100" id="vert-tabs-tab" role="tablist" aria-orientation="vertical">
+                                <a class="nav-link active" id="vert-tabs-home-tab" data-toggle="pill" href="#vert-tabs-home" role="tab" aria-controls="vert-tabs-home" aria-selected="true">Normal Çalışma</a>
 
-                                <a class="nav-link" id="vert-tabs-home-tab" data-toggle="pill" href="#vert-tabs-plus"
-                                    role="tab" aria-controls="vert-tabs-home" aria-selected="true">Fazla Çalışma</a>
+                                <a class="nav-link" id="vert-tabs-home-tab" data-toggle="pill" href="#vert-tabs-plus" role="tab" aria-controls="vert-tabs-home" aria-selected="true">Fazla Çalışma</a>
 
-                                <a class="nav-link" id="vert-tabs-profile-tab" data-toggle="pill"
-                                    href="#vert-tabs-profile" role="tab" aria-controls="vert-tabs-profile"
-                                    aria-selected="false">Saatlik Çalışma</a>
+                                <a class="nav-link" id="vert-tabs-profile-tab" data-toggle="pill" href="#vert-tabs-profile" role="tab" aria-controls="vert-tabs-profile" aria-selected="false">Saatlik Çalışma</a>
 
-                                <a class="nav-link" id="vert-tabs-messages-tab" data-toggle="pill"
-                                    href="#vert-tabs-messages" role="tab" aria-controls="vert-tabs-messages"
-                                    aria-selected="false">Ücretli İzin</a>
+                                <a class="nav-link" id="vert-tabs-messages-tab" data-toggle="pill" href="#vert-tabs-messages" role="tab" aria-controls="vert-tabs-messages" aria-selected="false">Ücretli İzin</a>
 
-                                <a class="nav-link" id="vert-tabs-settings-tab" data-toggle="pill"
-                                    href="#vert-tabs-settings" role="tab" aria-controls="vert-tabs-settings"
-                                    aria-selected="false">Ücretsiz</a>
+                                <a class="nav-link" id="vert-tabs-settings-tab" data-toggle="pill" href="#vert-tabs-settings" role="tab" aria-controls="vert-tabs-settings" aria-selected="false">Ücretsiz</a>
                             </div>
                         </div>
                         <div class="col-6 col-sm-7">
                             <div class="tab-content" id="vert-tabs-tabContent">
-                                <div class="tab-pane text-left fade show active hover-menu" id="vert-tabs-home"
-                                    role="tabpanel" aria-labelledby="vert-tabs-home-tab">
+                                <div class="tab-pane text-left fade show active hover-menu" id="vert-tabs-home" role="tabpanel" aria-labelledby="vert-tabs-home-tab">
                                     <?php echo $func->getPuantajTuruList('Normal Çalışma'); ?>
                                 </div>
 
-                                <div class="tab-pane fade hover-menu" id="vert-tabs-plus" role="tabpanel"
-                                    aria-labelledby="vert-tabs-profile-tab">
+                                <div class="tab-pane fade hover-menu" id="vert-tabs-plus" role="tabpanel" aria-labelledby="vert-tabs-profile-tab">
                                     <?php echo $func->getPuantajTuruList('Fazla Çalışma'); ?>
                                 </div>
 
-                                <div class="tab-pane fade hover-menu" id="vert-tabs-profile" role="tabpanel"
-                                    aria-labelledby="vert-tabs-profile-tab">
+                                <div class="tab-pane fade hover-menu" id="vert-tabs-profile" role="tabpanel" aria-labelledby="vert-tabs-profile-tab">
                                     <?php echo $func->getPuantajTuruList('Saatlik'); ?>
                                 </div>
 
-                                <div class="tab-pane fade hover-menu" id="vert-tabs-messages" role="tabpanel"
-                                    aria-labelledby="vert-tabs-messages-tab">
+                                <div class="tab-pane fade hover-menu" id="vert-tabs-messages" role="tabpanel" aria-labelledby="vert-tabs-messages-tab">
                                     <?php echo $func->getPuantajTuruList('Ücretli İzin'); ?>
                                 </div>
 
-                                <div class="tab-pane fade hover-menu" id="vert-tabs-settings" role="tabpanel"
-                                    aria-labelledby="vert-tabs-settings-tab">
+                                <div class="tab-pane fade hover-menu" id="vert-tabs-settings" role="tabpanel" aria-labelledby="vert-tabs-settings-tab">
                                     <?php echo $func->getPuantajTuruList('Ücretsiz'); ?>
 
                                 </div>
@@ -335,16 +320,15 @@ if ($project_id == null) {
                                         <ul class="ml-4 mb-0 fa-ul text-muted">
                                             <li class="small lead-email">
                                                 <i class="fas fa-lg fa-building"></i>
-                                            
+
                                             </li>
                                             <li class="small lead-phone"> <i class="fas fa-lg fa-phone"></i>
-                                                
+
                                             </li>
                                         </ul>
                                     </div>
                                     <div class="col-5 text-center">
-                                        <img src="../../dist/img/user1-128x128.jpg" alt="user-avatar"
-                                            class="img-circle img-fluid">
+                                        <img src="../../dist/img/user1-128x128.jpg" alt="user-avatar" class="img-circle img-fluid">
                                     </div>
                                 </div>
                             </div>
@@ -391,8 +375,7 @@ if ($project_id == null) {
 
                         </a>
                         <div class="btn ml-3">
-                            <button type="button" class="btn btn-default" data-toggle="dropdown">Rapor Al <i
-                                    class="fa-solid fa-caret-down ml-3"></i> </button>
+                            <button type="button" class="btn btn-default" data-toggle="dropdown">Rapor Al <i class="fa-solid fa-caret-down ml-3"></i> </button>
 
                             <div class="dropdown-menu" role="menu">
                                 <a class="dropdown-item" href="#" onclick="excelExport()" id="excele_aktar">Puantajı
@@ -404,24 +387,20 @@ if ($project_id == null) {
                     </div>
                     <div class="right-btn">
 
-                        <button type="button" id="" onclick="puantaj_olustur()" class="btn btn-primary float-right"><i
-                                class="fas fa-save mr-2"></i> Kaydet</button>
+                        <button type="button" id="" onclick="puantaj_olustur()" class="btn btn-primary float-right"><i class="fas fa-save mr-2"></i> Kaydet</button>
                     </div>
 
                 </div>
                 <div id="collapseOne" class="<?php echo $collapsed; ?>" data-parent="#accordion">
                     <div class="row p-3">
                         <div class="col-md-3 col-sm-12 mb-3">
-                            <input type="text" class="form-control" autocomplete="off" id="search_name"
-                                value="<?php echo $search_name; ?>" placeholder="Adı Soyadına göre ara...">
+                            <input type="text" class="form-control" autocomplete="off" id="search_name" value="<?php echo $search_name; ?>" placeholder="Adı Soyadına göre ara...">
                         </div>
                         <div class="col-md-3 col-sm-12 mb-3">
-                            <input type="text" class="form-control" id="search_job" value="<?php echo $search_job; ?>"
-                                placeholder="Unvanına göre ara... ">
+                            <input type="text" class="form-control" id="search_job" value="<?php echo $search_job; ?>" placeholder="Unvanına göre ara... ">
                         </div>
                         <div class="col-md-3 col-sm-12 mb-3">
-                            <input type="text" class="form-control" id="search_projects"
-                                value="<?php echo $search_projects; ?>" placeholder="Projesine göre ara... ">
+                            <input type="text" class="form-control" id="search_projects" value="<?php echo $search_projects; ?>" placeholder="Projesine göre ara... ">
                         </div>
                     </div>
                 </div>
@@ -474,7 +453,7 @@ if ($project_id == null) {
                 <th></th>
                 <th></th>
 
-                <?php foreach ($dates as $date): ?>
+                <?php foreach ($dates as $date) : ?>
                     <?php
                     $style = '';
                     if (isWeekend($date)) {
@@ -490,13 +469,13 @@ if ($project_id == null) {
                 <th class="ld">Adı Soyadı</th>
                 <th class="ld">Unvanı</th>
                 <th class="ld">Projesi</th>
-                <?php foreach ($dates as $date):
+                <?php foreach ($dates as $date) :
                     $style = '';
                     if (isWeekend($date)) {
                         $style = "background-color:#99A98F;color:white";
                     }
                     echo '<th class="vertical" style="' . $style . '"><span>' . $date . '</span></th>'
-                        ?>
+                ?>
 
                 <?php endforeach; ?>
             </tr>
@@ -510,10 +489,9 @@ if ($project_id == null) {
             while ($person = $sql->fetch(PDO::FETCH_ASSOC)) {
                 $job_start_date = DateTime::createFromFormat($format, $person["job_start_date"]);
 
-                ?>
+            ?>
                 <tr>
-                    <td class="text-nowrap" style="min-width:12vw;" data-id="<?php echo $person["id"] ?>"><a
-                            class="btn-user-modal" type="button">
+                    <td class="text-nowrap" style="min-width:12vw;" data-id="<?php echo $person["id"] ?>"><a class="btn-user-modal" type="button">
                             <?php echo $person["full_name"] ?></a></td>
 
                     <td class="text-nowrap" style="min-width:10vw;">
@@ -527,13 +505,13 @@ if ($project_id == null) {
 
                     <td class="text-nowrap" data-tooltip="<?php echo $projectNames; ?>"><?php
 
-                       echo $func->shortProjectsName($projectNames);
+                                                                                        echo $func->shortProjectsName($projectNames);
 
-                       ?></td>
+                                                                                        ?></td>
                     <?php
-                    foreach ($dates as $date):
+                    foreach ($dates as $date) :
                         $month_date = DateTime::createFromFormat($format, $date);
-                        ?>
+                    ?>
                         <?php
 
                         $puantaj_id = kayitVarmi($company_id, $person["id"], $year, $month);
@@ -547,7 +525,7 @@ if ($project_id == null) {
                                 $value = isset($data_json[$date]) ? $data_json[$date] : "0";
                                 $func->puantajClass($value);
                                 // echo "<td class='gun noselect' data-id=''>" . $value . "</td>";
-                
+
                             } else {
 
                                 if (isWeekend($date)) {
@@ -555,7 +533,6 @@ if ($project_id == null) {
                                 } else {
                                     echo "<td class='gun noselect'></td>";
                                 }
-
                             }
                         } else {
                             echo "<td class='noselect text-center' style='background:#ddd'>---</td>";
@@ -565,7 +542,7 @@ if ($project_id == null) {
                     <?php endforeach; ?>
 
                 </tr>
-                <?php
+            <?php
             }
             ?>
         </tbody>
@@ -578,11 +555,12 @@ if ($project_id == null) {
 
 <script src="pages/puantaj/app.js"></script>
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
 
         $('.select2').select2({
             minimumResultsForSearch: Infinity
         })
+
         function filterWaitingDemand() {
             var table = $('#pTable').DataTable();
             table.column(5).search('Ma').draw();
@@ -613,21 +591,21 @@ if ($project_id == null) {
         });
 
         // #column3_search is a <input type="text"> element
-        $('#search_name').on('keyup', function () {
+        $('#search_name').on('keyup', function() {
             table
                 .columns(0)
                 .search(this.value)
                 .draw();
         });
 
-        $('#search_job').on('keyup', function () {
+        $('#search_job').on('keyup', function() {
             table
                 .columns(1)
                 .search(this.value)
                 .draw();
         });
 
-        $('#search_projects').on('keyup', function () {
+        $('#search_projects').on('keyup', function() {
             table
                 .columns(2)
                 .search(this.value)
@@ -635,7 +613,6 @@ if ($project_id == null) {
         });
 
     })
-
 </script>
 
 
@@ -647,15 +624,15 @@ if ($project_id == null) {
         var table = $('#pTable').DataTable();
         var data = table.rows().data();
         var thElements = [];
-        $('thead tr').each(function () {
+        $('thead tr').each(function() {
             var rowData = [];
-            $(this).find('th').each(function () {
+            $(this).find('th').each(function() {
                 rowData.push($(this).text());
             });
             thElements.push(rowData);
         });
         var data_array = [];
-        data.each(function (value, index) {
+        data.each(function(value, index) {
             data_array.push(value);
         });
 

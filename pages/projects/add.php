@@ -1,11 +1,8 @@
 <?php
 
-// echo "Kullanıcı id :" . $account_id ;
-
-$type = isset($_GET["type"]) ? $_GET["type"] : $_POST["type"];
 if ($_POST && $_POST["method"] == "add") {
 
-
+    $type = $_POST["type"];
     $company_id = $_POST["companies"];
     $firm_id = $_POST["firms"];
     $project_name = $_POST["project_name"];
