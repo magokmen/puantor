@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
-require_once $_SERVER["DOCUMENT_ROOT"] . "/include/requires.php";
+require_once $_SERVER["DOCUMENT_ROOT"] ."/include/requires.php";
 
 // $id = isset($_GET['id']) ? $_GET['id'] : die('HATA: Kayıt bulunamadı.');
 // aktif kayıt bilgilerini oku 
@@ -11,7 +11,7 @@ $phone = "";
 $username = "";
 $password = "";
 
-//echo "account_id : " . $account_id;
+echo "account_id : " . $account_id;
 if ($_POST && $_POST['method'] == "add") {
     // Verileri al
     $full_name = $_POST['full_name'];
@@ -27,6 +27,7 @@ if ($_POST && $_POST['method'] == "add") {
     $query = "SELECT username FROM users WHERE username = ?";
     $statement = $con->prepare($query);
     $statement->execute(array($username));
+
     $result = $statement->fetch(PDO::FETCH_ASSOC);
 
     //mail adresi var mı kontrol edilir

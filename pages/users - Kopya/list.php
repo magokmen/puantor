@@ -1,7 +1,7 @@
 <?php
-require_once $_SERVER["DOCUMENT_ROOT"] . "/plugins/datatables/datatable.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/include/requires.php";
-$id = $_SESSION['id'];
+require_once $_SERVER["DOCUMENT_ROOT"] ."/plugins/datatables/datatable.php";
+require_once $_SERVER["DOCUMENT_ROOT"] ."/include/requires.php";
+
 // echo "hesap id :" . $account_id;
 if ($_POST && $_POST['method'] == "Delete") {
     $id = $_POST['id'];
@@ -29,20 +29,10 @@ if ($_POST && $_POST['method'] == "Delete") {
     <tbody>
 
         <?php
-        $sql = $con->prepare("SELECT groups FROM users WHERE id = ?");
-        $sql->execute(array($id));
-        $user = $sql->fetch();
-
-        if ($user && $user['groups'] == 1) {
-            // groups alanındaki değer 1 ise normal işlemi yap
-            $sql = $con->prepare("SELECT * FROM users WHERE account_id = ? ORDER BY id DESC");
-            $sql->execute(array($account_id));
-        } else {
-            // groups alanındaki değer 1 değilse, id alanı 1 dışında olanları göster
-            $sql = $con->prepare("SELECT * FROM users WHERE account_id = ? AND groups != 1 ORDER BY id DESC");
-            $sql->execute(array($account_id));
-        }
+        $sql = $con->prepare("Select * from users where account_id = ? ORDER BY id desc");
+        $sql->execute(array($account_id));
         $result = $sql->fetchAll();
+
 
         foreach ($result as $key => $value) {
 
@@ -101,4 +91,4 @@ if ($_POST && $_POST['method'] == "Delete") {
 <!-- /.content -->
 
 <?php
-include_once $_SERVER["DOCUMENT_ROOT"] . "/plugins/datatables/datatablescripts.php" ?>
+include_once $_SERVER["DOCUMENT_ROOT"] ."/plugins/datatables/datatablescripts.php" ?>

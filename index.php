@@ -39,7 +39,8 @@ if ($expired_date < 3) {
         crossorigin="anonymous" />   -->
 
     <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
     <script src="https://kit.fontawesome.com/0c7584bba4.js" crossorigin="anonymous"></script>
@@ -76,7 +77,8 @@ if ($expired_date < 3) {
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
     <title>Puantor | Puantaj Takip Uygulaması</title>
-    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
+        rel="stylesheet">
 
 
 </head>
@@ -117,11 +119,13 @@ if ($expired_date < 3) {
                 <?php if ($user_state != 1) { ?>
                     <marquee behavior="" direction="rihgt" onmouseover="stop()" onmouseout="start()">
                         <span class="text-blue">
-                            Deneme sürümünün bitmesine kalan süre <span class="badge badge-<?php echo $badgestyle; ?> p-2"><?php echo $expired_date; ?></span>
+                            Deneme sürümünün bitmesine kalan süre <span
+                                class="badge badge-<?php echo $badgestyle; ?> p-2"><?php echo $expired_date; ?></span>
                             gün.Kullanmaya devam etmek için lütfen satın alın
                         </span>
                     </marquee>
-                <?php }; ?>
+                <?php }
+                ; ?>
             </div>
 
             <!-- Right navbar links -->
@@ -145,10 +149,10 @@ if ($expired_date < 3) {
                     }
 
 
-                    echo $func->companies("companyindex",  $company_id, minwidth: "250px");
+                    echo $func->companies("companyindex", $company_id, "250px");
                     // $companyName = $func->getCompanyName($company_id);
                     // $convertedName = convertTurkishCharacters($companyName);
-
+                    
                     ?>
 
                     <script>
@@ -162,7 +166,8 @@ if ($expired_date < 3) {
                     <div class="navbar-search-block">
                         <form class="form-inline">
                             <div class="input-group input-group-sm">
-                                <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+                                <input class="form-control form-control-navbar" type="search" placeholder="Search"
+                                    aria-label="Search">
                                 <div class="input-group-append">
                                     <button class="btn btn-navbar" type="submit">
                                         <i class="fas fa-search"></i>
@@ -221,8 +226,10 @@ if ($expired_date < 3) {
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="logout.php" class="brand-link">
-                <img src="../src/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light"><?php echo $func->getCompanyName($_SESSION["companyID"]); ?></span>
+                <img src="../src/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+                    style="opacity: .8">
+                <span
+                    class="brand-text font-weight-light"><?php echo $func->getCompanyName($_SESSION["companyID"]); ?></span>
             </a>
 
 
@@ -256,7 +263,8 @@ if ($expired_date < 3) {
 
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                        data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
                 with font-awesome or any other icon font library -->
                         <?php
@@ -267,7 +275,8 @@ if ($expired_date < 3) {
                         $pageTitle = "Ana Sayfa";
                         $active = $_SESSION["activeLink"] == $pageTitle ? "active" : ""; ?>
                         <li class="nav-item">
-                            <a class="nav-link nav-menu loadContent <?php echo $active; ?>" href="#" data-page="index" data-title="<?php echo $pageTitle; ?>">
+                            <a class="nav-link nav-menu loadContent <?php echo $active; ?>" href="#" data-page="index"
+                                data-title="<?php echo $pageTitle; ?>">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     <?php echo $pageTitle; ?>
@@ -275,13 +284,14 @@ if ($expired_date < 3) {
                             </a>
                         </li>
 
-                        <?php if (permtrue("puantaj")) : ?>
+                        <?php if (permtrue("puantaj")): ?>
                             <?php
                             $pageTitle = "Puantaj";
-                           
+
                             ?>
                             <li class="nav-item">
-                                <a class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>" href="#" data-page="puantaj/main" data-title="<?php echo $pageTitle; ?>">
+                                <a class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>" href="#"
+                                    data-page="puantaj/main" data-title="<?php echo $pageTitle; ?>">
                                     <i class="nav-icon fa-regular fa-calendar-days"></i>
                                     <p>
                                         <?php echo $pageTitle; ?>
@@ -290,10 +300,11 @@ if ($expired_date < 3) {
                             </li>
                         <?php endif; ?>
 
-                        <?php if (permtrue("bordro")) : ?>
+                        <?php if (permtrue("bordro")): ?>
                             <?php $pageTitle = "Bordro"; ?>
                             <li class="nav-item ">
-                                <a class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>" href="#" data-page="bordro/main" data-title="<?php echo $pageTitle; ?>">
+                                <a class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>" href="#"
+                                    data-page="bordro/main" data-title="<?php echo $pageTitle; ?>">
                                     <i class="nav-icon fa-solid fa-money-bills"></i>
                                     <p>
                                         <?php echo $pageTitle; ?>
@@ -302,265 +313,278 @@ if ($expired_date < 3) {
                             </li>
                             <!-- <?php endif; ?> -->
 
-                            <?php if (permtrue("personel")) : ?>
-                                <?php
-                                $pageTitle = "Personeller";
-                                if ($_SESSION["activeLink"] == "Personel Listesi" || $_SESSION["activeLink"] == "Yeni Personel") {
-                                    $active = "active";
-                                    $menu_open = "menu-is-opening menu-open";
-                                } else {
-                                    $active = "";
-                                    $menu_open = "";
-                                }
-                                ?>
-                                <li class="nav-item <?php echo $menu_open; ?>">
-                                    <a href="#" class="nav-link">
-                                        <i class="nav-icon fas fa-user"></i>
-                                        <p>
-                                            <?php echo $pageTitle; ?>
-                                            <i class="fas fa-angle-left right"></i>
-                                        </p>
-                                    </a>
-                                    <ul class="nav nav-treeview">
-                                        <?php if (permtrue("personelYeni")) : ?>
-                                            <?php $pageTitle = "Yeni Personel"; ?>
-                                            <li class="nav-item">
-                                                <a href="#" data-page="person/main" data-title="Yeni Personel" class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>">
-                                                    <i class="far fa-circle nav-icon"></i>
-                                                    <p>
-                                                        <?php echo $pageTitle; ?>
-                                                        <span class="right badge badge-danger">Yeni</span>
-                                                    </p>
-                                                </a>
-                                            </li>
-                                        <?php endif; ?>
-                                        <?php if (permtrue("personelListesi")) : ?>
-                                            <?php $pageTitle = "Personel Listesi"; ?>
-                                            <li class="nav-item">
-                                                <a href="#" data-page="person/main" data-title="Personel Listesi" class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>">
-                                                    <i class="far fa-circle nav-icon"></i>
-                                                    <?php echo $pageTitle; ?>
-                                                </a>
-                                            </li>
-                                        <?php endif; ?>
-                                    </ul>
-                                </li>
-                            <?php endif; ?>
-
-                            <?php if (permtrue("proje")) : ?>
-                                <?php
-                                $pageTitle = "Proje Takip";
-                                if ($_SESSION["activeLink"] == "Alınan Projeler" || $_SESSION["activeLink"] == "Verilen Projeler") {
-                                    $active = "active";
-                                    $menu_open = "menu-is-opening menu-open";
-                                } else {
-                                    $active = "";
-                                    $menu_open = "";
-                                }
-                                ?>
-                                <li class="nav-item <?php echo $menu_open; ?>">
-                                    <a href="#" class="nav-link">
-                                        <i class="nav-icon fa-regular fa-building"></i>
-                                        <p>
-                                            Proje Takip
-                                            <i class="fas fa-angle-left right"></i>
-                                        </p>
-                                    </a>
-                                    <ul class="nav nav-treeview">
-                                        <?php if (permtrue("alinanProjeler")) : ?>
-                                            <?php $pageTitle = "Alınan Projeler"; ?>
-                                            <li class="nav-item">
-                                                <a href="#" data-page="projects/main" data-params="type=1" data-title="<?php echo $pageTitle; ?>" class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>">
-                                                    <i class="far fa-circle nav-icon"></i>
-                                                    <p>
-                                                        <?php echo $pageTitle; ?>
-                                                        <span class="right badge badge-danger">Yeni</span>
-                                                    </p>
-                                                </a>
-                                            </li>
-                                        <?php endif; ?>
-                                        <?php if (permtrue("verilenProjeler")) : ?>
-                                            <?php $pageTitle = "Verilen Projeler"; ?>
-                                            <li class="nav-item">
-                                                <a href="#" data-page="projects/main" data-params="type=2" data-title="<?php echo $pageTitle; ?>" class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>">
-                                                    <i class="far fa-circle nav-icon"></i>
-                                                    <p><?php echo $pageTitle; ?></p>
-                                                </a>
-                                            </li>
-                                        <?php endif; ?>
-                                    </ul>
-                                </li>
-                            <?php endif; ?>
-
-                            <?php if (permtrue("firmalar")) : ?>
-                                <?php $pageTitle = "Firmalar"; ?>
-                                <li class="nav-item">
-                                    <a class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>" href="#" data-page="firms/main" data-title="Firma Listesi">
-                                        <i class="nav-icon fa-regular fa-folder-open"></i>
-                                        <p>
-                                            <?php echo $pageTitle; ?>
-                                        </p>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-
-                            <?php if (permtrue("kasa")) : ?>
-                                <?php $pageTitle = "Kasa"; ?>
-                                <li class="nav-item">
-                                    <a class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>" href="#" data-page="kasa/main" data-title="<?php echo $pageTitle; ?>">
-                                        <i class="nav-icon fa-solid fa-building-columns"></i>
-                                        <p>
-                                            <?php echo $pageTitle; ?>
-                                        </p>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-
-                            <?php if (permtrue("tanimlamalar")) : ?>
-                                <?php
-                                $pageTitle = "Tanımlamalar";
-                                if ($_SESSION["activeLink"] == "Parametre Tanımlama" || $_SESSION["activeLink"] == "Kesinti Türü Listesi") {
-                                    $active = "active";
-                                    $menu_open = "menu-is-opening menu-open";
-                                } else {
-                                    $active = "";
-                                    $menu_open = "";
-                                }
-                                ?>
-                                <li class="nav-item <?php echo $menu_open; ?>">
-                                    <a href="#" class="nav-link" data-page="Tanımlamalar" data-title="<?php echo $pageTitle; ?>">
-                                        <i class="nav-icon fa-solid fa-gears"></i>
-                                        <p>
-                                            <?php echo $pageTitle; ?>
-                                            <i class="fas fa-angle-left right"></i>
-                                        </p>
-                                    </a>
-                                    <ul class="nav nav-treeview">
-                                        <?php if (permtrue("tanımlamalarParametreEkle")) : ?>
-                                            <?php $pageTitle = "Parametre Tanımlama"; ?>
-                                            <li class="nav-item">
-                                                <a href="#" data-page="params/main" data-title="<?php echo $pageTitle; ?>" class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>">
-                                                    <i class="far fa-circle nav-icon"></i>
-                                                    <p><?php echo $pageTitle; ?></p>
-                                                </a>
-                                            </li>
-                                        <?php endif; ?>
-
-                                        <?php if (permtrue("tanımlamalarKesintiListesi")) : ?>
-                                            <?php $pageTitle = "Kesinti Türü Listesi"; ?>
-                                            <li class="nav-item">
-                                                <a href="#" data-page="defines/cuts/main" 
-                                                data-title="<?php echo $pageTitle; ?>" 
-                                                class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>">
-                                                    <i class="far fa-circle nav-icon"></i>
-                                                    <p>Kesinti Türü Tanımlama</p>
-                                                </a>
-                                            </li>
-                                        <?php endif; ?>
-                                    </ul>
-                                </li>
-                            <?php endif; ?>
-
-
-                            <?php if (permtrue("şirketlerim")) : ?>
-                                <?php $pageTitle = "Şirketlerim"; ?>
-                                <li class="nav-item">
-                                    <a href="#" data-page="company/main" 
-                                        data-title="Şirket Listesi" 
-                                        class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>">
-                                            <i class="fa-solid fa-folder-tree nav-icon"></i>
-                                        <p><?php echo $pageTitle; ?></p>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-
-                            <?php if (permtrue("kullanıcılar")) : ?>
-                                <?php
-                                $pageTitle = "Kullanıcılar";
-                                if ($_SESSION["activeLink"] == "Kullanıcı Listesi" || $_SESSION["activeLink"] == "Yeni Kullanıcı") {
-                                    $active = "active";
-                                    $menu_open = "menu-is-opening menu-open";
-                                } else {
-                                    $active = "";
-                                    $menu_open = "";
-                                }
-                                ?>
-                                <li class="nav-item <?php echo $menu_open; ?>">
-                                    <a href="#" class="nav-link" data-page="kullanıcılar" data-title="<?php echo $pageTitle; ?>">
-                                        <i class="nav-icon fa-solid fa-users"></i>
-                                        <p>
-                                            <?php echo $pageTitle; ?>
-                                            <i class="fas fa-angle-left right"></i>
-                                        </p>
-                                    </a>
-                                    <ul class="nav nav-treeview">
-                                        <?php if (permtrue("kullanıcılarYeni")) : ?>
-                                            <?php $pageTitle = "Yeni Kullanıcı"; ?>
-                                            <li class="nav-item">
-                                                <a href="#" data-page="users/main" data-title="<?php echo $pageTitle; ?>" class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>">
-                                                    <i class="far fa-circle nav-icon"></i>
-                                                    <p><?php echo $pageTitle; ?></p>
-                                                </a>
-                                            </li>
-                                        <?php endif; ?>
-
-                                        <?php if (permtrue("kullanıcıListele")) : ?>
-                                            <?php $pageTitle = "Kullanıcı Listesi"; ?>
-                                            <li class="nav-item">
-                                                <a href="#" data-page="users/main" data-title="<?php echo $pageTitle; ?>" class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>">
-                                                    <i class="far fa-circle nav-icon"></i>
-                                                    <p><?php echo $pageTitle; ?></p>
-                                                </a>
-                                            </li>
-                                        <?php endif; ?>
-                                    </ul>
-                                </li>
-                            <?php endif; ?>
-
-
-
-                            <?php if (permtrue("yetkiler")) : ?>
-                                <?php $pageTitle = "Yetkiler"; ?>
-                                <li class="nav-item">
-                                    <a class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>" href="#" data-page="roles/main" data-title="Yetki Grupları">
-                                        <i class="nav-icon fa-solid fa-lock-open"></i>
-                                        <p>
-                                        <?php echo $pageTitle ;?>
-                                        </p>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-
-                            <?php if (permtrue("ayarlar")) : ?>
-                                <li class="nav-item">
-                                    <a class="nav-link nav-menu loadContent" href="#" data-page="settings" data-title="Ayarlar">
-                                        <i class="nav-icon fa-solid fa-gear"></i>
-                                        <p>
-                                            Ayarlar
-                                        </p>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-
-                            <?php if ($_SESSION["accountType"] == 1) : ?>
-                                <li class="nav-item">
-                                    <a class="nav-link nav-menu loadContent" href="#" data-page="accounts/list" data-title="Hesaplar">
-                                        <i class="nav-icon  fa-solid fa-user-gear"></i>
-                                        <p>
-                                            Hesaplar
-                                        </p>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-
-                            <li class="nav-item">
-                                <a class="nav-link nav-menu" href="logout.php" data-page="">
-                                    <i class="nav-icon fa-solid fa-right-from-bracket"></i>
+                        <?php if (permtrue("personel")): ?>
+                            <?php
+                            $pageTitle = "Personeller";
+                            if ($_SESSION["activeLink"] == "Personel Listesi" || $_SESSION["activeLink"] == "Yeni Personel") {
+                                $active = "active";
+                                $menu_open = "menu-is-opening menu-open";
+                            } else {
+                                $active = "";
+                                $menu_open = "";
+                            }
+                            ?>
+                            <li class="nav-item <?php echo $menu_open; ?>">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-user"></i>
                                     <p>
-                                        Çıkış yap
+                                        <?php echo $pageTitle; ?>
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <?php if (permtrue("personelYeni")): ?>
+                                        <?php $pageTitle = "Yeni Personel"; ?>
+                                        <li class="nav-item">
+                                            <a href="#" data-page="person/main" data-title="Yeni Personel"
+                                                class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>
+                                                    <?php echo $pageTitle; ?>
+                                                    <span class="right badge badge-danger">Yeni</span>
+                                                </p>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+                                    <?php if (permtrue("personelListesi")): ?>
+                                        <?php $pageTitle = "Personel Listesi"; ?>
+                                        <li class="nav-item">
+                                            <a href="#" data-page="person/main" data-title="Personel Listesi"
+                                                class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <?php echo $pageTitle; ?>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </li>
+                        <?php endif; ?>
+
+                        <?php if (permtrue("proje")): ?>
+                            <?php
+                            $pageTitle = "Proje Takip";
+                            if ($_SESSION["activeLink"] == "Alınan Projeler" || $_SESSION["activeLink"] == "Verilen Projeler") {
+                                $active = "active";
+                                $menu_open = "menu-is-opening menu-open";
+                            } else {
+                                $active = "";
+                                $menu_open = "";
+                            }
+                            ?>
+                            <li class="nav-item <?php echo $menu_open; ?>">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fa-regular fa-building"></i>
+                                    <p>
+                                        Proje Takip
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <?php if (permtrue("alinanProjeler")): ?>
+                                        <?php $pageTitle = "Alınan Projeler"; ?>
+                                        <li class="nav-item">
+                                            <a href="#" data-page="projects/main" data-params="type=1"
+                                                data-title="<?php echo $pageTitle; ?>"
+                                                class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>
+                                                    <?php echo $pageTitle; ?>
+                                                    <span class="right badge badge-danger">Yeni</span>
+                                                </p>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+                                    <?php if (permtrue("verilenProjeler")): ?>
+                                        <?php $pageTitle = "Verilen Projeler"; ?>
+                                        <li class="nav-item">
+                                            <a href="#" data-page="projects/main" data-params="type=2"
+                                                data-title="<?php echo $pageTitle; ?>"
+                                                class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p><?php echo $pageTitle; ?></p>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </li>
+                        <?php endif; ?>
+
+                        <?php if (permtrue("firmalar")): ?>
+                            <?php $pageTitle = "Firmalar"; ?>
+                            <li class="nav-item">
+                                <a class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>" href="#"
+                                    data-page="firms/main" data-title="Firma Listesi">
+                                    <i class="nav-icon fa-regular fa-folder-open"></i>
+                                    <p>
+                                        <?php echo $pageTitle; ?>
                                     </p>
                                 </a>
                             </li>
+                        <?php endif; ?>
+
+                        <?php if (permtrue("kasa")): ?>
+                            <?php $pageTitle = "Kasa"; ?>
+                            <li class="nav-item">
+                                <a class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>" href="#"
+                                    data-page="kasa/main" data-title="<?php echo $pageTitle; ?>">
+                                    <i class="nav-icon fa-solid fa-building-columns"></i>
+                                    <p>
+                                        <?php echo $pageTitle; ?>
+                                    </p>
+                                </a>
+                            </li>
+                        <?php endif; ?>
+
+                        <?php if (permtrue("tanimlamalar")): ?>
+                            <?php
+                            $pageTitle = "Tanımlamalar";
+                            if ($_SESSION["activeLink"] == "Parametre Tanımlama" || $_SESSION["activeLink"] == "Kesinti Türü Listesi") {
+                                $active = "active";
+                                $menu_open = "menu-is-opening menu-open";
+                            } else {
+                                $active = "";
+                                $menu_open = "";
+                            }
+                            ?>
+                            <li class="nav-item <?php echo $menu_open; ?>">
+                                <a href="#" class="nav-link" data-page="Tanımlamalar"
+                                    data-title="<?php echo $pageTitle; ?>">
+                                    <i class="nav-icon fa-solid fa-gears"></i>
+                                    <p>
+                                        <?php echo $pageTitle; ?>
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <?php if (permtrue("tanımlamalarParametreEkle")): ?>
+                                        <?php $pageTitle = "Parametre Tanımlama"; ?>
+                                        <li class="nav-item">
+                                            <a href="#" data-page="params/main" data-title="<?php echo $pageTitle; ?>"
+                                                class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p><?php echo $pageTitle; ?></p>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+
+                                    <?php if (permtrue("tanımlamalarKesintiListesi")): ?>
+                                        <?php $pageTitle = "Kesinti Türü Listesi"; ?>
+                                        <li class="nav-item">
+                                            <a href="#" data-page="defines/cuts/main" data-title="<?php echo $pageTitle; ?>"
+                                                class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Kesinti Türü Tanımlama</p>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </li>
+                        <?php endif; ?>
+
+
+                        <?php if (permtrue("şirketlerim")): ?>
+                            <?php $pageTitle = "Şirketlerim"; ?>
+                            <li class="nav-item">
+                                <a href="#" data-page="company/main" data-title="Şirket Listesi"
+                                    class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>">
+                                    <i class="fa-solid fa-folder-tree nav-icon"></i>
+                                    <p><?php echo $pageTitle; ?></p>
+                                </a>
+                            </li>
+                        <?php endif; ?>
+
+                        <?php if (permtrue("kullanıcılar")): ?>
+                            <?php
+                            $pageTitle = "Kullanıcılar";
+                            if ($_SESSION["activeLink"] == "Kullanıcı Listesi" || $_SESSION["activeLink"] == "Yeni Kullanıcı") {
+                                $active = "active";
+                                $menu_open = "menu-is-opening menu-open";
+                            } else {
+                                $active = "";
+                                $menu_open = "";
+                            }
+                            ?>
+                            <li class="nav-item <?php echo $menu_open; ?>">
+                                <a href="#" class="nav-link" data-page="kullanıcılar"
+                                    data-title="<?php echo $pageTitle; ?>">
+                                    <i class="nav-icon fa-solid fa-users"></i>
+                                    <p>
+                                        <?php echo $pageTitle; ?>
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <?php if (permtrue("kullanıcılarYeni")): ?>
+                                        <?php $pageTitle = "Yeni Kullanıcı"; ?>
+                                        <li class="nav-item">
+                                            <a href="#" data-page="users/main" data-title="<?php echo $pageTitle; ?>"
+                                                class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p><?php echo $pageTitle; ?></p>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+
+                                    <?php if (permtrue("kullanıcıListele")): ?>
+                                        <?php $pageTitle = "Kullanıcı Listesi"; ?>
+                                        <li class="nav-item">
+                                            <a href="#" data-page="users/main" data-title="<?php echo $pageTitle; ?>"
+                                                class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p><?php echo $pageTitle; ?></p>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </li>
+                        <?php endif; ?>
+
+
+
+                        <?php if (permtrue("yetkiler")): ?>
+                            <?php $pageTitle = "Yetkiler"; ?>
+                            <li class="nav-item">
+                                <a class="nav-link nav-menu loadContent <?php echo getActiveStatus($pageTitle); ?>" href="#"
+                                    data-page="roles/main" data-title="Yetki Grupları">
+                                    <i class="nav-icon fa-solid fa-lock-open"></i>
+                                    <p>
+                                        <?php echo $pageTitle; ?>
+                                    </p>
+                                </a>
+                            </li>
+                        <?php endif; ?>
+
+                        <?php if (permtrue("ayarlar")): ?>
+                            <li class="nav-item">
+                                <a class="nav-link nav-menu loadContent" href="#" data-page="settings" data-title="Ayarlar">
+                                    <i class="nav-icon fa-solid fa-gear"></i>
+                                    <p>
+                                        Ayarlar
+                                    </p>
+                                </a>
+                            </li>
+                        <?php endif; ?>
+
+                        <?php if ($_SESSION["accountType"] == 1): ?>
+                            <li class="nav-item">
+                                <a class="nav-link nav-menu loadContent" href="#" data-page="accounts/list"
+                                    data-title="Hesaplar">
+                                    <i class="nav-icon  fa-solid fa-user-gear"></i>
+                                    <p>
+                                        Hesaplar
+                                    </p>
+                                </a>
+                            </li>
+                        <?php endif; ?>
+
+                        <li class="nav-item">
+                            <a class="nav-link nav-menu" href="logout.php" data-page="">
+                                <i class="nav-icon fa-solid fa-right-from-bracket"></i>
+                                <p>
+                                    Çıkış yap
+                                </p>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -577,8 +601,8 @@ if ($expired_date < 3) {
                     <div class="row mb-2">
                         <div class="col-sm-6">
                             <h1 class="m-0" id="page-title"> <?php
-                                                                $pageTitle = $_SESSION["pageTitle"] ?? "Ana Sayfa";
-                                                                echo $pageTitle; ?>
+                            $pageTitle = $_SESSION["pageTitle"] ?? "Ana Sayfa";
+                            echo $pageTitle; ?>
                             </h1>
                         </div><!-- /.col -->
 
@@ -586,7 +610,7 @@ if ($expired_date < 3) {
 
                     <div id="content" class="maincontent">
                         <?php
-                       
+
                         if (isset($_SESSION["page"])) {
                             require_once $_SESSION["page"];
                         } else {

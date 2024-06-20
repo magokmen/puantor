@@ -96,7 +96,8 @@ class Functions
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
             $il_adi = $row['il_adi'];
             $html .= '<option ' . ($id == $row["id"] ? " selected" : '') . ' value=' . $row["id"] . '>' . $il_adi . '</option>';
-        };
+        }
+        ;
 
         $html .= ' </select>';
         echo $html;
@@ -115,7 +116,8 @@ class Functions
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
             $ilce_adi = $row['ilce_adi'];
             $html .= '<option ' . ($id == $row["id"] ? " selected" : '') . ' value=' . $row["id"] . '>' . $ilce_adi . '</option>';
-        };
+        }
+        ;
 
         $html .= ' </select>';
         echo $html;
@@ -144,7 +146,8 @@ class Functions
                 $selected = '';
             }
             $html .= '<option ' . $selected . ' value=' . $row["id"] . '>' . $company_name . '</option>';
-        };
+        }
+        ;
 
         $html .= ' </select>';
 
@@ -166,7 +169,8 @@ class Functions
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
             $firm_name = $row['firm_name'];
             $html .= '<option ' . ($id == $row["id"] ? " selected" : '') . ' value=' . $row["id"] . '>' . $firm_name . '</option>';
-        };
+        }
+        ;
 
         $html .= ' </select>';
         echo $html;
@@ -186,7 +190,8 @@ class Functions
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
             $project_name = $row['project_name'];
             $html .= '<option ' . ($id == $row["id"] ? " selected" : '') . ' value=' . $row["id"] . '>' . $project_name . '</option>';
-        };
+        }
+        ;
 
         $html .= ' </select>';
         echo $html;
@@ -270,7 +275,8 @@ class Functions
             $salonid = $row['id'];
 
             $places .= '<option ' . ($id == $row["id"] ? " selected" : "") . ' value=' . $salonid . '>' . $salonAdi . '</option>';
-        };
+        }
+        ;
 
         $places .= ' </select>';
         echo $places;
@@ -549,17 +555,32 @@ function getPuantajTuru($id)
     {
         global $con;
         global $account_id;
+        $sid = $_SESSION['id'];
+
+        $sql = $con->prepare("SELECT groups FROM users WHERE id = ?");
+        $sql->execute(array($sid));
+        $user = $sql->fetch();
+
         $html = ' <select required id="' . $name . '" name="' . $name . '"  class="select2"
                             style="width: 100%;">
                             <option value="">Yetki Seçiniz</option>';
 
-        $sql = $con->prepare("Select id,roleName from userroles WHERE account_id = ?");
-        $sql->execute(array($account_id));
+        if ($user && $user['groups'] == 1) {
+            // groups alanındaki değer 1 ise normal işlemi yap
+            $sql = $con->prepare("SELECT * FROM userroles WHERE account_id = ? ORDER BY id DESC");
+            $sql->execute(array($account_id));
+        } else {
+            // groups alanındaki değer 1 değilse, id alanı 1 dışında olanları göster
+            $sql = $con->prepare("SELECT * FROM userroles WHERE account_id = ? AND id != 1 ORDER BY id DESC");
+            $sql->execute(array($account_id));
+        }
+
 
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
             $roleName = $row['roleName'];
             $html .= '<option ' . ($id == $row["id"] ? " selected" : '') . ' value=' . $row["id"] . '>' . $roleName . '</option>';
-        };
+        }
+        ;
 
         $html .= ' </select>';
         echo $html;
@@ -827,11 +848,12 @@ function deleteRecordbyPhp($id, $tablename, $page, $pTitle)
     }
 
     echo json_encode($res);
-    
+
 }
 
 
-function getCompanyId($account_id) {
+function getCompanyId($account_id)
+{
     global $con;
     if (isset($_GET["company_id"])) {
         return $_GET["company_id"];
@@ -845,7 +867,8 @@ function getCompanyId($account_id) {
     }
 }
 
-function getActiveStatus($page){
+function getActiveStatus($page)
+{
     if (isset($_SESSION["pageTitle"]) && $_SESSION["pageTitle"] === $page) {
         return "active";
     } else {
