@@ -58,7 +58,7 @@ $company_id = getCompanyId($account_id);
                     <?php echo $row["param_name"]; ?>
                 </td>
                 <td>
-                    <?php echo $row["param_type"]; ?>
+                <?php echo $row["param_type"] == 1 ? "Günlük Ücret" : "Saatlik Ücret"; ?>
                 </td>
                 <td class="text-center">
                     <?php echo formatdDate($row["start_date"]); ?>
@@ -70,8 +70,8 @@ $company_id = getCompanyId($account_id);
                     <?php echo tlFormat($row["param_val"]); ?>
                 </td>
 
-                <td>
-                    <?php echo $row["calc_type"] == 1 ? "Günlük Ücret" : "Saatlik Ücret"; ?>
+                <td class="text-center">
+                    <?php echo $row["calc_type"] == 1 ? "TL" : "Günlük Ücr. Yüzdesi"; ?>
                 </td>
                 <td>
                     <?php echo $row["description"]; ?>

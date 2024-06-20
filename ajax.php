@@ -320,6 +320,8 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
 
             $toplam_ucret = 0;
             $maas_data = array();
+            $person_id = 0;
+
 
             ## puantaj tablosunda personeli çalışma verileri alıyoruz
             $data = $row["datas"];
@@ -344,7 +346,7 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
 
 
 
-                        // // #Saatlik ücret dışındaki çalışma ise günlük saat üzerinden puantajdaki saat hesaplanır
+                        // Tarihi kontrol et ve formatını değiştir
                         $ctrl_date = DateTime::createFromFormat('d.m.Y', $value)->format('Y-m-d');
 
 
@@ -396,17 +398,25 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
                                 $toplam_ucret = $toplam_ucret + $tutar;
 
 
+                                if ($person_id == 0) {
+                                    $person_id = $row["person"];
+                                    $puantaj_turu_tutar = array();
+                                };
                                 // veritabanına kayıt edilecek verileri oluştur
                                 if (isset($puantaj_turu_tutar[$puantaj["id"]])) {
-                                    // Eğer "tur_id" değeri zaten varsa, mevcut "tutar" değerine ekleyin
+                                    // Eğer "tur_id" değeri zaten varsa, mevcut "tutar" ve "sayi" değerlerini güncelleyin
                                     $puantaj_turu_tutar[$puantaj["id"]]["tutar"] += $tutar;
+                                    $puantaj_turu_tutar[$puantaj["id"]]["sayi"] += 1;
                                 } else {
-                                    // Yoksa yeni bir öğe ekleyin ve hesaplanmış "tutar" değerini kullanın
+                                    // Yoksa yeni bir öğe ekleyin ve hesaplanmış "tutar" ve "sayi" değerlerini kullanın
                                     $puantaj_turu_tutar[$puantaj["id"]] = array(
                                         "tur_id" => $puantaj["id"],
-                                        "tutar" => $tutar
+                                        "tutar" => $tutar,
+                                        "sayi" => 1
                                     );
                                 }
+
+
                                 $maas_data = json_encode($puantaj_turu_tutar);
 
                                 // Kontrol etmek için verileri diziye ekler
@@ -425,6 +435,63 @@ if ($_POST && $_POST["action"] == "maas_hesapla") {
                             );
                             echo json_encode($res);
                             return;
+                        }
+                    } else if ($tur == "Saatlik") {
+                        // Tarihi kontrol et ve formatını değiştir
+                        $ctrl_date = DateTime::createFromFormat('d.m.Y', $value)->format('Y-m-d');
+
+                        // Döngüye alına tarihlerin parametrelerini kontrol ederek ücreti alır
+                        $prm = $con->prepare("SELECT * FROM parameters WHERE account_id = ? and param_type = ? 
+                                      AND STR_TO_DATE(start_date,'%Y-%m-%d') <= ? 
+                                      AND STR_TO_DATE(end_date,'%Y-%m-%d') >= ? 
+                                      AND STR_TO_DATE(start_date,'%Y-%m-%d') <= ?
+                                      AND STR_TO_DATE(end_date,'%Y-%m-%d') >= ? 
+                                      ORDER by id DESC LIMIT 1 ");
+                        $prm->execute(array($account_id, 2, $ctrl_date, $ctrl_date, $start_date, $end_date));
+
+                        // // Eğer parametre varsa döngüye alınır
+                        while ($paramVal = $prm->fetch(PDO::FETCH_ASSOC)) {
+                            // //Döneme ait parametre varsa günlük ücreti alır yoksa geri mesaj döner
+                            if (isset($paramVal["param_val"])) {
+                                $saatlik_ucret = $paramVal["param_val"];
+                                
+                            } else {
+                                $saatlik_ucret = 0;
+                                $ucret_statu = 400;
+                                $res = array(
+                                    "statu" => 400,
+                                    "message" => "Seçilen döneme ait parametre bulunamadı!",
+                                );
+                                echo json_encode($res);
+                                return;
+                            }
+
+                                // puantaj kodunun saat karşılığı alınır
+                                $puantaj_saati = $puantaj["PuantajSaati"];
+
+                                // Saatlik ücretin karşılığı hesaplanır
+                                $tutar = ($puantaj_saati) * $saatlik_ucret;
+
+                                // Toplam ücret hesaplanır
+                                $toplam_ucret = $toplam_ucret + $tutar;
+
+                               
+                                // veritabanına kayıt edilecek verileri oluştur
+                                if (isset($puantaj_turu_tutar[$puantaj["id"]])) {
+                                    // Eğer "tur_id" değeri zaten varsa, mevcut "tutar" ve "sayi" değerlerini güncelleyin
+                                    $puantaj_turu_tutar[$puantaj["id"]]["tutar"] += $tutar;
+                                    $puantaj_turu_tutar[$puantaj["id"]]["sayi"] += 1;
+                                } else {
+                                    // Yoksa yeni bir öğe ekleyin ve hesaplanmış "tutar" ve "sayi" değerlerini kullanın
+                                    $puantaj_turu_tutar[$puantaj["id"]] = array(
+                                        "tur_id" => $puantaj["id"],
+                                        "tutar" => $tutar,
+                                        "sayi" => 1
+                                    );
+                                }
+                                
+                                $maas_data = json_encode($puantaj_turu_tutar);
+
                         }
                     }
                 }

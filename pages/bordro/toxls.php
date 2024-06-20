@@ -5,6 +5,9 @@ require_once "../../config/functions.php";
 $func = new Functions();
 
 
+
+
+
 $file_name = "maaslar";
 #varsayılan olarak bu kadar değerde döner
 $columns = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J");

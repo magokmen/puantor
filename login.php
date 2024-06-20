@@ -185,6 +185,7 @@ if ( $CheckUser ) {
                     $_SESSION['state'] = $user_state;
                     $_SESSION['accountID'] = $account["account_id"];
                     $_SESSION['id'] = $account["id"];
+                    $_SESSION["page"] = "pages/index.php";
 
 
                     // Giriş başarılı mesajını göster

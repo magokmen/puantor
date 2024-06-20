@@ -5,10 +5,20 @@ if ($_POST && $_POST['method'] == "Delete") {
 
     require_once $_SERVER["DOCUMENT_ROOT"] . "/include/requires.php";
      try {
-        $id = $_POST['id'];
+        $puantaj_id = $_POST['puantaj_id'];
+        $person_id = $_POST['person_id'];
+        $year = $_POST['year'];
+        $month = $_POST['month'];
 
         $up = $con->prepare("UPDATE puantaj SET viewonPayroll = ? WHERE id = ?");
-        $up->execute([0, $id]);
+        $up->execute([0, $puantaj_id]);
+
+        $del_gelir = $con->prepare("DELETE FROM maas_gelir WHERE puantaj_id = ?");
+        $del_gelir->execute([$puantaj_id]);
+        
+        $del_kesinti = $con->prepare("DELETE FROM wagecuts WHERE person_id = ? AND year = ? AND month = ?");
+        $del_kesinti->execute([$person_id, $year, $month]);
+
         $res = array(
             "status" => 200,
             "message" => "Kayıt başarıyla silindi",
@@ -302,8 +312,12 @@ $dates = generateDates($year, $month, $days);
 
                             <i class="fa-solid fa-ellipsis list-button" data-toggle="dropdown"></i>
                             <ul class="dropdown-menu">
+                            <?php 
+                                $person_id =encrypt($row["id"]);
+
+                            ;?>
                                 <li class="dropdown-item edit"><i class="fa-regular fa-file-pdf dropdown-list-icon"></i></i>
-                                    <a href="../pages/reports/payroll.php" target="_blank" data-title="Parametre Güncelleme">
+                                    <a href="../pages/reports/payroll.php?project_id=<?php echo $project_id ;?>&person_id=<?php echo $person_id; ?>&month=<?php echo $month ;?>&year=<?php echo $year ;?>" target="_blank" data-title="Bordro Göster">
                                         Bordroyu Göster
                                     </a>
                                 </li>
@@ -316,8 +330,11 @@ $dates = generateDates($year, $month, $days);
 
                                 <?php
                                 $params = array(
-                                    "id" => $row["puantaj_id"],
-                                    "message" => "Bu kaydı silmek istediğinize emin misiniz?"
+                                    "puantaj_id" => $row["puantaj_id"],
+                                    "person_id" => $row["id"],
+                                    "message" => "Bu kaydı silmek istediğinize emin misiniz?",
+                                    "year" => $year,
+                                    "month" => $month,
                                 );
                                 $params_json = $func->jsonEncode($params);
 
