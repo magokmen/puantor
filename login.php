@@ -5,71 +5,55 @@ require_once "config/connect.php";
 require_once "config/functions.php";
 
 // Eğer aktif bir oturum yok ise.
-if ( !isset($_SESSION['Oturum']) || $_SESSION['Oturum'] != 'active' ) {
- 
-// Eğer beni hatırla çerezi var ise.
-  if ( isset($_COOKIE['RMB']) and $_COOKIE['RMB'] != 'false' ) {
- 
-$CookieToken = $_COOKIE['RMB']; // Çerez kodu.
-$Browser     = md5($_SERVER['HTTP_USER_AGENT']); // Tarayıcı bilgisi.
-$time        = time(); // Unix zaman.
- 
-$query = $con->query("SELECT * FROM remember_me WHERE remember_token = '{$CookieToken}' and user_browser = '$Browser' and expired_time > $time ")->fetch(PDO::FETCH_ASSOC);
- 
-// Eğer çerez kodu geçerli ise ve max oturum süresi 7 gün aşılmamış ise.
-if ( $query ) {
- 
-$CookieUser = $query['user_id']; // Çereze ait kullanıcı id'si.
- 
-// Çerezdeki kullanıcı id'sini veri tabanımızda sorguluyoruz.
-$CheckUser = $con->query("SELECT * FROM users WHERE id = '{$CookieUser}' ")->fetch(PDO::FETCH_ASSOC); 
- 
-if ( $CheckUser ) {
- 
-// Kullanıcı geçerli. $CheckUser kullanıcısı için oturum başlatılabilir.
- 
-// Burada standart login sayfanızda hangi işlemleri yapıyorsanız onları yapın ve oturumu başlatın. 
+if (!isset($_SESSION['Oturum']) || $_SESSION['Oturum'] != 'active') {
+
+    // Eğer beni hatırla çerezi var ise.
+    if (isset($_COOKIE['RMB']) and $_COOKIE['RMB'] != 'false') {
+
+        $CookieToken = $_COOKIE['RMB']; // Çerez kodu.
+        $Browser = md5($_SERVER['HTTP_USER_AGENT']); // Tarayıcı bilgisi.
+        $time = time(); // Unix zaman.
+
+        $query = $con->query("SELECT * FROM remember_me WHERE remember_token = '{$CookieToken}' and user_browser = '$Browser' and expired_time > $time ")->fetch(PDO::FETCH_ASSOC);
+
+        // Eğer çerez kodu geçerli ise ve max oturum süresi 7 gün aşılmamış ise.
+        if ($query) {
+
+            $CookieUser = $query['user_id']; // Çereze ait kullanıcı id'si.
+
+            // Çerezdeki kullanıcı id'sini veri tabanımızda sorguluyoruz.
+            $CheckUser = $con->query("SELECT * FROM users WHERE id = '{$CookieUser}' ")->fetch(PDO::FETCH_ASSOC);
+
+            if ($CheckUser) {
+
+                // Kullanıcı geçerli. $CheckUser kullanıcısı için oturum başlatılabilir.
+
+                // Burada standart login sayfanızda hangi işlemleri yapıyorsanız onları yapın ve oturumu başlatın. 
 // Bu şekilde kullanıcının oturumu otomatik olarak başlamış olacak.
- 
-  $_SESSION['Oturum'] = 'active';
-  $_SESSION['UserID'] = $CheckUser['id'];
- 
-} else {
- 
-// Çerez geçersiz, çerezi sıfırla ve giriş sayfasına yönlendir.
-  setcookie("RMB", 'false', time() -3600,'/');
-  header("Location:/Login");
-  exit;
- 
+
+                $_SESSION['Oturum'] = 'active';
+                $_SESSION['UserID'] = $CheckUser['id'];
+
+            } else {
+
+                // Çerez geçersiz, çerezi sıfırla ve giriş sayfasına yönlendir.
+                setcookie("RMB", 'false', time() - 3600, '/');
+                header("Location:/Login");
+                exit;
+
+            }
+
+        } else {
+
+            // Çerez geçersiz, çerezi sıfırla ve giriş sayfasına yönlendir.
+            setcookie("RMB", 'false', time() - 3600, '/');
+            header("Location:/Login");
+            exit;
+
+        }
+
+    }
 }
- 
-} else {
- 
-// Çerez geçersiz, çerezi sıfırla ve giriş sayfasına yönlendir.
-  setcookie("RMB", 'false', time() -3600,'/');
-  header("Location:/Login");
-  exit;
- 
-}
- 
-}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ?>
 <!DOCTYPE html>
@@ -105,7 +89,7 @@ if ( $CheckUser ) {
         $email = "";
         $message = "";
         // Kullanıcı adı ve parola boş değilse
-
+        
         if ($_POST) {
 
             $email = $_POST["email"];
@@ -117,93 +101,95 @@ if ( $CheckUser ) {
                 showAlert("Şifreyi boş bırakmayınız!!!");
             } else {
 
-
-
-
                 $query = $con->prepare("SELECT * FROM users WHERE email = ?");
                 $query->execute([$email]);
                 $account = $query->fetch(PDO::FETCH_ASSOC);
 
+                if ($account["isActive"] == 0) {
+                    showAlert("Kullanıcı Durumunuz Pasiftir. Lütfen Yetkiliniz ile irtibata geçiniz!!!");
+                } else {
+                    $sql = $con->prepare("SELECT * FROM accounts WHERE id = ?");
+                    $sql->execute(array($account["account_id"]));
+                    $result = $sql->fetch(PDO::FETCH_OBJ);
 
-                $sql = $con->prepare("SELECT * FROM accounts WHERE id = ?");
-                $sql->execute(array($account["account_id"]));
-                $result = $sql->fetch(PDO::FETCH_OBJ);
 
+                    $tarih1 = new DateTime($result->created_at);
+                    $tarih2 = new DateTime("now");
 
-                $tarih1 = new DateTime($result->created_at);
-                $tarih2 = new DateTime("now");
+                    // Farkı hesapla
+                    $fark = $tarih1->diff($tarih2);
 
-                // Farkı hesapla
-                $fark = $tarih1->diff($tarih2);
+                    // Farkı gün olarak al
+                    $farkGun = 14 - $fark->days;
+                    $user_state = $result->state != null ? 1 : 0;
 
-                // Farkı gün olarak al
-                $farkGun = 14 - $fark->days;
-                $user_state =  $result->state != null ? 1 : 0;
+                    if ($user_state == 0 && $farkGun < 1) {
+                        echo '<div class="alert alert-warning" role="alert">Deneme süreniz dolmuştur. Lütfen satın alın</div>';
+                    } else if ($account && password_verify($password, $account["password"])) {
 
-                if ($user_state == 0 && $farkGun < 1) {
-                    echo '<div class="alert alert-warning" role="alert">Deneme süreniz dolmuştur. Lütfen satın alın</div>';
-                } else if ($account && password_verify($password, $account["password"])) {
+                        if (isset($_POST['remember-me'])) {
 
-                    if (isset($_POST['remember-me'])) {
-
-                        $UserID = $account['id']; // Kullanıcının id'si.
-                        $delete = $con->exec("DELETE FROM remember_me WHERE user_id = '$UserID' "); // Önceki anahtarları siliyoruz.
-
-                        $NewToken = bin2hex(openssl_random_pseudo_bytes(32)); // Rastgele kod üretiyoruz.
-
-                        // Ürettiğimiz kodu kullanıcı id'si ve tarayıcı bilgisi ile birlikte veritabanımıza kaydediyoruz.
-                        $Insert2 = $con->prepare("INSERT INTO remember_me SET
+                            $UserID = $account['id']; // Kullanıcının id'si.
+                            $delete = $con->exec("DELETE FROM remember_me WHERE user_id = '$UserID' "); // Önceki anahtarları siliyoruz.
+        
+                            $NewToken = bin2hex(openssl_random_pseudo_bytes(32)); // Rastgele kod üretiyoruz.
+        
+                            // Ürettiğimiz kodu kullanıcı id'si ve tarayıcı bilgisi ile birlikte veritabanımıza kaydediyoruz.
+                            $Insert2 = $con->prepare("INSERT INTO remember_me SET
                                 user_id = :bir,
                                 remember_token = :iki,
                                 expired_time = :uc,
                                 user_browser = :dort");
-                        $insert = $Insert2->execute(array(
-                            "bir" => $UserID,
-                            "iki" => $NewToken,
-                            "uc" => time() + 604800,
-                            'dort' => md5($_SERVER['HTTP_USER_AGENT'])
+                            $insert = $Insert2->execute(
+                                array(
+                                    "bir" => $UserID,
+                                    "iki" => $NewToken,
+                                    "uc" => time() + 604800,
+                                    'dort' => md5($_SERVER['HTTP_USER_AGENT'])
 
-                        ));
+                                )
+                            );
 
-                        // Kullanıcının tarayıcısına bu kodu çerez olarak kaydediyoruz.
-                        setcookie("RMB", $NewToken, time() + 604801, '/');
+                            // Kullanıcının tarayıcısına bu kodu çerez olarak kaydediyoruz.
+                            setcookie("RMB", $NewToken, time() + 604801, '/');
+                        }
+
+
+
+
+                        session_regenerate_id();
+                        $_SESSION['login'] = true;
+                        $_SESSION['email'] = $_POST['email'];
+                        $_SESSION['LoginIP'] = $_SERVER["REMOTE_ADDR"];
+                        $_SESSION['userAgent'] = $_SERVER["HTTP_USER_AGENT"];
+
+                        $_SESSION['companyID'] = $account["company_id"];
+                        $_SESSION['UserFullName'] = $account["full_name"];
+                        $_SESSION['accountType'] = $account["account_type"];
+                        $_SESSION['expired_date'] = $farkGun;
+                        $_SESSION['state'] = $user_state;
+                        $_SESSION['accountID'] = $account["account_id"];
+                        $_SESSION['id'] = $account["id"];
+
+
+                        // Giriş başarılı mesajını göster
+                        echo '<div class="alert alert-info" role="alert">Giriş başarılı! Ana Sayfaya yönlendiriliyorsunuz.</div>';
+
+                        // Sayfayı yönlendir
+                        echo '<meta http-equiv="refresh" content="2;url=index.php">';
+
+                        //exit(); // header işleminden sonra kodun devam etmemesi için exit kullanılır
+                    } else {
+                        echo '<div class="alert alert-danger" role="alert">Hatalı parola veya şifre!</div>';
                     }
-
-
-
-
-                    session_regenerate_id();
-                    $_SESSION['login'] = true;
-                    $_SESSION['email'] = $_POST['email'];
-                    $_SESSION['LoginIP'] = $_SERVER["REMOTE_ADDR"];
-                    $_SESSION['userAgent'] = $_SERVER["HTTP_USER_AGENT"];
-
-                    $_SESSION['companyID'] = $account["company_id"];
-                    $_SESSION['UserFullName'] = $account["full_name"];
-                    $_SESSION['accountType'] = $account["account_type"];
-                    $_SESSION['expired_date'] = $farkGun;
-                    $_SESSION['state'] = $user_state;
-                    $_SESSION['accountID'] = $account["account_id"];
-                    $_SESSION['id'] = $account["id"];
-
-
-                    // Giriş başarılı mesajını göster
-                    echo '<div class="alert alert-info" role="alert">Giriş başarılı! Ana Sayfaya yönlendiriliyorsunuz.</div>';
-
-                    // Sayfayı yönlendir
-                    echo '<meta http-equiv="refresh" content="2;url=index.php">';
-
-                    //exit(); // header işleminden sonra kodun devam etmemesi için exit kullanılır
-                } else {
-                    echo '<div class="alert alert-danger" role="alert">Hatalı parola veya şifre!</div>';
                 }
             }
         }
         ?>
         <script>
-            $(document).ready(function() {
+            $(document).ready(function () {
                 // show the alert
-                setTimeout(function() {
+                setTimeout(function () {
                     $(".alert-info,.alert-danger").fadeOut("slow");
                 }, 3000);
             });
@@ -222,7 +208,8 @@ if ( $CheckUser ) {
                         <img src="src/img/preload.png" alt="" style="width:64px;height:64px">
                     </div>
                     <div class="input-group mb-3">
-                        <input type="email" class="form-control" value="<?php echo $email ?>" name="email" placeholder="Email adresini giriniz">
+                        <input type="email" class="form-control" value="<?php echo $email ?>" name="email"
+                            placeholder="Email adresini giriniz">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>

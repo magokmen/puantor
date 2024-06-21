@@ -859,3 +859,9 @@ function getActiveStatus($page)
         return "";
     }
 }
+function updateStatus($id, $status)
+{
+    global $con;
+    $up = $con->prepare("UPDATE users SET isActive = ? WHERE id = ?");
+    $result = $up->execute(array($status, $id));
+}

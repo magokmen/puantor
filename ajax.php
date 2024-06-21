@@ -146,12 +146,12 @@ if ($_POST && $_POST["action"] == "todos") {
 
         $res = array(
             "statu" => 200,
-            "data" =>  $html,
+            "data" => $html,
         );
     } catch (PDOException $ex) {
         $res = array(
             "statu" => 200,
-            "data" =>   $ex->getMessage()
+            "data" => $ex->getMessage()
         );
     }
 
@@ -206,7 +206,8 @@ if ($_POST && $_POST["action"] == "puantaj") {
                 "message" => "Bir hata oluştu. Hata mesajı :" . $ex->getMessage(),
                 "status" => 400
             );
-        };
+        }
+        ;
     }
     echo json_encode($res);
     return false;
@@ -664,4 +665,20 @@ if ($_POST && $_POST["action"] == "auth-define") {
     );
     echo json_encode($res);
     exit();
+}
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'update_status') {
+    $userId = $_POST['userId'];
+    $isActive = $_POST['isActive'];
+
+    $sql = "UPDATE users SET isActive = :isActive WHERE id = :userId";
+    $stmt = $con->prepare($sql);
+    $stmt->bindParam(':isActive', $isActive, PDO::PARAM_INT);
+    $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+
+    if ($stmt->execute()) {
+        echo "Başarılı";
+    } else {
+        echo "Hata: Güncelleme yapılamadı.";
+    }
+
 }
