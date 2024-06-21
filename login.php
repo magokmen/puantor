@@ -163,13 +163,13 @@ if (!isset($_SESSION['Oturum']) || $_SESSION['Oturum'] != 'active') {
                         $_SESSION['LoginIP'] = $_SERVER["REMOTE_ADDR"];
                         $_SESSION['userAgent'] = $_SERVER["HTTP_USER_AGENT"];
 
-                        $_SESSION['companyID'] = $account["company_id"];
-                        $_SESSION['UserFullName'] = $account["full_name"];
-                        $_SESSION['accountType'] = $account["account_type"];
-                        $_SESSION['expired_date'] = $farkGun;
-                        $_SESSION['state'] = $user_state;
-                        $_SESSION['accountID'] = $account["account_id"];
-                        $_SESSION['id'] = $account["id"];
+                    $_SESSION['companyID'] = $account["company_id"];
+                    $_SESSION['UserFullName'] = $account["full_name"];
+                    $_SESSION['accountType'] = $account["account_type"];
+                    $_SESSION['expired_date'] = $farkGun;
+                    $_SESSION['state'] = $user_state;
+                    $_SESSION['accountID'] = $account["account_id"];
+                    $_SESSION['id'] = $account["id"];
 
 
                         // Giriş başarılı mesajını göster

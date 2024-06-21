@@ -10,16 +10,36 @@ function toBase64($image)
     return 'data:' . mime_content_type($image) . ';base64,' . $data;
 }
 
+$project_id = $_GET["project_id"];
+$person_id =decrypt($_GET["person_id"]);
+$year = $_GET["year"];
+$month = $_GET["month"];
+$month_days = $func->daysInMonth($month, $year);
 
-$id = $_GET["id"];
 
+$sql = $con->prepare("SELECT sm.*,mg.datas 
+                        FROM sqlmaas sm 
+                        LEFT JOIN maas_gelir mg ON mg.person_id=sm.id 
+                        WHERE sm.id = ? and sm.yil = ? and sm.ay = ?");
 
-$sql = $con->prepare("SELECT * FROM sqlmaas WHERE id = ? and yil = 2024 and ay = 6");
-$sql->execute(array(143));
+$sql->execute(array($person_id, $year, $month));
 $result = $sql->fetch(PDO::FETCH_OBJ);
 
+$groupedData = [];
+$data = json_decode($result->datas, true);
+
+foreach ($data as $item) {
+    if (isset($item['tur_id'])) {
+        $turId = $item['tur_id'];
+        if (!isset($groupedData[$turId])) {
+            $groupedData[$turId] = [];
+        }
+        $groupedData[$turId][] = $item;
+    }
+}
 
 
+$document = 'bordro.pdf';
 
 $html = '<!DOCTYPE html>
 <html lang="tr">
@@ -42,7 +62,7 @@ $html = '<!DOCTYPE html>
     <tr>
         <td rowspan="5" class="col-3">LOGO BURAYA GELECEK</td>
         <td class="col-2">Adı Soyadı :</td>
-        <td class="col-7 text-bold">Mehmet Ali Gökmen</td>
+        <td class="col-7 text-bold">'. $result->full_name .'</td>
     </tr>
     <tr>
         <td class="col-2">Görevi :</td>
@@ -50,15 +70,15 @@ $html = '<!DOCTYPE html>
     </tr>
     <tr>
         <td class="col-2">Ay Günü :</td>
-        <td class="col-7 text-bold">30</td>
+        <td class="col-7 text-bold">'.$month_days.'</td>
     </tr>
     <tr>
         <td class="col-2">Ay / Yıl :</td>
-        <td class="col-7 text-bold">Haziran / 2024</td>
+        <td class="col-7 text-bold">'.$month.' / '.$year.'</td>
     </tr>
     <tr>
         <td class="col-2">Firma / Proje :</td>
-        <td class="col-7 text-bold">Mbe Yazılım</td>
+        <td class="col-7 text-bold">'.$func->getCompanyName($result->company_id). ' / ' . $func->getProjectName($project_id) . ' </td>
     </tr>
 
     <tr>
@@ -85,26 +105,34 @@ $html = '<!DOCTYPE html>
                             <tr style="border-bottom: 1px solid gray;">
                                 <td colspan="4">KAZANÇLAR</td>
                                 <td colspan="2">Gün</td>
-                                <td colspan="3">Saat</td>
+                                <td colspan="3">Toplam Saat</td>
                                 <td colspan="3">Tutar</td>
                             </tr>';
 
-                            
+                            $data = json_decode($result->datas, true);
 
-                         $html .= '<tr>
-                                <td colspan="4">Normal Çalışma</td>
-                                <td colspan="2">3 Gün</td>
-                                <td colspan="3">24 Saat</td>
-                                <td colspan="3">3.000,00 TL</td>
-                            </tr>';
+                            foreach ($data as $item) {
+                                // Check if the item has tur_id and tutar properties
+                                if (isset($item['tur_id']) && isset($item['tutar'])) {
+                                    $tur_id = $item['tur_id'];
+                                    $tutar = $item['tutar'];
+                                    $sayi = $item['sayi'];
+                                    $puantaj_saati =$sayi * $func->getPuantajSaati($tur_id);
+                                    
+                                    // Add the row to the HTML table
+                                    if($tutar>0){
 
-                            $html .= '<tr>
-                                <td colspan="4">Fazla Mesai</td>
-                                <td colspan="2">3 Gün</td>
-                                <td colspan="3">24 Saat</td>
-                                <td colspan="3">3.000,00 TL</td>';
+                                        $html .= '<tr>
+                                        <td colspan="4">' . $func->getPuantajTuru($tur_id) . '</td>
+                                        <td colspan="2" style="text-align:center">'.$sayi.' Gün</td>
+                                        <td colspan="3">'.$puantaj_saati.' Saat</td>
+                                        <td colspan="3">' . tlFormat($tutar) . ' TL</td>
+                                        </tr>';
+                                    }
+                                }
+                            };
 
-
+    
                        $html .= '</table>
                     </td>
                    <td class="col-6" style="border: 1px solid gray;">
@@ -115,14 +143,23 @@ $html = '<!DOCTYPE html>
                                 <td colspan="3">Saat</td>
                                 <td colspan="3">Tutar</td>
                             </tr>';
-                            $html .= '<tr>
-                                        <td colspan="4">Bes Kesintisi</td>
+                            $qryKesinti = $con->prepare("SELECT wc.*,ct.type_name,SUM(wc.cut_amount) AS toplam_kesinti 
+                                                            FROM wagecuts wc 
+                                                            LEFT JOIN cut_types ct ON ct.id = wc.cut_type
+                                                            WHERE wc.person_id = ? AND wc.year = ? AND wc.month= ? 
+                                                            AND ct.type_name IS NOT NULL
+                                                            GROUP BY wc.cut_type");
+                            $qryKesinti->execute(array($person_id, $year, $month));
+                            while ($row = $qryKesinti->fetch(PDO::FETCH_OBJ)) {
+                                $html .= '<tr>
+                                        <td colspan="4">' . $row->type_name . '</td>
                                         <td colspan="2"></td>
                                         <td colspan="3"></td>
-                                        <td colspan="3">900,00 TL</td>
+                                        <td colspan="3">' . tlFormat($row->toplam_kesinti) . ' TL</td>
                                     </tr>';
+                            }
 
-                        $html .='</table>
+                        $html .='</table>   
                     </td>
                  
                
@@ -142,9 +179,9 @@ $html = '<!DOCTYPE html>
                     <td class="col-4 text-center border-right" >ÖDENECEK TUTAR</td>
                 </tr>
                 <tr>
-                    <td class="col-4 text-center border-right text-bold" >6.000,00 TL</td>
-                    <td class="col-4 text-center border-right text-bold" >900,00 TL</td>
-                    <td class="col-4 text-center border-right text-bold" >5.100,00 TL</td>
+                    <td class="col-4 text-center border-right text-bold" >'.tlFormat($result->toplam_maas).' TL</td>
+                    <td class="col-4 text-center border-right text-bold" >'.tlFormat($result->kesinti).' TL</td>
+                    <td class="col-4 text-center border-right text-bold" >'.tlformat($result->elegecen).' TL</td>
                 </tr>
             </table>
         </td>
@@ -170,7 +207,7 @@ $dompdf->loadHtml($html);
 
 
 
-$document = 'bordro.pdf';
+
 // (Optional) Setup the paper size and orientation
 $dompdf->setPaper('A4', 'P');
 

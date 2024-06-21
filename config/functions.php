@@ -333,7 +333,23 @@ class Functions
         $html .= ' </select>';
         echo $html;
     }
+function getPuantajTuru($id)
+    {
+        global $con;
+        $sql = $con->prepare("SELECT * FROM puantajturu WHERE id = ?");
+        $sql->execute(array($id));
+        $result = $sql->fetch(PDO::FETCH_ASSOC);
+        return $result ? $result["PuantajAdi"] : "";
+    }
 
+    function getPuantajSaati($id)
+    {
+        global $con;
+        $sql = $con->prepare("SELECT * FROM puantajturu WHERE id = ?");
+        $sql->execute(array($id));
+        $result = $sql->fetch(PDO::FETCH_ASSOC);
+        return $result ? $result["PuantajSaati"] : "";
+    }
 
     function getPuantajTuruList($turu)
     {
