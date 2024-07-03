@@ -11,19 +11,28 @@ if ($_POST && $_POST["method"] == "add") {
     $tax_number = $func->security($_POST["tax_number"]);
     $address = $func->security($_POST["address"]);
     $open_date = $func->security($_POST["open_date"]);
+    $company_logo = $_FILES["company_logo"]["name"];
     $description = $func->security($_POST["description"]);
 
 
     try {
+
+        $uploadDir = $_SERVER["DOCUMENT_ROOT"] . '/files/'; // Değiştirilmesi gereken dizin
+        $uploadPath = $uploadDir . basename($_FILES["company_logo"]["name"]);
+        // Dosyayı belirtilen dizine taşı,
+        if (move_uploaded_file($_FILES["company_logo"]["tmp_name"], $uploadPath)) {
+        
+        }
         $sql = $con->prepare("INSERT INTO companies SET account_id = ?, 
                                                         company_name = ? , 
                                                         company_official = ?,
                                                         tax_number = ?, 
                                                         address = ?,
                                                         open_date = ?,
+                                                        company_logo = ?,
                                                         description = ?");
 
-        $sql->execute(array($account_id, $company_name, $company_official, $tax_number, $address, $open_date, $description));
+        $sql->execute(array($account_id, $company_name, $company_official, $tax_number, $address, $open_date,$company_logo, $description));
     } catch (PDOException $ex) {
         echo "Error: " . $ex->getMessage();
     }
@@ -84,7 +93,15 @@ if ($_POST && $_POST["method"] == "add") {
                     </div>
                 </div>
                 <div class="card-body">
-
+                    <div class="form-group">
+                        <label for="company_logo">Firma Logosu</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="company_logo" id="company_logo">
+                                <label class="custom-file-label" for="company_logo">Dosya Seçin</label>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label for="open_date">Açılış Tarihi </span></label>
 
@@ -92,9 +109,7 @@ if ($_POST && $_POST["method"] == "add") {
                             <div class="input-group-prepend" data-target="#startdate" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
-                            <input type="text" id="open_date" name="open_date" class="form-control datetimepicker-input"
-                                data-target="#startdate" data-inputmask-alias="datetime"
-                                data-inputmask-inputformat="dd.mm.yyyy" data-mask />
+                            <input type="text" id="open_date" name="open_date" class="form-control datetimepicker-input" data-target="#startdate" data-inputmask-alias="datetime" data-inputmask-inputformat="dd.mm.yyyy" data-mask />
 
                         </div>
                     </div>
@@ -114,3 +129,9 @@ if ($_POST && $_POST["method"] == "add") {
     <!-- row -->
 
 </form>
+<script src="../../src/component.js"></script>
+<script>
+$(function () {
+  bsCustomFileInput.init();
+});
+</script>

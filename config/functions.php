@@ -624,6 +624,8 @@ function permcontrol($var)
     $auth = $pcheck->fetchAll(PDO::FETCH_ASSOC);
     return isset($auth["id"]) ? true : false;
 }
+
+
 function permtrue($var)
 {
     global $con;

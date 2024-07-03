@@ -181,9 +181,6 @@ if ($expired_date < 3) {
                     </div>
                 </li>
 
-
-
-
                 <!-- Notifications Dropdown Menu -->
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
@@ -191,7 +188,7 @@ if ($expired_date < 3) {
                         <span class="badge badge-warning navbar-badge">15</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span class="dropdown-item dropdown-header">15 Notifications</span>
+                        <span class="dropdown-item dropdown-header"><?php echo "account : ". $account_id ;?></span>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item">
                             <i class="fas fa-envelope mr-2"></i> 4 new messages
@@ -311,7 +308,7 @@ if ($expired_date < 3) {
                                     </p>
                                 </a>
                             </li>
-                            <!-- <?php endif; ?> -->
+                            <?php endif; ?>
 
                         <?php if (permtrue("personel")): ?>
                             <?php

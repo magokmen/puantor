@@ -242,8 +242,6 @@ function deleteRecordByAjax(page, params) {
       //   console.log(key + ": " + value);
       // });
 
-
-
       fetch(deleteUrl, {
         method: "POST",
         body: formData,
@@ -253,7 +251,6 @@ function deleteRecordByAjax(page, params) {
           var data = JSON.parse(data);
           console.log(data);
           if (data.status == 200) {
-
             Swal.fire({
               title: "Başarılı!",
               text: data.message,
@@ -269,8 +266,8 @@ function deleteRecordByAjax(page, params) {
               icon: "error",
             });
           }
-
-        }).catch((error) => {
+        })
+        .catch((error) => {
           // Handle error if deletion fails (optional)
           console.error(error);
           Swal.fire({
@@ -307,15 +304,12 @@ function RoutePagewithParams(page, params = "", animate = true) {
       // Yükleme tamamlandığında içeriği gösterme işlemi
       $(this).animate({ opacity: 1 }, 300);
       $(".preloader").css("opacity", 0).fadeOut(400);
-
     });
   });
 }
 
-
-
-
 function RoutePage(page, element = "", pTitle = "") {
+  console.log(page, pTitle);
   var pageTitleElement = $("#page-title");
   var params = element ? $(element).data("params") : "";
   if (pTitle != "") {
@@ -324,7 +318,6 @@ function RoutePage(page, element = "", pTitle = "") {
     var pTitle = element ? $(element).data("title") : "";
     pageTitleElement.text(pTitle);
   }
-
   $("#content").empty(); // İçeriği temizle
   session_check();
   if (page != null) {
@@ -334,8 +327,6 @@ function RoutePage(page, element = "", pTitle = "") {
         //console.log(page,"pTitle : " + pTitle);
         set_session_page("pages/" + page + ".php", pTitle);
         $(this).animate({ opacity: 1 }, 300);
-
-
       });
     });
   }
@@ -398,8 +389,7 @@ function loadContent(pagelink) {
       // Yükleme tamamlandığında, içeriği göster
       $(this).fadeIn(50);
       // Hide preloader
-      $(".preloader").css('opacity', 0).fadeOut(400);
-
+      $(".preloader").css("opacity", 0).fadeOut(400);
     });
   });
 }
@@ -453,7 +443,7 @@ function set_session_page(page, pageTitle) {
     type: "POST",
     data: {
       page: page,
-      pageTitle: pageTitle
+      pageTitle: pageTitle,
     },
     success: function (response) {
       if (response == "invalid") {
@@ -491,14 +481,14 @@ function showMessage(message, type) {
   if (alertClass && message) {
     var alertMessage = $(
       '<div class="message alert ' +
-      alertClass +
-      ' alert-dismissible fade show">' +
-      "<strong>" +
-      firstLetter +
-      "</strong> " +
-      message +
-      '<button type="button" class="close" data-dismiss="alert">&times;</button>' +
-      "</div>"
+        alertClass +
+        ' alert-dismissible fade show">' +
+        "<strong>" +
+        firstLetter +
+        "</strong> " +
+        message +
+        '<button type="button" class="close" data-dismiss="alert">&times;</button>' +
+        "</div>"
     );
 
     $("#content").before(alertMessage);
@@ -703,7 +693,6 @@ $(function () {
   });
 });
 
-
 $(document).ready(function () {
   $(".select2").select2();
   //Initialize Select2 Elements
@@ -716,24 +705,20 @@ $(document).ready(function () {
   function Route() {
     var company_id = $("#companyindex option:selected").val();
     window.location.href = "index.php?company_id=" + company_id;
-
   }
 
-
-  moment().locale('tr');
+  moment().locale("tr");
   $("[data-mask]").inputmask("dd.mm.yyyy");
   $("#startdate,#enddate").datetimepicker({
     format: "DD.MM.YYYY",
-    locale: moment.locale('tr'),
+    locale: moment.locale("tr"),
   });
 
-
   // jQuery UI sortable for the todo list
-  $('.todo-list').sortable({
-    placeholder: 'sort-highlight',
-    handle: '.handle',
+  $(".todo-list").sortable({
+    placeholder: "sort-highlight",
+    handle: ".handle",
     forcePlaceholderSize: true,
-    zIndex: 999999
-  })
-
+    zIndex: 999999,
+  });
 });

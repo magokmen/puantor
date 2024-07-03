@@ -1,0 +1,33 @@
+
+
+$tarih1 = new DateTime("2024-05-23 23:38:27");
+$tarih2 = new DateTime("now");
+
+// Farkı hesapla
+$fark = $tarih1->diff($tarih2);
+
+// Farkı gün olarak al
+$farkGun = 14 - $fark->days;
+$user_state =  $result->state != null ? 1 : 0;
+
+
+$tarih1 = new DateTime("2024-05-23 23:38:27");
+$tarih2 = new DateTime("now");
+
+// Farkı hesapla
+$fark = $tarih1->diff($tarih2);
+
+// Farkı gün olarak al
+$farkGun = 14 - $fark->days;
+$user_state =  $result->state != null ? 1 : 0;
+
+
+$tarih1 = new DateTime("2024-05-23 23:38:27");
+$tarih2 = new DateTime("now");
+
+// Farkı hesapla
+$fark = $tarih1->diff($tarih2);
+
+// Farkı gün olarak al
+$farkGun = 14 - $fark->days;
+$user_state =  $result->state != null ? 1 : 0;
