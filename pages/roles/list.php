@@ -34,7 +34,7 @@ if ($_POST && isset($_POST["action"]) == "delete-roles") {
             <th>id</th>
             <th>Yetki Adı</th>
             <th>Açıklama</th>
-            <th class="text-center">Durumu</th>
+
             <th class="text-center" style="max-width:10px">İşlemler</th>
         </tr>
     </thead>
@@ -69,15 +69,7 @@ if ($_POST && isset($_POST["action"]) == "delete-roles") {
                 <td>
                     <?php echo $value["roleDescription"] ?>
                 </td>
-                <td class="text-center">
-                    <?php if ($value["isActive"] == 1) {
-                        $checked = "checked";
-                    } else {
-                        $checked = "";
-                    } ?>
-                    <input type="checkbox" class="check" <?php echo $checked; ?> data-on="Aktif" data-off="Pasif"
-                        data-offstyle="danger">
-                </td>
+
                 <td class="text-center">
                     <i class="fa-solid fa-ellipsis list-button" data-toggle="dropdown"></i>
                     <ul class="dropdown-menu">
@@ -114,7 +106,6 @@ if ($_POST && isset($_POST["action"]) == "delete-roles") {
             <th>id</th>
             <th>Yetki Adı</th>
             <th>Açıklama</th>
-            <th class="text-center">Durumu</th>
             <th class="text-center" style="max-width:8px">İşlemler</th>
         </tr>
     </tfoot>

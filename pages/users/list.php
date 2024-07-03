@@ -2,51 +2,46 @@
 require_once $_SERVER["DOCUMENT_ROOT"] . "/plugins/datatables/datatable.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/include/requires.php";
 $id = $_SESSION['id'];
-// echo "hesap id :" . $account_id;
+
+// Eğer POST metodu ile silme işlemi yapılıyorsa
 if ($_POST && $_POST['method'] == "Delete") {
     $id = $_POST['id'];
     if ($id > 0) {
-
-        $up = $con->prepare("DELETE FROM users where id = ? ");
+        $up = $con->prepare("DELETE FROM users where id = ?");
         $result = $up->execute(array($id));
-
     }
 }
-;
 
+// Veritabanından kullanıcı verilerini al
+$sql1 = $con->prepare("SELECT groups FROM users WHERE id = ?");
+$sql1->execute(array($id));
+$user = $sql1->fetch();
+
+if ($user && $user['groups'] == 1) {
+    $sql = $con->prepare("SELECT * FROM users WHERE account_id = ? ORDER BY id DESC");
+    $sql->execute(array($account_id));
+} else {
+    $sql = $con->prepare("SELECT * FROM users WHERE account_id = ? AND groups != 1 ORDER BY id DESC");
+    $sql->execute(array($account_id));
+}
+
+$result = $sql->fetchAll();
 ?>
 
-<table id="example1" class="table table-bordered table-striped table-sm table-hover ">
+<table id="example1" class="table table-bordered table-striped table-sm table-hover">
     <thead>
         <tr>
             <th class="text-center">id</th>
-            <th>Adı Soyadı Adı</th>
+            <th>Adı Soyadı</th>
             <th>Telefon</th>
             <th>Email Adresi</th>
+            <th>Pozisyon</th>
+            <th>Durumu</th>
             <th class="text-center">İşlemler</th>
         </tr>
     </thead>
     <tbody>
-
-        <?php
-        $sql = $con->prepare("SELECT groups FROM users WHERE id = ?");
-        $sql->execute(array($id));
-        $user = $sql->fetch();
-
-        if ($user && $user['groups'] == 1) {
-            // groups alanındaki değer 1 ise normal işlemi yap
-            $sql = $con->prepare("SELECT * FROM users WHERE account_id = ? ORDER BY id DESC");
-            $sql->execute(array($account_id));
-        } else {
-            // groups alanındaki değer 1 değilse, id alanı 1 dışında olanları göster
-            $sql = $con->prepare("SELECT * FROM users WHERE account_id = ? AND groups != 1 ORDER BY id DESC");
-            $sql->execute(array($account_id));
-        }
-        $result = $sql->fetchAll();
-
-        foreach ($result as $key => $value) {
-
-            ?>
+        <?php foreach ($result as $key => $value): ?>
             <tr>
                 <td class="text-center col-md-1">
                     <?php echo $value["id"] ?>
@@ -60,16 +55,29 @@ if ($_POST && $_POST['method'] == "Delete") {
                 <td>
                     <?php echo $value["email"] ?>
                 </td>
+                <td>
+                    <?php
+                    $ids = $value["groups"];
+                    $sql = "SELECT roleName FROM userroles WHERE id = ?";
+                    $stmt = $con->prepare($sql);
+                    $stmt->execute([$ids]);
+                    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                    echo $result ? $result["roleName"] : "Hiçbir sonuç bulunamadı.";
+                    ?>
+                </td>
+                <td class="text-center">
+                    <?php $checked = $value["isActive"] == 1 ? "checked" : ""; ?>
+                    <input type="checkbox" class="check" <?php echo $checked; ?> data-on="Aktif" data-off="Pasif"
+                        data-offstyle="danger" data-user-id="<?php echo $value['id']; ?>">
 
+                </td>
                 <td class="text-center text-nowrap col-md-1 pl-3 pr-3">
-
                     <?php if (permtrue("kullanıcıDüzenle")): ?>
                         <button class="btn btn-sm bg-gray" data-tooltip="Düzenle" onclick="RoutePage('users/edit', this)"
                             data-title="Kullanıcı Düzenle" data-params="id=<?php echo $value["id"] ?>"><i
                                 class="fa fa-edit"></i></button>
                     <?php endif; ?>
 
-                    <!-- Silme parametrelerini göndermek için oluşturulur -->
                     <?php
                     $params = array(
                         "id" => $value["id"],
@@ -82,23 +90,41 @@ if ($_POST && $_POST['method'] == "Delete") {
                             onclick="deleteRecordByAjax('users/main','<?php echo $params_json; ?>')"><i
                                 class="fa fa-trash"></i></button>
                     <?php endif; ?>
-
                 </td>
             </tr>
-
-        <?php } ?>
+        <?php endforeach; ?>
     </tbody>
     <tfoot>
         <tr>
             <th class="text-center">id</th>
-            <th>Adı Soyadı Adı</th>
+            <th>Adı Soyadı</th>
             <th>Telefon</th>
             <th>Email Adresi</th>
+            <th>Pozisyon</th>
+            <th>Durumu</th>
             <th class="text-center">İşlemler</th>
         </tr>
     </tfoot>
 </table>
-<!-- /.content -->
 
-<?php
-include_once $_SERVER["DOCUMENT_ROOT"] . "/plugins/datatables/datatablescripts.php" ?>
+<?php include_once $_SERVER["DOCUMENT_ROOT"] . "/plugins/datatables/datatablescripts.php"; ?>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.check').change(function () {
+            var isActive = $(this).is(':checked') ? 1 : 0;
+            var userId = $(this).data('user-id');
+            var action = 'update_status';
+
+            $.ajax({
+                type: "POST",
+                url: "ajax.php",
+                data: { action: action, isActive: isActive, userId: userId },
+                success: function (response) {
+                    console.log(response);
+                }
+            });
+        });
+    });
+</script>
